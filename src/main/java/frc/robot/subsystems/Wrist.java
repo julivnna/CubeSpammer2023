@@ -17,7 +17,7 @@ import frc.robot.Constants.WristConstants;
 import frc.robot.filters.ExponentialSmoothingFilter;
 import frc.robot.util.NerdyMath;
 
-public class Wrist extends SubsystemBase{
+public class Wrist extends SubsystemBase implements Reportable {
     private TalonFX leftWrist;
     private TalonFX rightWrist;
     private int targetTicks = WristConstants.kWristStow;
@@ -120,6 +120,18 @@ public class Wrist extends SubsystemBase{
 
     public void setTargetTicks(int targetTicks) {
         this.targetTicks = targetTicks;
+    }
+
+    @Override
+    public void reportToSmartDashboard(LOG_LEVEL priority) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void initShuffleboard(LOG_LEVEL priority) {
+        // TODO Auto-generated method stub
+        
     }
     
 }

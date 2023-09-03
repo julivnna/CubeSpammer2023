@@ -1,4 +1,4 @@
-# ChargedUp2023
+# CubeSpammer2023
 
 FRC Team 687's code for its first Charged Up 2023 offseason robot.
 

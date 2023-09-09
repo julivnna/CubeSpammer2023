@@ -136,13 +136,13 @@ public class RobotContainer {
     commandDriverController.circle()
       .whileTrue(Commands.run(() -> swerveDrive.setVelocityControl(true)))
       .whileFalse(Commands.run(() -> swerveDrive.setVelocityControl(false)));
-    commandOperatorController.R1().onTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristGround))));
-    commandOperatorController.R2().onTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristLow))));
-    commandOperatorController.L1().onTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristMid))));
-    commandOperatorController.L2().onTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristHigh))));
-    upButton.whileTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristStow))));
+    commandDriverController.R1().onTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristGround))));
+    commandDriverController.R2().onTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristLow))));
+    commandDriverController.L1().onTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristMid))));
+    commandDriverController.L2().onTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristHigh))));
+    upButtonDriver.whileTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristStow))));
 
-    commandOperatorController.share().onTrue(Commands.runOnce(wrist::resetEncoders));
+    commandDriverController.share().onTrue(Commands.runOnce(wrist::resetEncoders));
   }
 
   private void initAutoChoosers() {

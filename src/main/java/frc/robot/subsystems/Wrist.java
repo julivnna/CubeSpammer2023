@@ -12,6 +12,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.WristConstants;
 import frc.robot.filters.ExponentialSmoothingFilter;
@@ -112,10 +114,12 @@ public class Wrist extends SubsystemBase implements Reportable {
         wrist.set(ControlMode.MotionMagic, targetTicks, DemandType.ArbitraryFeedForward, ff);
     }
 
-    public void moveWristMotionMagicButton(int position) {
-        wrist.configMotionCruiseVelocity(WristConstants.kWristCruiseVelocity);
-        wrist.configMotionAcceleration(WristConstants.kWristMotionAcceleration);
-        setTargetTicks(position);
+    public CommandBase motionMagicCommand(int position) {
+        return Commands.runOnce(() -> {
+            wrist.configMotionCruiseVelocity(WristConstants.kWristCruiseVelocity);
+            wrist.configMotionAcceleration(WristConstants.kWristMotionAcceleration);
+            setTargetTicks(position);
+        });
     }
 
     public void setTargetTicks(int targetTicks) {

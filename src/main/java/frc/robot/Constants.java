@@ -69,6 +69,7 @@ public final class Constants {
     public static final double kMidOuttakePower = 0; //0.5
     public static final double kHighOuttakePower = 0; //0.5
     public static final double kIntakeNeutralPower = 0; //-0.25
+    public static final double kCubeCurrent = 30; // tune this!
   }
 
   public static class ControllerConstants {

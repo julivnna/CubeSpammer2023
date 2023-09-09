@@ -30,6 +30,10 @@ public class Shooter extends SubsystemBase {
         // rightMotor.enableVoltageCompensation(true);
     }
 
+    public boolean hasCube() {
+        return leftMotor.getStatorCurrent() > ShooterConstants.kCubeCurrent;
+    }
+
     public CommandBase setPower(double power) {
         return runOnce(
         () -> {

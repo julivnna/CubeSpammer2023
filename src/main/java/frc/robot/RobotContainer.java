@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.WristConstants;
@@ -133,6 +134,8 @@ public class RobotContainer {
     // These button bindings are chosen for testing, and may be changed based on
     commandDriverController.share().onTrue(Commands.runOnce(imu::zeroHeading));
     commandDriverController.options().onTrue(Commands.runOnce(swerveDrive::resetEncoders));
+    commandDriverController.options().onTrue(Commands.runOnce(wrist::resetEncoders));
+
     commandDriverController.triangle().whileTrue(new TheGreatBalancingAct(swerveDrive));
     commandDriverController.circle()
       .onTrue(Commands.runOnce(() -> swerveDrive.setVelocityControl(true)))
@@ -143,39 +146,39 @@ public class RobotContainer {
     // L1:  press = aim low   let go = score + stow
     // R1:  press = aim mid   let go = score + stow
     // R2:  press = aim high  let go = score + stow
-    commandDriverController.L2().onTrue(Commands.runOnce(() -> {
-      wrist.moveWristMotionMagicButton((WristConstants.kWristGround));
-    }).andThen(shooter.setPower(ShooterConstants.kIntakePower))
-    ).onFalse(Commands.runOnce(() ->{
-        wrist.moveWristMotionMagicButton(WristConstants.kWristStow);
-    }).andThen(shooter.setPower(ShooterConstants.kIntakeNeutralPower))
-    );
+    commandDriverController.L2()
+      .onTrue(wrist.motionMagicCommand((WristConstants.kWristGround))
+        .andThen(shooter.setPower(ShooterConstants.kIntakePower)))
+      .onFalse(wrist.motionMagicCommand(WristConstants.kWristStow)
+        .andThen(shooter.setPower(ShooterConstants.kIntakeNeutralPower)));
 
-    commandDriverController.L1().onTrue(Commands.runOnce(() -> {
-      wrist.moveWristMotionMagicButton((WristConstants.kWristLow));
-    })).onFalse(shooter.outtakeLow()
-      .andThen(Commands.runOnce(() ->{
-        wrist.moveWristMotionMagicButton(WristConstants.kWristStow);
-      }))
-    );
+    Trigger cubeTrigger = new Trigger(shooter::hasCube);
+    cubeTrigger.onTrue(
+      shooter.setPowerZero()
+        .andThen(wrist.motionMagicCommand(WristConstants.kWristStow))
+      );
 
-    commandDriverController.R1().onTrue(Commands.runOnce(() -> {
-      wrist.moveWristMotionMagicButton((WristConstants.kWristMid));
-    })).onFalse(shooter.outtakeMid()
-      .andThen(Commands.runOnce(() ->{
-      wrist.moveWristMotionMagicButton(WristConstants.kWristStow);
-    }))
-  );
+    commandDriverController.L1()
+      .onTrue(wrist.motionMagicCommand((WristConstants.kWristLow)))
+      .onFalse(
+        shooter.outtakeLow()
+        .andThen(wrist.motionMagicCommand(WristConstants.kWristStow))
+      );
+    
+    commandDriverController.R1()
+      .onTrue(wrist.motionMagicCommand((WristConstants.kWristMid)))
+      .onFalse(
+        shooter.outtakeMid()
+        .andThen(wrist.motionMagicCommand(WristConstants.kWristStow))
+      );
 
-    commandDriverController.R2().onTrue(Commands.runOnce(() -> {
-      wrist.moveWristMotionMagicButton((WristConstants.kWristHigh));
-    })).onFalse(shooter.outtakeHigh()
-      .andThen(Commands.runOnce(() ->{
-      wrist.moveWristMotionMagicButton(WristConstants.kWristStow);
-    }))
-  );
+    commandDriverController.R2()
+      .onTrue(wrist.motionMagicCommand((WristConstants.kWristHigh)))
+      .onFalse(
+        shooter.outtakeHigh()
+        .andThen(wrist.motionMagicCommand(WristConstants.kWristStow))
+      );
 
-    commandDriverController.share().onTrue(Commands.runOnce(wrist::resetEncoders));
   }
 
   private void initAutoChoosers() {

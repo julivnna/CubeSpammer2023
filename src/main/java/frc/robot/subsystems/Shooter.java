@@ -45,9 +45,25 @@ public class Shooter extends SubsystemBase {
         return setPower(0);
     }
 
-    public CommandBase outtake() {
+    public CommandBase outtakeHigh() {
         return sequence(
-            setPower(ShooterConstants.kOuttakePower),
+            setPower(ShooterConstants.kHighOuttakePower),
+            waitSeconds(0.25),
+            setPowerZero()
+        );
+    }
+
+    public CommandBase outtakeMid() {
+        return sequence(
+            setPower(ShooterConstants.kMidOuttakePower),
+            waitSeconds(0.25),
+            setPowerZero()
+        );
+    }
+
+    public CommandBase outtakeLow() {
+        return sequence(
+            setPower(ShooterConstants.kLowOuttakePower),
             waitSeconds(0.25),
             setPowerZero()
         );

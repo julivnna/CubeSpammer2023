@@ -29,6 +29,11 @@ public class Wrist extends SubsystemBase implements Reportable {
         leftEncoder = new TalonSRX(WristConstants.kLeftEncoderID);
     }
 
+    @Override
+    public void periodic() {
+        moveWristMotionMagic();
+    }
+
     public void init() {
         wrist.setNeutralMode(NeutralMode.Brake);
         wrist.setInverted(false);

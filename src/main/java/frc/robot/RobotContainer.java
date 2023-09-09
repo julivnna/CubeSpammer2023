@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.WristConstants;
 import frc.robot.commands.PathPlannerAutos;
 import frc.robot.commands.SquareTest;
@@ -134,13 +135,46 @@ public class RobotContainer {
     commandDriverController.options().onTrue(Commands.runOnce(swerveDrive::resetEncoders));
     commandDriverController.triangle().whileTrue(new TheGreatBalancingAct(swerveDrive));
     commandDriverController.circle()
-      .whileTrue(Commands.run(() -> swerveDrive.setVelocityControl(true)))
-      .whileFalse(Commands.run(() -> swerveDrive.setVelocityControl(false)));
-    commandDriverController.R1().onTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristGround))));
-    commandDriverController.R2().onTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristLow))));
-    commandDriverController.L1().onTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristMid))));
-    commandDriverController.L2().onTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristHigh))));
-    upButtonDriver.whileTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristStow))));
+      .onTrue(Commands.runOnce(() -> swerveDrive.setVelocityControl(true)))
+      .onFalse(Commands.runOnce(() -> swerveDrive.setVelocityControl(false)));
+    
+    // Note:
+    // L2:  hold = intake     let go = stow + hold
+    // L1:  press = aim low   let go = score + stow
+    // R1:  press = aim mid   let go = score + stow
+    // R2:  press = aim high  let go = score + stow
+    commandDriverController.L2().onTrue(Commands.runOnce(() -> {
+      wrist.moveWristMotionMagicButton((WristConstants.kWristGround));
+      shooter.setPower(ShooterConstants.kIntakePower);
+    })).onFalse(Commands.runOnce(() ->{
+        wrist.moveWristMotionMagicButton(WristConstants.kWristStow);
+        shooter.setPower(ShooterConstants.kIntakeNeutralPower);  
+      })
+    );
+
+    commandDriverController.L1().onTrue(Commands.runOnce(() -> {
+      wrist.moveWristMotionMagicButton((WristConstants.kWristLow));
+    })).onFalse(shooter.outtakeLow()
+      .andThen(Commands.runOnce(() ->{
+        wrist.moveWristMotionMagicButton(WristConstants.kWristStow);
+      }))
+    );
+
+    commandDriverController.R1().onTrue(Commands.runOnce(() -> {
+      wrist.moveWristMotionMagicButton((WristConstants.kWristMid));
+    })).onFalse(shooter.outtakeMid()
+      .andThen(Commands.runOnce(() ->{
+      wrist.moveWristMotionMagicButton(WristConstants.kWristStow);
+    }))
+  );
+
+    commandDriverController.R2().onTrue(Commands.runOnce(() -> {
+      wrist.moveWristMotionMagicButton((WristConstants.kWristHigh));
+    })).onFalse(shooter.outtakeHigh()
+      .andThen(Commands.runOnce(() ->{
+      wrist.moveWristMotionMagicButton(WristConstants.kWristStow);
+    }))
+  );
 
     commandDriverController.share().onTrue(Commands.runOnce(wrist::resetEncoders));
   }

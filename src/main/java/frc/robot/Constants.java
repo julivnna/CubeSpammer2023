@@ -65,7 +65,9 @@ public final class Constants {
     public static final int kLeftMotorID = 0;
     public static final int kRightMotorID = 0;
     public static final double kIntakePower = 0; //-0.3
-    public static final double kOuttakePower = 0; //0.5
+    public static final double kLowOuttakePower = 0; //0.5
+    public static final double kMidOuttakePower = 0; //0.5
+    public static final double kHighOuttakePower = 0; //0.5
     public static final double kIntakeNeutralPower = 0; //-0.25
   }
 

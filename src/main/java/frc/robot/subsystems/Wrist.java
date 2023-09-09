@@ -22,18 +22,19 @@ import frc.robot.util.NerdyMath;
 public class Wrist extends SubsystemBase implements Reportable {
     private TalonFX wrist;
     private int targetTicks = WristConstants.kWristStow;
-    public BooleanSupplier atTargetPosition;
+    public BooleanSupplier atTargetPosition = () -> false;
     private TalonSRX leftEncoder;
     private ExponentialSmoothingFilter joystickFilter = new ExponentialSmoothingFilter(WristConstants.kLowPassAlpha);
 
     public Wrist() {
         wrist = new TalonFX(WristConstants.kWristID);
         leftEncoder = new TalonSRX(WristConstants.kLeftEncoderID);
+        init();
     }
 
     @Override
     public void periodic() {
-        moveWristMotionMagic();
+        // moveWristMotionMagic();
     }
 
     public void init() {
@@ -42,10 +43,10 @@ public class Wrist extends SubsystemBase implements Reportable {
         leftEncoder.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.QuadEncoder, 0, 1000);
         leftEncoder.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.PulseWidthEncodedPosition, 1, 1000);
         //test
-        wrist.config_kP(0, WristConstants.kWristP);
-        wrist.config_kI(0, WristConstants.kWristI);
-        wrist.config_kD(0, WristConstants.kWristD);
-        wrist.config_kF(0, WristConstants.kWristF);
+        wrist.config_kP(0, WristConstants.kWristP.get());
+        wrist.config_kI(0, WristConstants.kWristI.get());
+        wrist.config_kD(0, WristConstants.kWristD.get());
+        wrist.config_kF(0, WristConstants.kWristF.get());
 
         wrist.configMotionCruiseVelocity(WristConstants.kWristCruiseVelocity);
         wrist.configMotionAcceleration(WristConstants.kWristMotionAcceleration);
@@ -55,6 +56,10 @@ public class Wrist extends SubsystemBase implements Reportable {
     public void resetEncoders(){
         double absoluteTicks = leftEncoder.getSelectedSensorPosition(0);
         wrist.setSelectedSensorPosition(absoluteTicks * WristConstants.kFalconTicksPerAbsoluteTicks, 0, 100);
+        wrist.config_kP(0, WristConstants.kWristP.get());
+        wrist.config_kI(0, WristConstants.kWristI.get());
+        wrist.config_kD(0, WristConstants.kWristD.get());
+        wrist.config_kF(0, WristConstants.kWristF.get());
     }
 
     public void moveWristJoystick(double currentJoystickOutput) {
@@ -158,6 +163,7 @@ public class Wrist extends SubsystemBase implements Reportable {
             case ALL:
                 tab.addNumber("Motor Output", wrist::getMotorOutputPercent);
                 tab.addString("Control Mode", wrist.getControlMode()::toString);
+                tab.add("Zero wrist angle", Commands.runOnce(() -> wrist.setSelectedSensorPosition(0, 0, 1000)));
                 // tab.addNumber("Wrist Target Velocity", wrist::getActiveTrajectoryVelocity); 
                 // tab.addNumber("Closed loop error", wrist::getClosedLoopError);
 
@@ -171,6 +177,7 @@ public class Wrist extends SubsystemBase implements Reportable {
                 tab.addNumber("Current Wrist Ticks", wrist::getSelectedSensorPosition);
                 tab.addNumber("Target Wrist Ticks", () -> targetTicks);
                 tab.addBoolean("At target position", atTargetPosition);
+                tab.addNumber("Current Wrist Angle", this::getWristAngle);
                 break;
         }
         }

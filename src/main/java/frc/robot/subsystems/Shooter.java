@@ -18,15 +18,15 @@ public class Shooter extends SubsystemBase {
     // private TalonFX rightMotor;
 
     public Shooter() {
-        TalonFX leftMotor = new TalonFX(ShooterConstants.kLeftMotorID);
+        leftMotor = new TalonFX(ShooterConstants.kLeftMotorID);
         // TalonFX rightMotor = new TalonFX(ShooterConstants.kRightMotorID);
         leftMotor.setInverted(false);
         // rightMotor.setInverted(true);
         leftMotor.setNeutralMode(NeutralMode.Brake);
         // rightMotor.setNeutralMode(NeutralMode.Brake);
-        leftMotor.configVoltageCompSaturation(11);
+        leftMotor.configVoltageCompSaturation(12);
         // rightMotor.configVoltageCompSaturation(11);
-        leftMotor.enableVoltageCompensation(true);
+        leftMotor.enableVoltageCompensation(false);
         // rightMotor.enableVoltageCompensation(true);
     }
 
@@ -52,7 +52,7 @@ public class Shooter extends SubsystemBase {
     public CommandBase outtakeHigh() {
         return sequence(
             setPower(ShooterConstants.kHighOuttakePower),
-            waitSeconds(0.25),
+            waitSeconds(3),
             setPowerZero()
         );
     }
@@ -60,7 +60,7 @@ public class Shooter extends SubsystemBase {
     public CommandBase outtakeMid() {
         return sequence(
             setPower(ShooterConstants.kMidOuttakePower),
-            waitSeconds(0.25),
+            waitSeconds(3),
             setPowerZero()
         );
     }
@@ -68,7 +68,7 @@ public class Shooter extends SubsystemBase {
     public CommandBase outtakeLow() {
         return sequence(
             setPower(ShooterConstants.kLowOuttakePower),
-            waitSeconds(0.25),
+            waitSeconds(3),
             setPowerZero()
         );
     }
@@ -76,7 +76,7 @@ public class Shooter extends SubsystemBase {
     public CommandBase intake() {
         return sequence(
             setPower(ShooterConstants.kIntakePower),
-            waitSeconds(0.25),
+            waitSeconds(1),
             setPower(ShooterConstants.kIntakeNeutralPower)
         );
     }

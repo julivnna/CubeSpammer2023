@@ -155,32 +155,23 @@ public class RobotContainer {
       .onFalse(wrist.motionMagicCommand(WristConstants.kWristStow)
         .andThen(shooter.setPower(ShooterConstants.kIntakeNeutralPower)));
 
-    Trigger cubeTrigger = new Trigger(shooter::hasCube);
-    cubeTrigger.onTrue(
-      shooter.setPowerZero()
-        .andThen(wrist.motionMagicCommand(WristConstants.kWristStow))
-      );
+    // Trigger cubeTrigger = new Trigger(shooter::hasCube);
+    // cubeTrigger.onTrue(
+    //   shooter.setPowerZero()
+    //     .andThen(wrist.motionMagicCommand(WristConstants.kWristStow))
+    //   );
 
     commandDriverController.L1()
-      .onTrue(wrist.motionMagicCommand((WristConstants.kWristLow)))
-      .onFalse(
-        shooter.outtakeLow()
-        .andThen(wrist.motionMagicCommand(WristConstants.kWristStow))
-      );
+      .onTrue(shooter.setPower(ShooterConstants.kLowOuttakePower))
+      .onFalse(shooter.setPowerZero());
     
     commandDriverController.R1()
-      .onTrue(wrist.motionMagicCommand((WristConstants.kWristMid)))
-      .onFalse(
-        shooter.outtakeMid()
-        .andThen(wrist.motionMagicCommand(WristConstants.kWristStow))
-      );
+      .onTrue(shooter.setPower(ShooterConstants.kMidOuttakePower))
+      .onFalse(shooter.setPowerZero());
 
     commandDriverController.R2()
-      .onTrue(wrist.motionMagicCommand((WristConstants.kWristHigh)))
-      .onFalse(
-        shooter.outtakeHigh()
-        .andThen(wrist.motionMagicCommand(WristConstants.kWristStow))
-      );
+      .onTrue(shooter.setPower(ShooterConstants.kHighOuttakePower))
+      .onFalse(shooter.setPowerZero());
 
   }
 

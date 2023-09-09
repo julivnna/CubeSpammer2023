@@ -33,9 +33,9 @@ public final class Constants {
     public static final double kErrorBound = 0;
   }
   public static class WristConstants {
-    public static final int kWristID = 0;
-    public static final int kRightWristID = 0;
-    public static final int kLeftEncoderID = 0;
+    public static final int kWristID = 20;
+    // public static final int kRightWristID = 0;
+    public static final int kLeftEncoderID = 15;
     public static final int kWristStow = 0;
     public static final int kWristGround = 0;
     public static final int kWristLow = 0;
@@ -45,30 +45,30 @@ public final class Constants {
     public static final int kWristLowerLimit = 0;
     public static final int kWristUpperLimit = 0;
 
-    public static final double kWristP = 0;
-    public static final double kWristI = 0;
-    public static final double kWristD = 0;
-    public static final double kWristF = 0;
+    public static final PrefDouble kWristP = new PrefDouble("WristP", 0);
+    public static final PrefDouble kWristI = new PrefDouble("WristI", 0);
+    public static final PrefDouble kWristD = new PrefDouble("WristP", 0);
+    public static final PrefDouble kWristF = new PrefDouble("WristF", 0);
     public static final double kLowPassAlpha = 0.11765;
     public static final double kJoystickScale = 500;
     public static final int kWristCruiseVelocity = 0;
     public static final int kWristMotionAcceleration = 0;
     public static final double kWristDeadband = 0.05;
-    public static final PrefDouble kWristFF = new PrefDouble("Wrist_FF", 0);
-    public static final double kWristGearRatio = 27;
+    public static final PrefDouble kWristFF = new PrefDouble("Wrist_FF", 0.05);
+    public static final double kWristGearRatio = 40;
     public static final double kFalconTicksPerAbsoluteTicks = kWristGearRatio * 2048/1024;
     public static final double kDegreesPerTick = 360 / kWristGearRatio / 2048;
 
   }
 
   public static class ShooterConstants {
-    public static final int kLeftMotorID = 0;
-    public static final int kRightMotorID = 0;
-    public static final double kIntakePower = 0; //-0.3
-    public static final double kLowOuttakePower = 0; //0.5
-    public static final double kMidOuttakePower = 0; //0.5
-    public static final double kHighOuttakePower = 0; //0.5
-    public static final double kIntakeNeutralPower = 0; //-0.25
+    public static final int kLeftMotorID = 19;
+    // public static final int kRightMotorID = 0;
+    public static final double kIntakePower = -0.35; //-0.3
+    public static final double kLowOuttakePower = 0.2; //0.5
+    public static final double kMidOuttakePower = 0.5; //0.5
+    public static final double kHighOuttakePower = 1; //0.5
+    public static final double kIntakeNeutralPower = -0.2; //-0.25
     public static final double kCubeCurrent = 30; // tune this!
   }
 

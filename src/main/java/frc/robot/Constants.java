@@ -37,6 +37,10 @@ public final class Constants {
     public static final int kRightWristID = 0;
     public static final int kLeftEncoderID = 0;
     public static final int kWristStow = 0;
+    public static final int kWristGround = 0;
+    public static final int kWristLow = 0;
+    public static final int kWristMid = 0;
+    public static final int kWristHigh = 0;
     
     public static final int kWristLowerLimit = 0;
     public static final int kWristUpperLimit = 0;

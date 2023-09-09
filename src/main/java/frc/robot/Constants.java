@@ -54,7 +54,7 @@ public final class Constants {
     public static final int kWristCruiseVelocity = 0;
     public static final int kWristMotionAcceleration = 0;
     public static final double kWristDeadband = 0.05;
-    public static final double kWristFF = 0;
+    public static final PrefDouble kWristFF = new PrefDouble("Wrist_FF", 0);
     public static final double kWristGearRatio = 27;
     public static final double kFalconTicksPerAbsoluteTicks = kWristGearRatio * 2048/1024;
     public static final double kDegreesPerTick = 360 / kWristGearRatio / 2048;

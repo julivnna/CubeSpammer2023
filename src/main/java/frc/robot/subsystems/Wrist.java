@@ -110,7 +110,7 @@ public class Wrist extends SubsystemBase implements Reportable {
     }
 
     public void moveWristMotionMagic() {
-        double ff = WristConstants.kWristFF * Math.cos(getWristAngleRadians());
+        double ff = WristConstants.kWristFF.get() * Math.cos(getWristAngleRadians());
         wrist.set(ControlMode.MotionMagic, targetTicks, DemandType.ArbitraryFeedForward, ff);
     }
 

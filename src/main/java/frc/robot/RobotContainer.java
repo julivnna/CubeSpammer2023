@@ -15,12 +15,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.WristConstants;
 import frc.robot.commands.PathPlannerAutos;
 import frc.robot.commands.SquareTest;
 import frc.robot.commands.SwerveJoystickCommand;
+import frc.robot.commands.TheGreatBalancingAct;
 import frc.robot.commands.SwerveJoystickCommand.DodgeDirection;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Reportable.LOG_LEVEL;
 import frc.robot.subsystems.imu.Gyro;
 import frc.robot.subsystems.imu.NavX;
@@ -39,20 +45,31 @@ import frc.robot.subsystems.swerve.SwerveDrivetrain.SwerveModuleType;
  */
 public class RobotContainer {
 
+  public Wrist wrist = new Wrist();
   public Gyro imu = new NavX();
   // public Gyro imu = new Pigeon(60);
   public SwerveDrivetrain swerveDrive;
+  public Shooter shooter = new Shooter();
 
-  private final CommandPS4Controller driverController = new CommandPS4Controller(
+  private final CommandPS4Controller commandDriverController = new CommandPS4Controller(
       ControllerConstants.kDriverControllerPort);
-  private final PS4Controller badPS5 = driverController.getHID();
+  private final PS4Controller driverController = commandDriverController.getHID();
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandPS4Controller operatorController = new CommandPS4Controller(
+  private final CommandPS4Controller commandOperatorController = new CommandPS4Controller(
       ControllerConstants.kOperatorControllerPort);
-  private final PS4Controller badPS4 = operatorController.getHID();
+  private final PS4Controller operatorController = commandOperatorController.getHID();
   // private final Joystick joystick = new Joystick(2);
 
   private final LOG_LEVEL loggingLevel = LOG_LEVEL.ALL;
+  private final POVButton upButton = new POVButton (operatorController,0);
+  private final POVButton rightButton = new POVButton (operatorController, 90);
+  private final POVButton downButton = new POVButton (operatorController, 180);
+  private final POVButton leftButton = new POVButton (operatorController, 270);
+
+  private final POVButton upButtonDriver = new POVButton (driverController, 0);
+  private final POVButton rightButtonDriver = new POVButton (driverController, 90);
+  private final POVButton downButtonDriver = new POVButton (driverController, 180);
+  private final POVButton leftButtonDriver = new POVButton (driverController, 270);
 
   private SendableChooser<Supplier<CommandBase>> autoChooser = new SendableChooser<Supplier<CommandBase>>();
 
@@ -78,12 +95,12 @@ public class RobotContainer {
     swerveDrive.setDefaultCommand(
       new SwerveJoystickCommand(
         swerveDrive,
-        () -> -driverController.getLeftY(), // Horizontal translation
-        driverController::getLeftX, // Vertical Translation
+        () -> -commandDriverController.getLeftY(), // Horizontal translation
+        commandDriverController::getLeftX, // Vertical Translation
         // () -> 0.0, // debug
-        driverController::getRightX, // Rotation
-        badPS5::getSquareButton, // Field oriented
-        badPS5::getL2Button, // Towing
+        commandDriverController::getRightX, // Rotation
+        driverController::getSquareButton, // Field oriented
+        driverController::getL2Button, // Towing
         // Dodge
         // () -> {return badPS5.getL1Button() || badPS5.getR1Button();},
         () -> false,
@@ -97,10 +114,10 @@ public class RobotContainer {
           // }
           return DodgeDirection.NONE;
         },
-        badPS5::getR2Button, // Precision/"Sniper Button"
-        () -> badPS5.getR1Button() || badPS5.getL1Button(), // Turn to angle
+        driverController::getR2Button, // Precision/"Sniper Button"
+        () -> driverController.getR1Button() || driverController.getL1Button(), // Turn to angle
         () -> { // Turn To angle Direction
-          if (badPS5.getR1Button()) {
+          if (driverController.getR1Button()) {
             return 180.0;
           } else {
             return 0.0;
@@ -113,8 +130,19 @@ public class RobotContainer {
     // Note: whileTrue() does not restart the command if it ends while the button is
     // still being held
     // These button bindings are chosen for testing, and may be changed based on
-    driverController.share().onTrue(Commands.runOnce(imu::zeroHeading));
-    driverController.options().onTrue(Commands.runOnce(swerveDrive::resetEncoders));
+    commandDriverController.share().onTrue(Commands.runOnce(imu::zeroHeading));
+    commandDriverController.options().onTrue(Commands.runOnce(swerveDrive::resetEncoders));
+    commandDriverController.triangle().whileTrue(new TheGreatBalancingAct(swerveDrive));
+    commandDriverController.circle()
+      .whileTrue(Commands.run(() -> swerveDrive.setVelocityControl(true)))
+      .whileFalse(Commands.run(() -> swerveDrive.setVelocityControl(false)));
+    commandOperatorController.R1().onTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristGround))));
+    commandOperatorController.R2().onTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristLow))));
+    commandOperatorController.L1().onTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristMid))));
+    commandOperatorController.L2().onTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristHigh))));
+    upButton.whileTrue(new InstantCommand(() -> wrist.moveWristMotionMagicButton((WristConstants.kWristStow))));
+
+    commandOperatorController.share().onTrue(Commands.runOnce(wrist::resetEncoders));
   }
 
   private void initAutoChoosers() {
@@ -153,6 +181,8 @@ public class RobotContainer {
 
   public void reportAllToSmartDashboard() {
     imu.reportToSmartDashboard(loggingLevel);
+    wrist.reportToSmartDashboard(loggingLevel);
+    shooter.reportToSmartDashboard(loggingLevel);
     swerveDrive.reportToSmartDashboard(loggingLevel);
     swerveDrive.reportModulesToSmartDashboard(loggingLevel);
   }

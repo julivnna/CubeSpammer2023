@@ -33,7 +33,7 @@ public final class Constants {
     public static final double kErrorBound = 0;
   }
   public static class WristConstants {
-    public static final int kLeftWristID = 0;
+    public static final int kWristID = 0;
     public static final int kRightWristID = 0;
     public static final int kLeftEncoderID = 0;
     public static final int kWristStow = 0;
@@ -56,6 +56,15 @@ public final class Constants {
     public static final double kDegreesPerTick = 360 / kWristGearRatio / 2048;
 
   }
+
+  public static class ShooterConstants {
+    public static final int kLeftMotorID = 0;
+    public static final int kRightMotorID = 0;
+    public static final double kIntakePower = 0; //-0.3
+    public static final double kOuttakePower = 0; //0.5
+    public static final double kIntakeNeutralPower = 0; //-0.25
+  }
+
   public static class ControllerConstants {
     public static final double kDeadband = 0.05;
     public static final double kRotationDeadband = 0.1;

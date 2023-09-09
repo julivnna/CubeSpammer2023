@@ -154,8 +154,8 @@ public class Wrist extends SubsystemBase implements Reportable {
             case ALL:
                 tab.addNumber("Motor Output", wrist::getMotorOutputPercent);
                 tab.addString("Control Mode", wrist.getControlMode()::toString);
-                tab.addNumber("Wrist Target Velocity", wrist::getActiveTrajectoryVelocity); 
-                tab.addNumber("Closed loop error", wrist::getClosedLoopError);
+                // tab.addNumber("Wrist Target Velocity", wrist::getActiveTrajectoryVelocity); 
+                // tab.addNumber("Closed loop error", wrist::getClosedLoopError);
 
             case MEDIUM:
                 tab.addNumber("Wrist Current", wrist::getStatorCurrent);

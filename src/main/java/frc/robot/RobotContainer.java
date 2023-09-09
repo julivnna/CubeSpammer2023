@@ -145,11 +145,10 @@ public class RobotContainer {
     // R2:  press = aim high  let go = score + stow
     commandDriverController.L2().onTrue(Commands.runOnce(() -> {
       wrist.moveWristMotionMagicButton((WristConstants.kWristGround));
-      shooter.setPower(ShooterConstants.kIntakePower);
-    })).onFalse(Commands.runOnce(() ->{
+    }).andThen(shooter.setPower(ShooterConstants.kIntakePower))
+    ).onFalse(Commands.runOnce(() ->{
         wrist.moveWristMotionMagicButton(WristConstants.kWristStow);
-        shooter.setPower(ShooterConstants.kIntakeNeutralPower);  
-      })
+    }).andThen(shooter.setPower(ShooterConstants.kIntakeNeutralPower))
     );
 
     commandDriverController.L1().onTrue(Commands.runOnce(() -> {
@@ -209,6 +208,8 @@ public class RobotContainer {
   
   public void initShuffleboard() {
     imu.initShuffleboard(loggingLevel);
+    wrist.initShuffleboard(loggingLevel);
+    shooter.initShuffleboard(loggingLevel);
     swerveDrive.initShuffleboard(loggingLevel);
     swerveDrive.initModuleShuffleboard(loggingLevel);
   }

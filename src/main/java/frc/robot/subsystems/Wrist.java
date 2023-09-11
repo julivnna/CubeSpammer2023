@@ -34,12 +34,18 @@ public class Wrist extends SubsystemBase implements Reportable {
 
     @Override
     public void periodic() {
-        // moveWristMotionMagic();
+        // Turn off motor when close to stow
+        if (targetTicks > WristConstants.kWristOff && wrist.getSelectedSensorPosition() > WristConstants.kWristOff) {
+            wrist.set(ControlMode.PercentOutput, 0);
+        } else {
+            moveWristMotionMagic();
+        }
     }
 
     public void init() {
         wrist.setNeutralMode(NeutralMode.Brake);
-        wrist.setInverted(false);
+        wrist.setInverted(true);
+        leftEncoder.setInverted(true);
         leftEncoder.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.QuadEncoder, 0, 1000);
         leftEncoder.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.PulseWidthEncodedPosition, 1, 1000);
         //test
@@ -62,31 +68,7 @@ public class Wrist extends SubsystemBase implements Reportable {
         wrist.config_kF(0, WristConstants.kWristF.get());
     }
 
-    public void moveWristJoystick(double currentJoystickOutput) {
-        if (currentJoystickOutput > WristConstants.kWristDeadband) {
-            if (wrist.getStatorCurrent() >= 45)
-            {
-                wrist.set(ControlMode.PercentOutput, 0);
-            } else {
-                wrist.set(ControlMode.PercentOutput, 0.3);
-            }
-        }
-
-        else if (currentJoystickOutput < -WristConstants.kWristDeadband){
-            if (wrist.getStatorCurrent() >= 45) {
-                wrist.set(ControlMode.PercentOutput, 0);
-            }
-            else {
-                wrist.set(ControlMode.PercentOutput, -0.3);
-            }}
-
-        else {
-            wrist.set(ControlMode.PercentOutput, 0);
-            wrist.setNeutralMode(NeutralMode.Brake);
-        }
-    }
-
-    public void moveWristMotionMagicJoystick(double joystickInput, double percentExtended) {
+    public void moveWristMotionMagicJoystick(double joystickInput) {
         if (joystickInput < -0.1 || joystickInput > 0.1) {
             int tickChange = (int) (WristConstants.kJoystickScale * joystickInput);
             int currentTicks = (int) wrist.getSelectedSensorPosition();
@@ -163,7 +145,11 @@ public class Wrist extends SubsystemBase implements Reportable {
             case ALL:
                 tab.addNumber("Motor Output", wrist::getMotorOutputPercent);
                 tab.addString("Control Mode", wrist.getControlMode()::toString);
-                tab.add("Zero wrist angle", Commands.runOnce(() -> wrist.setSelectedSensorPosition(0, 0, 1000)));
+                tab.add("Zero wrist angle", Commands.runOnce(() -> {
+                    leftEncoder.setSelectedSensorPosition(0, 0, 1000);
+                    wrist.setSelectedSensorPosition(0, 0, 1000);
+                    resetEncoders();
+                }));
                 // tab.addNumber("Wrist Target Velocity", wrist::getActiveTrajectoryVelocity); 
                 // tab.addNumber("Closed loop error", wrist::getClosedLoopError);
 
@@ -175,7 +161,10 @@ public class Wrist extends SubsystemBase implements Reportable {
 
             case MINIMAL:
                 tab.addNumber("Current Wrist Ticks", wrist::getSelectedSensorPosition);
+                tab.addNumber("Current Wrist Absolute Ticks", leftEncoder::getSelectedSensorPosition);
                 tab.addNumber("Target Wrist Ticks", () -> targetTicks);
+                tab.addNumber("MotionMagic Trajectory Ticks", wrist::getActiveTrajectoryVelocity);
+                tab.addNumber("MotionMagic Trajectory Position", wrist::getActiveTrajectoryPosition);
                 tab.addBoolean("At target position", atTargetPosition);
                 tab.addNumber("Current Wrist Angle", this::getWristAngle);
                 break;

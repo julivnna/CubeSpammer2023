@@ -129,6 +129,8 @@ public class RobotContainer {
           }
         }
       ));
+
+      wrist.setDefaultCommand(Commands.run(() -> wrist.moveWristMotionMagicJoystick(-operatorController.getLeftY()), wrist));
   }
 
   private void configureBindings() {

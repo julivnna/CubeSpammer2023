@@ -26,7 +26,7 @@ public class Shooter extends SubsystemBase {
         // rightMotor.setNeutralMode(NeutralMode.Brake);
         leftMotor.configVoltageCompSaturation(12);
         // rightMotor.configVoltageCompSaturation(11);
-        leftMotor.enableVoltageCompensation(false);
+        leftMotor.enableVoltageCompensation(true);
         // rightMotor.enableVoltageCompensation(true);
     }
 

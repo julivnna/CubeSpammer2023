@@ -30,6 +30,7 @@ public class Wrist extends SubsystemBase implements Reportable {
         wrist = new TalonFX(WristConstants.kWristID);
         leftEncoder = new TalonSRX(WristConstants.kLeftEncoderID);
         init();
+        resetEncoders();
     }
 
     @Override
@@ -38,7 +39,7 @@ public class Wrist extends SubsystemBase implements Reportable {
         if (targetTicks > WristConstants.kWristOff && wrist.getSelectedSensorPosition() > WristConstants.kWristOff) {
             wrist.set(ControlMode.PercentOutput, 0);
         } else {
-            moveWristMotionMagic();
+            // moveWristMotionMagic();
         }
     }
 
@@ -62,6 +63,11 @@ public class Wrist extends SubsystemBase implements Reportable {
     public void resetEncoders(){
         double absoluteTicks = leftEncoder.getSelectedSensorPosition(0);
         wrist.setSelectedSensorPosition(absoluteTicks * WristConstants.kFalconTicksPerAbsoluteTicks, 0, 100);
+        WristConstants.kWristP.loadPreferences();
+        WristConstants.kWristI.loadPreferences();
+        WristConstants.kWristD.loadPreferences();
+        WristConstants.kWristF.loadPreferences();
+        WristConstants.kWristFF.loadPreferences();
         wrist.config_kP(0, WristConstants.kWristP.get());
         wrist.config_kI(0, WristConstants.kWristI.get());
         wrist.config_kD(0, WristConstants.kWristD.get());
@@ -88,7 +94,7 @@ public class Wrist extends SubsystemBase implements Reportable {
 
     public double getWristAngle() {
         double ticks = wrist.getSelectedSensorPosition(0);
-        double angle = ticks * WristConstants.kDegreesPerTick %360;
+        double angle = ticks * WristConstants.kDegreesPerTick % 360;
         return angle;
     }
 
@@ -154,7 +160,8 @@ public class Wrist extends SubsystemBase implements Reportable {
                 // tab.addNumber("Closed loop error", wrist::getClosedLoopError);
 
             case MEDIUM:
-                tab.addNumber("Wrist Current", wrist::getStatorCurrent);
+                tab.addNumber("Wrist Stator Current", wrist::getStatorCurrent);
+                tab.addNumber("Wrist Supply Curremt", wrist::getSupplyCurrent);
                 tab.addNumber("Wrist Velocity", wrist::getSelectedSensorVelocity);
                 tab.addNumber("Wrist Voltage", wrist::getMotorOutputVoltage);
                 tab.addNumber("Wrist Percent Output", wrist::getMotorOutputPercent);
@@ -163,8 +170,8 @@ public class Wrist extends SubsystemBase implements Reportable {
                 tab.addNumber("Current Wrist Ticks", wrist::getSelectedSensorPosition);
                 tab.addNumber("Current Wrist Absolute Ticks", leftEncoder::getSelectedSensorPosition);
                 tab.addNumber("Target Wrist Ticks", () -> targetTicks);
-                tab.addNumber("MotionMagic Trajectory Ticks", wrist::getActiveTrajectoryVelocity);
-                tab.addNumber("MotionMagic Trajectory Position", wrist::getActiveTrajectoryPosition);
+                tab.addNumber("MotionMagic Velocity", wrist::getActiveTrajectoryVelocity);
+                tab.addNumber("MotionMagic Position", wrist::getActiveTrajectoryPosition);
                 tab.addBoolean("At target position", atTargetPosition);
                 tab.addNumber("Current Wrist Angle", this::getWristAngle);
                 break;

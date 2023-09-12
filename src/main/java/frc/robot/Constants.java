@@ -44,11 +44,11 @@ public final class Constants {
     public static final int kWristOff = 23000; // everything after this is basically stow
     
     public static final int kWristLowerLimit = 0;
-    public static final int kWristUpperLimit = 0;
+    public static final int kWristUpperLimit = kWristStow;
 
-    public static final PrefDouble kWristP = new PrefDouble("WristP", 0);
+    public static final PrefDouble kWristP = new PrefDouble("WristP", 0.25);
     public static final PrefDouble kWristI = new PrefDouble("WristI", 0);
-    public static final PrefDouble kWristD = new PrefDouble("WristP", 0);
+    public static final PrefDouble kWristD = new PrefDouble("WristD", 0);
     public static final PrefDouble kWristF = new PrefDouble("WristF", 0);
     public static final double kLowPassAlpha = 0.11765;
     public static final double kJoystickScale = 500;

@@ -97,7 +97,7 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
         numEncoderResets = 0;
         resetEncoders();
         this.gyro = gyro;
-        this.poseEstimator = new SwerveDrivePoseEstimator(kDriveKinematics, gyro.getRotation2d(), getModulePositions(), getPose());
+        this.poseEstimator = new SwerveDrivePoseEstimator(kDriveKinematics, gyro.getRotation2d(), getModulePositions(), new Pose2d());
         this.sunflower = new PrimalSunflower(VisionConstants.limelightName, this);
         // this.odometer = new SwerveDriveOdometry(
         //     kDriveKinematics, 

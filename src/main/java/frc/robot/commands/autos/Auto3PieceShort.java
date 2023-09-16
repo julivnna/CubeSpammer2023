@@ -16,8 +16,8 @@ import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
 
-public class Auto3Piece extends SequentialCommandGroup {
-    public Auto3Piece(SwerveAutoBuilder autoBuilder, SwerveDrivetrain swerve, Shooter shoot, Wrist wrist) {
+public class Auto3PieceShort extends SequentialCommandGroup {
+    public Auto3PieceShort(SwerveAutoBuilder autoBuilder, SwerveDrivetrain swerve, Shooter shoot, Wrist wrist) {
         List<PathPlannerTrajectory> pathGroup = PathPlannerAutos.getPathGroup("3Piece Short");
         
         addCommands(
@@ -41,6 +41,7 @@ public class Auto3Piece extends SequentialCommandGroup {
                     autoBuilder.followPathWithEvents(pathGroup.get(2)),
                     shoot.setPower(ShooterConstants.kTopIntakeNeutralPower.get(), ShooterConstants.kBottomIntakeNeutralPower.get())
                 ),
+                shoot.setPower(ShooterConstants.kTopIntakeNeutralPower.get(), ShooterConstants.kBottomIntakeNeutralPower.get()),
                 autoBuilder.followPathWithEvents(pathGroup.get(3)),
                 wrist.motionMagicCommand(WristConstants.kWristLow),
                 shoot.setPower(ShooterConstants.kTopLowOuttakePower.get(), ShooterConstants.kBottomLowOuttakePower.get()),
@@ -59,6 +60,7 @@ public class Auto3Piece extends SequentialCommandGroup {
                     autoBuilder.followPathWithEvents(pathGroup.get(6)),
                     shoot.setPower(ShooterConstants.kTopIntakeNeutralPower.get(), ShooterConstants.kBottomIntakeNeutralPower.get())
                 ),
+                shoot.setPower(ShooterConstants.kTopIntakeNeutralPower.get(), ShooterConstants.kBottomIntakeNeutralPower.get()),
                 autoBuilder.followPathWithEvents(pathGroup.get(7)),
                 wrist.motionMagicCommand(WristConstants.kWristLow),
                 shoot.setPower(ShooterConstants.kTopLowOuttakePower.get(), ShooterConstants.kBottomLowOuttakePower.get()),

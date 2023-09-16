@@ -39,7 +39,7 @@ public class Wrist extends SubsystemBase implements Reportable {
         if (targetTicks > WristConstants.kWristOff && wrist.getSelectedSensorPosition() > WristConstants.kWristOff) {
             wrist.set(ControlMode.PercentOutput, 0);
         } else {
-            // moveWristMotionMagic();
+            moveWristMotionMagic();
         }
     }
 
@@ -61,7 +61,7 @@ public class Wrist extends SubsystemBase implements Reportable {
     }
 
     public void resetEncoders(){
-        double absoluteTicks = leftEncoder.getSelectedSensorPosition(0);
+        double absoluteTicks = leftEncoder.getSelectedSensorPosition(1);
         wrist.setSelectedSensorPosition(absoluteTicks * WristConstants.kFalconTicksPerAbsoluteTicks, 0, 100);
         WristConstants.kWristP.loadPreferences();
         WristConstants.kWristI.loadPreferences();
@@ -152,6 +152,7 @@ public class Wrist extends SubsystemBase implements Reportable {
                 tab.addNumber("Motor Output", wrist::getMotorOutputPercent);
                 tab.addString("Control Mode", wrist.getControlMode()::toString);
                 tab.add("Zero wrist angle", Commands.runOnce(() -> {
+                    leftEncoder.setSelectedSensorPosition(0, 1, 1000);
                     leftEncoder.setSelectedSensorPosition(0, 0, 1000);
                     wrist.setSelectedSensorPosition(0, 0, 1000);
                     resetEncoders();
@@ -168,7 +169,7 @@ public class Wrist extends SubsystemBase implements Reportable {
 
             case MINIMAL:
                 tab.addNumber("Current Wrist Ticks", wrist::getSelectedSensorPosition);
-                tab.addNumber("Current Wrist Absolute Ticks", leftEncoder::getSelectedSensorPosition);
+                tab.addNumber("Current Wrist Absolute Ticks", () -> leftEncoder.getSelectedSensorPosition(1));
                 tab.addNumber("Target Wrist Ticks", () -> targetTicks);
                 tab.addNumber("MotionMagic Velocity", wrist::getActiveTrajectoryVelocity);
                 tab.addNumber("MotionMagic Position", wrist::getActiveTrajectoryPosition);

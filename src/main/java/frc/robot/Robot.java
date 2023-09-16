@@ -92,6 +92,8 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     
+    m_robotContainer.imu.setOffset(180);
+
     m_robotContainer.initDefaultCommands();
   }
 

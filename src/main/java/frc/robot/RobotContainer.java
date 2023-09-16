@@ -180,7 +180,7 @@ public class RobotContainer {
   private void initAutoChoosers() {
     // Remember to load the pathplanner paths here
     final String[] paths = {
-      "TestPath", "TestSquare", "Test Line", "TestSquare3"
+      "TestPath", "TestSquare", "Test Line", "TestSquare3", "3Piece Short","3Piece Long","Balance","DirectBalance"
     };
     
     PathPlannerAutos.init(swerveDrive);
@@ -196,6 +196,14 @@ public class RobotContainer {
     autoChooser.addOption("Path Planner Test3", () -> PathPlannerAutos.pathplannerAuto("Test Line", swerveDrive));
     autoChooser.addOption("Path Planner TestSquare3", () -> PathPlannerAutos.pathplannerAuto("TestSquare3", swerveDrive));
     autoChooser.addOption("Path Planner TestSquare4", () -> new SquareTest(PathPlannerAutos.autoBuilder));
+    autoChooser.addOption("Path Planner 3Piece Short", () -> PathPlannerAutos.pathplannerAuto("3Piece Short", swerveDrive));
+    autoChooser.addOption("Path Planner 3Piece Long", () -> PathPlannerAutos.pathplannerAuto("3Piece Long", swerveDrive));
+    autoChooser.addOption("Path Planner Balance", () -> PathPlannerAutos.pathplannerAuto("Balance", swerveDrive));
+    autoChooser.addOption("Path Planner DirectBalance", () -> PathPlannerAutos.pathplannerAuto("DirectBalance", swerveDrive));
+
+
+
+
 
     ShuffleboardTab autosTab = Shuffleboard.getTab("Autos");
 

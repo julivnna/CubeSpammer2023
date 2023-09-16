@@ -25,9 +25,8 @@ public class Auto3PieceShort extends SequentialCommandGroup {
                 Commands.runOnce(() -> swerve.getImu().zeroAll()),
                 autoBuilder.resetPose(pathGroup.get(0)),
                 wrist.motionMagicCommand(WristConstants.kWristHigh),
-                shoot.setPower(ShooterConstants.kTopHighOuttakePower.get(), ShooterConstants.kBottomHighOuttakePower.get()),
+                shoot.outtakeHigh(),
                 Commands.parallel(
-                    shoot.setPowerZero(),
                     wrist.motionMagicCommand(WristConstants.kWristStow),
                     autoBuilder.followPathWithEvents(pathGroup.get(0))
                 ),
@@ -44,9 +43,8 @@ public class Auto3PieceShort extends SequentialCommandGroup {
                 shoot.setPower(ShooterConstants.kTopIntakeNeutralPower.get(), ShooterConstants.kBottomIntakeNeutralPower.get()),
                 autoBuilder.followPathWithEvents(pathGroup.get(3)),
                 wrist.motionMagicCommand(WristConstants.kWristLow),
-                shoot.setPower(ShooterConstants.kTopLowOuttakePower.get(), ShooterConstants.kBottomLowOuttakePower.get()),
+                shoot.outtakeLow(),
                 Commands.parallel(
-                    shoot.setPowerZero(),
                     wrist.motionMagicCommand(WristConstants.kWristStow),
                     autoBuilder.followPathWithEvents(pathGroup.get(4))
                 ),
@@ -63,11 +61,10 @@ public class Auto3PieceShort extends SequentialCommandGroup {
                 shoot.setPower(ShooterConstants.kTopIntakeNeutralPower.get(), ShooterConstants.kBottomIntakeNeutralPower.get()),
                 autoBuilder.followPathWithEvents(pathGroup.get(7)),
                 wrist.motionMagicCommand(WristConstants.kWristLow),
-                shoot.setPower(ShooterConstants.kTopLowOuttakePower.get(), ShooterConstants.kBottomLowOuttakePower.get()),
-                shoot.setPowerZero(),
-                wrist.motionMagicCommand(WristConstants.kWristStow)));
-
-
+                shoot.outtakeLow(),
+                wrist.motionMagicCommand(WristConstants.kWristStow)
+            )
+        );
     }
     
 }

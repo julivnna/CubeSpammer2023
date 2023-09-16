@@ -1,4 +1,4 @@
-package frc.robot.commands;
+package frc.robot.commands.autos;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.PathPlannerConstants;
+import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
 import static frc.robot.Constants.PathPlannerConstants.*;

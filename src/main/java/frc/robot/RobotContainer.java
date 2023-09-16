@@ -153,9 +153,9 @@ public class RobotContainer {
     // R2:  press = aim high  let go = score + stow
     commandDriverController.L2()
       .onTrue(wrist.motionMagicCommand((WristConstants.kWristGround))
-        .andThen(shooter.setPower(ShooterConstants.kIntakePower)))
-      .onFalse(wrist.motionMagicCommand(WristConstants.kWristStow)
-        .andThen(shooter.setPower(ShooterConstants.kIntakeNeutralPower)));
+        .andThen(shooter.setPower(ShooterConstants.kTopIntakePower.get())))
+      .onFalse(wrist.motionMagicCommand((WristConstants.kWristStow))
+        .andThen(shooter.setPower(ShooterConstants.kTopIntakeNeutralPower.get())));
 
     // Trigger cubeTrigger = new Trigger(shooter::hasCube);
     // cubeTrigger.onTrue(
@@ -164,15 +164,15 @@ public class RobotContainer {
     //   );
 
     commandDriverController.L1()
-      .onTrue(shooter.setPower(ShooterConstants.kLowOuttakePower))
+      .onTrue(shooter.setPower(ShooterConstants.kTopLowOuttakePower.get()))
       .onFalse(shooter.setPowerZero());
     
     commandDriverController.R1()
-      .onTrue(shooter.setPower(ShooterConstants.kMidOuttakePower))
+      .onTrue(shooter.setPower(ShooterConstants.kTopMidOuttakePower.get()))
       .onFalse(shooter.setPowerZero());
 
     commandDriverController.R2()
-      .onTrue(shooter.setPower(ShooterConstants.kHighOuttakePower))
+      .onTrue(shooter.setPower(ShooterConstants.kTopHighOuttakePower.get()))
       .onFalse(shooter.setPowerZero());
 
   }

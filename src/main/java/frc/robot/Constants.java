@@ -63,14 +63,21 @@ public final class Constants {
   }
 
   public static class ShooterConstants {
-    public static final int kLeftMotorID = 19;
-    public static final int kRightMotorID = 0;
-    public static final double kIntakePower = -0.35; //-0.3
-    public static final double kLowOuttakePower = 0.2; //0.5
-    public static final double kMidOuttakePower = 0.5; //0.5
-    public static final double kHighOuttakePower = 0.75; //0.5
-    public static final double kIntakeNeutralPower = -0.2; //-0.25
-    public static final double kCubeCurrent = 30; // tune this!
+    public static final int kTopMotorID = 19;
+    public static final int kBottomMotorID = 0;
+    public static final PrefDouble kTopIntakePower = new PrefDouble("TopIntakePower", -0.35); //-0.3
+    public static final PrefDouble kTopLowOuttakePower = new PrefDouble("TopLowOuttakePower", 0.2); //0.5
+    public static final PrefDouble kTopMidOuttakePower = new PrefDouble("TopMidOuttakePower", 0.5); //0.5
+    public static final PrefDouble kTopHighOuttakePower = new PrefDouble("TopHighOuttakePower", 0.75); //0.5
+    public static final PrefDouble kTopIntakeNeutralPower = new PrefDouble("TopIntakeNeutralPower", -0.2); //-0.25
+    public static final PrefDouble kTopCubeCurrent = new PrefDouble("TopCubeCurrent", 30); // tune this!
+
+    public static final PrefDouble kBottomIntakePower = new PrefDouble("BottomIntakePower", -0.35); //-0.3
+    public static final PrefDouble kBottomLowOuttakePower = new PrefDouble("BottomLowOuttakePower", 0.2); //0.5
+    public static final PrefDouble kBottomMidOuttakePower = new PrefDouble("BottomMidOuttakePower",0.5); //0.5
+    public static final PrefDouble kBottomHighOuttakePower = new PrefDouble("BottomHighOuttakePower", 0.75); //0.5
+    public static final PrefDouble kBottomIntakeNeutralPower = new PrefDouble("BottomIntakeNeutralPower", -0.2); //-0.25
+    public static final PrefDouble kBottomCubeCurrent = new PrefDouble("BottomCubeCurrent", 30); // tune this!
   }
 
   public static class ControllerConstants {

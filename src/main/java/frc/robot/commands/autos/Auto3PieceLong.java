@@ -19,7 +19,7 @@ import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
 public class Auto3PieceLong extends SequentialCommandGroup {
     public Auto3PieceLong(SwerveAutoBuilder autoBuilder,  SwerveDrivetrain swerve, Shooter shoot, Wrist wrist) {
-        List<PathPlannerTrajectory> pathGroup = PathPlannerAutos.getPathGroup("3PieceLong");
+        List<PathPlannerTrajectory> pathGroup = PathPlannerAutos.getPathGroup("3Piece Long");
         
         addCommands(
             Commands.sequence(

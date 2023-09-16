@@ -70,7 +70,7 @@ public class Shooter extends SubsystemBase {
     public CommandBase outtakeHigh() {
         return sequence(
             setPower(ShooterConstants.kTopHighOuttakePower.get(), ShooterConstants.kBottomHighOuttakePower.get()),
-            waitSeconds(3),
+            waitSeconds(1),
             setPowerZero()
         );
     }
@@ -78,7 +78,7 @@ public class Shooter extends SubsystemBase {
     public CommandBase outtakeMid() {
         return sequence(
             setPower(ShooterConstants.kTopMidOuttakePower.get(), ShooterConstants.kBottomMidOuttakePower.get()),
-            waitSeconds(3),
+            waitSeconds(1),
             setPowerZero()
         );
     }
@@ -86,7 +86,7 @@ public class Shooter extends SubsystemBase {
     public CommandBase outtakeLow() {
         return sequence(
             setPower(ShooterConstants.kTopLowOuttakePower.get(), ShooterConstants.kBottomLowOuttakePower.get()),
-            waitSeconds(3),
+            waitSeconds(1),
             setPowerZero()
         );
     }

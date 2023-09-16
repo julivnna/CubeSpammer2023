@@ -26,8 +26,6 @@ public class Auto3PieceLong extends SequentialCommandGroup {
                 autoBuilder.resetPose(pathGroup.get(0)),
                 wrist.motionMagicCommand(WristConstants.kWristHigh)),
                 shoot.outtakeHigh(),
-                Commands.waitSeconds(1),
-                shoot.setPower(0),
                 wrist.motionMagicCommand(WristConstants.kWristStow),
                 autoBuilder.followPathWithEvents(pathGroup.get(0)),
                 autoBuilder.followPathWithEvents(pathGroup.get(1)),
@@ -44,8 +42,6 @@ public class Auto3PieceLong extends SequentialCommandGroup {
                 ),
                 wrist.motionMagicCommand(WristConstants.kWristHigh),
                 shoot.outtakeHigh(),
-                Commands.waitSeconds(1),
-                shoot.setPower(0),
                 wrist.motionMagicCommand(WristConstants.kWristStow),
                 autoBuilder.followPathWithEvents(pathGroup.get(7)),
                 autoBuilder.followPathWithEvents(pathGroup.get(8)),
@@ -61,8 +57,6 @@ public class Auto3PieceLong extends SequentialCommandGroup {
                 ),
                 wrist.motionMagicCommand(WristConstants.kWristHigh),
                 shoot.outtakeHigh(),
-                Commands.waitSeconds(1),
-                shoot.setPower(0),
                 wrist.motionMagicCommand(WristConstants.kWristStow)
             );
     }

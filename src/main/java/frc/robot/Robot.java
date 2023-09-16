@@ -95,6 +95,8 @@ public class Robot extends TimedRobot {
     m_robotContainer.imu.setOffset(180);
 
     m_robotContainer.initDefaultCommands();
+
+    m_robotContainer.wrist.zeroEncodersStow();
   }
 
   /** This function is called periodically during operator control. */

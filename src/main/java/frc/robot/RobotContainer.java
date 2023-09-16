@@ -101,8 +101,8 @@ public class RobotContainer {
         commandDriverController::getLeftX, // Vertical Translation
         // () -> 0.0, // debug
         commandDriverController::getRightX, // Rotation
-        // driverController::getSquareButton, // Field oriented
-        () -> false, // Field oriented
+        driverController::getSquareButton, // Field oriented
+        // () -> false, // Field oriented
         driverController::getSquareButton, // Towing
         // Dodge
         // () -> {return badPS5.getL1Button() || badPS5.getR1Button();},
@@ -153,9 +153,9 @@ public class RobotContainer {
     // R2:  press = aim high  let go = score + stow
     commandDriverController.L2()
       .onTrue(wrist.motionMagicCommand((WristConstants.kWristGround))
-        .andThen(shooter.setPower(ShooterConstants.kTopIntakePower.get())))
+        .andThen(shooter.intakeUpdated()))
       .onFalse(wrist.motionMagicCommand((WristConstants.kWristStow))
-        .andThen(shooter.setPower(ShooterConstants.kTopIntakeNeutralPower.get())));
+        .andThen(shooter.holdUpdated()));
 
     // Trigger cubeTrigger = new Trigger(shooter::hasCube);
     // cubeTrigger.onTrue(
@@ -164,15 +164,15 @@ public class RobotContainer {
     //   );
 
     commandDriverController.L1()
-      .onTrue(shooter.setPower(ShooterConstants.kTopLowOuttakePower.get()))
+      .onTrue(shooter.outtakeLowUpdated())
       .onFalse(shooter.setPowerZero());
     
     commandDriverController.R1()
-      .onTrue(shooter.setPower(ShooterConstants.kTopMidOuttakePower.get()))
+      .onTrue(shooter.outtakeMidUpdated())
       .onFalse(shooter.setPowerZero());
 
     commandDriverController.R2()
-      .onTrue(shooter.setPower(ShooterConstants.kTopHighOuttakePower.get()))
+      .onTrue(shooter.outtakeHighUpdated())
       .onFalse(shooter.setPowerZero());
 
   }

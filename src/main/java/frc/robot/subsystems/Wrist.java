@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,9 +38,14 @@ public class Wrist extends SubsystemBase implements Reportable {
     public void periodic() {
         // Turn off motor when close to stow
         if (targetTicks > WristConstants.kWristOff && wrist.getSelectedSensorPosition() > WristConstants.kWristOff) {
-            wrist.set(ControlMode.PercentOutput, 0);
+                moveWristMotionMagic();
+                // wrist.set(ControlMode.PercentOutput, 0);
         } else {
-            moveWristMotionMagic();
+            if (!DriverStation.isTest()) {
+                moveWristMotionMagic();
+            } else {
+                wrist.set(ControlMode.PercentOutput, 0);
+            }
         }
     }
 
@@ -47,9 +53,10 @@ public class Wrist extends SubsystemBase implements Reportable {
         wrist.setNeutralMode(NeutralMode.Brake);
         wrist.setInverted(true);
         leftEncoder.setInverted(false);
-        leftEncoder.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.QuadEncoder, 1, 1000);
-        leftEncoder.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.PulseWidthEncodedPosition, 0, 1000);
+        leftEncoder.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Absolute, 0, 1000);
+        leftEncoder.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Relative, 1, 1000);
         //test
+        zeroEncodersStow();
         wrist.config_kP(0, WristConstants.kWristP.get());
         wrist.config_kI(0, WristConstants.kWristI.get());
         wrist.config_kD(0, WristConstants.kWristD.get());
@@ -139,6 +146,12 @@ public class Wrist extends SubsystemBase implements Reportable {
         
     }
 
+    public void zeroEncodersStow() {
+        leftEncoder.setSelectedSensorPosition(WristConstants.kWristStowPowerOff / WristConstants.kFalconTicksPerAbsoluteTicks, 1, 1000);
+        leftEncoder.setSelectedSensorPosition(WristConstants.kWristStowPowerOff / WristConstants.kFalconTicksPerAbsoluteTicks, 0, 1000);
+        wrist.setSelectedSensorPosition(WristConstants.kWristStowPowerOff, 0, 1000);
+    }
+
     @Override
     public void initShuffleboard(LOG_LEVEL level) { 
         if (level == LOG_LEVEL.OFF || level == LOG_LEVEL.MINIMAL) {
@@ -159,6 +172,11 @@ public class Wrist extends SubsystemBase implements Reportable {
                 }));
                 // tab.addNumber("Wrist Target Velocity", wrist::getActiveTrajectoryVelocity); 
                 // tab.addNumber("Closed loop error", wrist::getClosedLoopError);
+                tab.add("Stow wrist angle", Commands.runOnce(() -> {
+                    leftEncoder.setSelectedSensorPosition(WristConstants.kWristStowPowerOff / WristConstants.kFalconTicksPerAbsoluteTicks, 1, 1000);
+                    leftEncoder.setSelectedSensorPosition(WristConstants.kWristStowPowerOff / WristConstants.kFalconTicksPerAbsoluteTicks, 0, 1000);
+                    wrist.setSelectedSensorPosition(WristConstants.kWristStowPowerOff, 0, 1000);
+                }));
 
             case MEDIUM:
                 tab.addNumber("Wrist Stator Current", wrist::getStatorCurrent);

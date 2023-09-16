@@ -22,23 +22,27 @@ public class Shooter extends SubsystemBase {
 
     public Shooter() {
         topMotor = new TalonFX(ShooterConstants.kTopMotorID);
-        TalonFX rightMotor = new TalonFX(ShooterConstants.kBottomMotorID);
+        bottomMotor = new TalonFX(ShooterConstants.kBottomMotorID);
 
         topMotor.setInverted(false);
-        rightMotor.setInverted(true);
+        bottomMotor.setInverted(false);
 
         topMotor.setNeutralMode(NeutralMode.Brake);
-        rightMotor.setNeutralMode(NeutralMode.Brake);
+        bottomMotor.setNeutralMode(NeutralMode.Brake);
 
         topMotor.configVoltageCompSaturation(12);
-        rightMotor.configVoltageCompSaturation(12);
+        bottomMotor.configVoltageCompSaturation(12);
 
         topMotor.enableVoltageCompensation(true);
-        rightMotor.enableVoltageCompensation(true);
+        bottomMotor.enableVoltageCompensation(true);
+
+        topMotor.configNeutralDeadband(0.01);
+        bottomMotor.configNeutralDeadband(0.01);
     }
 
     public boolean hasCube() {
-        return topMotor.getStatorCurrent() > ShooterConstants.kTopCubeCurrent.get();
+        return topMotor.getSupplyCurrent() > ShooterConstants.kTopCubeCurrent.get()
+            || bottomMotor.getSupplyCurrent() > ShooterConstants.kBottomCubeCurrent.get();
     }
 
     public CommandBase setPower(double power) {
@@ -65,6 +69,41 @@ public class Shooter extends SubsystemBase {
 
     public CommandBase setPowerZero() {
         return setPower(0,0);
+    }
+
+    public CommandBase outtakeHighUpdated() {
+        return Commands.runOnce(() -> {
+            topMotor.set(ControlMode.PercentOutput, ShooterConstants.kTopHighOuttakePower.get());
+            bottomMotor.set(ControlMode.PercentOutput, ShooterConstants.kBottomHighOuttakePower.get());
+        });
+    }
+
+    public CommandBase outtakeMidUpdated() {
+        return Commands.runOnce(() -> {
+            topMotor.set(ControlMode.PercentOutput, ShooterConstants.kTopMidOuttakePower.get());
+            bottomMotor.set(ControlMode.PercentOutput, ShooterConstants.kBottomMidOuttakePower.get());
+        });
+    }
+
+    public CommandBase outtakeLowUpdated() {
+        return Commands.runOnce(() -> {
+            topMotor.set(ControlMode.PercentOutput, ShooterConstants.kTopLowOuttakePower.get());
+            bottomMotor.set(ControlMode.PercentOutput, ShooterConstants.kBottomLowOuttakePower.get());
+        });
+    }
+
+    public CommandBase intakeUpdated() {
+        return Commands.runOnce(() -> {
+            topMotor.set(ControlMode.PercentOutput, ShooterConstants.kTopIntakePower.get());
+            bottomMotor.set(ControlMode.PercentOutput, ShooterConstants.kBottomIntakePower.get());
+        });
+    }
+
+    public CommandBase holdUpdated() {
+        return Commands.runOnce(() -> {
+            topMotor.set(ControlMode.PercentOutput, ShooterConstants.kTopIntakeNeutralPower.get());
+            bottomMotor.set(ControlMode.PercentOutput, ShooterConstants.kBottomIntakeNeutralPower.get());
+        });
     }
 
     public CommandBase outtakeHigh() {
@@ -143,6 +182,13 @@ public class Shooter extends SubsystemBase {
             case OFF:
                 break;
             case ALL:
+                tab.addNumber("Top Low Outtake", () -> ShooterConstants.kTopLowOuttakePower.get());
+                tab.addNumber("Top Mid Outtake", () -> ShooterConstants.kTopMidOuttakePower.get());
+                tab.addNumber("Top High Outtake", () -> ShooterConstants.kTopHighOuttakePower.get());
+                tab.addNumber("Bottom Low Outtake", () -> ShooterConstants.kBottomLowOuttakePower.get());
+                tab.addNumber("Bottom Mid Outtake", () -> ShooterConstants.kBottomMidOuttakePower.get());
+                tab.addNumber("Bottom High Outtake", () -> ShooterConstants.kBottomHighOuttakePower.get());
+
                 tab.addNumber("Right Shooter Stator Current", bottomMotor::getStatorCurrent);
                 tab.addNumber("Left Shooter Stator Current", topMotor::getStatorCurrent);
 

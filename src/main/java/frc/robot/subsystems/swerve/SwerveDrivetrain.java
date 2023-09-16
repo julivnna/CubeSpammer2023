@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -115,7 +116,9 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
      */
     @Override
     public void periodic() {
-        runModules();
+        if (!DriverStation.isTest()) {
+            runModules();
+        }
         // odometer.update(gyro.getRotation2d(), getModulePositions());
         poseEstimator.update(gyro.getRotation2d(), getModulePositions());
         if (sunflower.getPose3d() != null) {

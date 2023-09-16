@@ -46,9 +46,9 @@ public class Wrist extends SubsystemBase implements Reportable {
     public void init() {
         wrist.setNeutralMode(NeutralMode.Brake);
         wrist.setInverted(true);
-        leftEncoder.setInverted(true);
-        leftEncoder.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.QuadEncoder, 0, 1000);
-        leftEncoder.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.PulseWidthEncodedPosition, 1, 1000);
+        leftEncoder.setInverted(false);
+        leftEncoder.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.QuadEncoder, 1, 1000);
+        leftEncoder.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.PulseWidthEncodedPosition, 0, 1000);
         //test
         wrist.config_kP(0, WristConstants.kWristP.get());
         wrist.config_kI(0, WristConstants.kWristI.get());
@@ -61,7 +61,7 @@ public class Wrist extends SubsystemBase implements Reportable {
     }
 
     public void resetEncoders(){
-        double absoluteTicks = leftEncoder.getSelectedSensorPosition(1);
+        double absoluteTicks = leftEncoder.getSelectedSensorPosition(0);
         wrist.setSelectedSensorPosition(absoluteTicks * WristConstants.kFalconTicksPerAbsoluteTicks, 0, 100);
         WristConstants.kWristP.loadPreferences();
         WristConstants.kWristI.loadPreferences();
@@ -169,7 +169,8 @@ public class Wrist extends SubsystemBase implements Reportable {
 
             case MINIMAL:
                 tab.addNumber("Current Wrist Ticks", wrist::getSelectedSensorPosition);
-                tab.addNumber("Current Wrist Absolute Ticks", () -> leftEncoder.getSelectedSensorPosition(1));
+                tab.addNumber("Current Wrist Absolute Ticks", () -> leftEncoder.getSelectedSensorPosition(0));
+                tab.addNumber("Current Wrist Absolute Angle", () -> leftEncoder.getSelectedSensorPosition(0) / 4096 * 360);
                 tab.addNumber("Target Wrist Ticks", () -> targetTicks);
                 tab.addNumber("MotionMagic Velocity", wrist::getActiveTrajectoryVelocity);
                 tab.addNumber("MotionMagic Position", wrist::getActiveTrajectoryPosition);

@@ -56,8 +56,8 @@ public final class Constants {
     public static final int kWristMotionAcceleration = 10000;
     public static final double kWristDeadband = 0.05;
     public static final PrefDouble kWristFF = new PrefDouble("Wrist_FF", 0.05);
-    public static final double kWristGearRatio = 34;
-    public static final double kFalconTicksPerAbsoluteTicks = kWristGearRatio * 2048/1024;
+    public static final double kWristGearRatio = 40;
+    public static final double kFalconTicksPerAbsoluteTicks = kWristGearRatio * 2048/4096;
     public static final double kDegreesPerTick = 360 / kWristGearRatio / 2048;
 
   }
@@ -68,7 +68,7 @@ public final class Constants {
     public static final double kIntakePower = -0.35; //-0.3
     public static final double kLowOuttakePower = 0.2; //0.5
     public static final double kMidOuttakePower = 0.5; //0.5
-    public static final double kHighOuttakePower = 1; //0.5
+    public static final double kHighOuttakePower = 0.75; //0.5
     public static final double kIntakeNeutralPower = -0.2; //-0.25
     public static final double kCubeCurrent = 30; // tune this!
   }

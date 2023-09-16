@@ -255,4 +255,9 @@ public final class Constants {
 
     public static final boolean kUseAllianceColor = true;
   }
+
+  public static final class VisionConstants {
+    public static final String limelightName = "limelight-high";
+    public static final int aprilTagPipeline = 4;
+  }
 }

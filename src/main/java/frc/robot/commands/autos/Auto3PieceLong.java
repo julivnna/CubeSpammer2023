@@ -38,10 +38,10 @@ public class Auto3PieceLong extends SequentialCommandGroup {
                 Commands.parallel(
                     wrist.motionMagicCommand(WristConstants.kWristStow),
                     shoot.setPower(ShooterConstants.kTopIntakeNeutralPower.get(), ShooterConstants.kBottomIntakeNeutralPower.get()),
-                    autoBuilder.followPathWithEvents(pathGroup.get(4))
+                    autoBuilder.followPathWithEvents(pathGroup.get(4)),
+                    autoBuilder.followPathWithEvents(pathGroup.get(5)),
+                    autoBuilder.followPathWithEvents(pathGroup.get(6))
                 ),
-                autoBuilder.followPathWithEvents(pathGroup.get(5)),
-                autoBuilder.followPathWithEvents(pathGroup.get(6)),
                 wrist.motionMagicCommand(WristConstants.kWristHigh),
                 shoot.outtakeHigh(),
                 Commands.waitSeconds(1),
@@ -55,10 +55,10 @@ public class Auto3PieceLong extends SequentialCommandGroup {
                 Commands.parallel(
                     wrist.motionMagicCommand(WristConstants.kWristStow),
                     shoot.setPower(ShooterConstants.kTopIntakeNeutralPower.get(), ShooterConstants.kBottomIntakeNeutralPower.get()),
-                    autoBuilder.followPathWithEvents(pathGroup.get(10))
+                    autoBuilder.followPathWithEvents(pathGroup.get(10)),
+                    autoBuilder.followPathWithEvents(pathGroup.get(11)),
+                    autoBuilder.followPathWithEvents(pathGroup.get(12))
                 ),
-                autoBuilder.followPathWithEvents(pathGroup.get(11)),
-                autoBuilder.followPathWithEvents(pathGroup.get(12)),
                 wrist.motionMagicCommand(WristConstants.kWristHigh),
                 shoot.outtakeHigh(),
                 Commands.waitSeconds(1),

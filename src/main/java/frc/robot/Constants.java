@@ -64,7 +64,7 @@ public final class Constants {
 
   public static class ShooterConstants {
     public static final int kLeftMotorID = 19;
-    // public static final int kRightMotorID = 0;
+    public static final int kRightMotorID = 0;
     public static final double kIntakePower = -0.35; //-0.3
     public static final double kLowOuttakePower = 0.2; //0.5
     public static final double kMidOuttakePower = 0.5; //0.5

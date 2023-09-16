@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
@@ -15,19 +16,20 @@ import frc.robot.subsystems.Reportable.LOG_LEVEL;
 
 public class Shooter extends SubsystemBase {
     private TalonFX leftMotor;
-    // private TalonFX rightMotor;
+    private TalonFX rightMotor;
 
     public Shooter() {
         leftMotor = new TalonFX(ShooterConstants.kLeftMotorID);
-        // TalonFX rightMotor = new TalonFX(ShooterConstants.kRightMotorID);
+        TalonFX rightMotor = new TalonFX(ShooterConstants.kRightMotorID);
         leftMotor.setInverted(false);
-        // rightMotor.setInverted(true);
+        rightMotor.setInverted(InvertType.OpposeMaster);
+        rightMotor.follow(leftMotor);
         leftMotor.setNeutralMode(NeutralMode.Brake);
-        // rightMotor.setNeutralMode(NeutralMode.Brake);
+        rightMotor.setNeutralMode(NeutralMode.Brake);
         leftMotor.configVoltageCompSaturation(12);
-        // rightMotor.configVoltageCompSaturation(11);
+        rightMotor.configVoltageCompSaturation(12);
         leftMotor.enableVoltageCompensation(true);
-        // rightMotor.enableVoltageCompensation(true);
+        rightMotor.enableVoltageCompensation(true);
     }
 
     public boolean hasCube() {
@@ -38,9 +40,9 @@ public class Shooter extends SubsystemBase {
         return runOnce(
         () -> {
             leftMotor.set(ControlMode.PercentOutput, power);
-            // rightMotor.set(ControlMode.PercentOutput, power);
+            rightMotor.set(ControlMode.PercentOutput, power);
             leftMotor.setNeutralMode(NeutralMode.Brake);
-            // rightMotor.setNeutralMode(NeutralMode.Brake);
+            rightMotor.setNeutralMode(NeutralMode.Brake);
         }
         );
     }
@@ -83,7 +85,7 @@ public class Shooter extends SubsystemBase {
 
     public void setNeutralMode(NeutralMode mode) {
         leftMotor.setNeutralMode(mode);
-        // rightMotor.setNeutralMode(mode);
+        rightMotor.setNeutralMode(mode);
     }
 
     public void reportToSmartDashboard(LOG_LEVEL level) {
@@ -92,9 +94,9 @@ public class Shooter extends SubsystemBase {
                 break;
             case ALL:
             case MEDIUM:
-                // SmartDashboard.putNumber("Right Shooter Velocity", rightMotor.getSelectedSensorVelocity());
+                SmartDashboard.putNumber("Right Shooter Velocity", rightMotor.getSelectedSensorVelocity());
                 SmartDashboard.putNumber("Left Shooter Velocity", leftMotor.getSelectedSensorVelocity());
-                // SmartDashboard.putNumber("Right Shooter Current", rightMotor.getStatorCurrent());
+                SmartDashboard.putNumber("Right Shooter Current", rightMotor.getStatorCurrent());
                 SmartDashboard.putNumber("Left Shooter Current", leftMotor.getStatorCurrent());
             case MINIMAL:
                 break;
@@ -110,19 +112,19 @@ public class Shooter extends SubsystemBase {
             case OFF:
                 break;
             case ALL:
-                // tab.addNumber("Right Shooter Stator Current", rightMotor::getStatorCurrent);
+                tab.addNumber("Right Shooter Stator Current", rightMotor::getStatorCurrent);
                 tab.addNumber("Left Shooter Stator Current", leftMotor::getStatorCurrent);
 
-                // tab.addNumber("Right Shooter Supply Current", rightMotor::getSupplyCurrent);
+                tab.addNumber("Right Shooter Supply Current", rightMotor::getSupplyCurrent);
                 tab.addNumber("Left Shooter Supply Current", leftMotor::getSupplyCurrent);
             case MEDIUM:
-                // tab.addNumber("Right Shooter Output Voltage", rightMotor::getMotorOutputVoltage);
+                tab.addNumber("Right Shooter Output Voltage", rightMotor::getMotorOutputVoltage);
                 tab.addNumber("Left Shooter Output Voltage", leftMotor::getMotorOutputVoltage);
 
-                // tab.addNumber("Right Shooter Output Percent", rightMotor::getMotorOutputPercent);
+                tab.addNumber("Right Shooter Output Percent", rightMotor::getMotorOutputPercent);
                 tab.addNumber("Left Shooter Output Percent", leftMotor::getMotorOutputPercent);
 
-                // tab.addNumber("Right Shooter Selected Sensor Velocity", rightMotor::getSelectedSensorVelocity);
+                tab.addNumber("Right Shooter Selected Sensor Velocity", rightMotor::getSelectedSensorVelocity);
                 tab.addNumber("Left Shooter Selected Sensor Velocity", leftMotor::getSelectedSensorVelocity);
             case MINIMAL:
                 break;

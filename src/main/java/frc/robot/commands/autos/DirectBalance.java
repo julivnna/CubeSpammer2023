@@ -22,6 +22,7 @@ public class DirectBalance extends SequentialCommandGroup {
         
         addCommands(
             Commands.sequence(
+                Commands.runOnce(() -> swerve.getImu().zeroAll()),
                 autoBuilder.resetPose(pathGroup.get(0)),
                 wrist.motionMagicCommand(WristConstants.kWristHigh)),
                 shoot.outtakeHigh(),

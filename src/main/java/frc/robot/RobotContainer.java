@@ -108,7 +108,7 @@ public class RobotContainer {
         driverController::getTriangleButton, // Field oriented
         // () -> false, // Field oriented
 
-        driverController::getSquareButton, // Towing
+        driverController::getCrossButton, // Towing
         // Dodge
         // () -> {return badPS5.getL1Button() || badPS5.getR1Button();},
         () -> false,
@@ -142,7 +142,7 @@ public class RobotContainer {
     commandDriverController.options().onTrue(Commands.runOnce(swerveDrive::resetEncoders));
     commandDriverController.options().onTrue(Commands.runOnce(wrist::resetEncoders));
 
-    commandDriverController.triangle().whileTrue(new TheGreatBalancingAct(swerveDrive));
+    // commandDriverController.triangle().whileTrue(new TheGreatBalancingAct(swerveDrive));
     commandDriverController.circle()
       .onTrue(Commands.runOnce(() -> swerveDrive.setVelocityControl(true)))
       .onFalse(Commands.runOnce(() -> swerveDrive.setVelocityControl(false)));
@@ -219,6 +219,7 @@ public class RobotContainer {
     swerveDrive.initModuleShuffleboard(loggingLevel);
     ShuffleboardTab tab = Shuffleboard.getTab("Main");
     tab.addNumber("Total Current Draw", pdp::getTotalCurrent);
+    tab.addNumber("Voltage", () -> Math.abs(pdp.getVoltage()));
   }
 
   public void reportAllToSmartDashboard() {

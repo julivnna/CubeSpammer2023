@@ -305,8 +305,8 @@ public class CANSwerveModule implements SwerveModule {
                 tab.addNumber("Turn percent (motor controller)", turnMotor::getMotorOutputPercent);
                 tab.addNumber("Turn percent (current)", () -> this.currentTurnPercent);
             case MEDIUM:
-                tab.addNumber("Drive Motor Current", driveMotor::getStatorCurrent);
-                tab.addNumber("Turn Motor Current", turnMotor::getStatorCurrent);
+                tab.addNumber("Drive Motor Current", driveMotor::getSupplyCurrent);
+                tab.addNumber("Turn Motor Current", turnMotor::getSupplyCurrent);
                 tab.addNumber("Drive Motor Voltage", driveMotor::getMotorOutputVoltage);
                 tab.addNumber("Turn Motor Voltage", turnMotor::getMotorOutputVoltage);
                 tab.addNumber("Module velocity", this::getDriveVelocity);

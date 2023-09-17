@@ -5,6 +5,7 @@ import java.util.function.BooleanSupplier;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -17,8 +18,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.WristConstants;
-import frc.robot.filters.ExponentialSmoothingFilter;
 import frc.robot.util.NerdyMath;
+import frc.robot.util.filters.ExponentialSmoothingFilter;
 
 public class Wrist extends SubsystemBase implements Reportable {
     private TalonFX wrist;
@@ -32,6 +33,7 @@ public class Wrist extends SubsystemBase implements Reportable {
         leftEncoder = new TalonSRX(WristConstants.kLeftEncoderID);
         init();
         resetEncoders();
+        wrist.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 30, 0.1));
     }
 
     @Override

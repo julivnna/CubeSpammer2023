@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -23,6 +24,10 @@ public class Shooter extends SubsystemBase {
     public Shooter() {
         topMotor = new TalonFX(ShooterConstants.kTopMotorID);
         bottomMotor = new TalonFX(ShooterConstants.kBottomMotorID);
+
+        this.topMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 30, 0.1));
+        this.bottomMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 30, 0.1));
+
 
         topMotor.setInverted(false);
         bottomMotor.setInverted(false);

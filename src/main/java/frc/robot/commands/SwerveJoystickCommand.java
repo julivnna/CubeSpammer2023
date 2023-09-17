@@ -13,10 +13,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveAutoConstants;
 import frc.robot.Constants.SwerveDriveConstants;
-import frc.robot.filters.Filter;
-import frc.robot.filters.NewDriverFilter;
+import frc.robot.filters.DriverFilter;
+import frc.robot.filters.OldDriverFilter2;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveDrivetrain.DRIVE_MODE;
+import frc.robot.util.filters.Filter;
 
 import static frc.robot.Constants.SwerveDriveConstants.*;
 
@@ -29,7 +30,7 @@ public class SwerveJoystickCommand extends CommandBase {
     private final Supplier<Double> desiredAngle;
     private final Supplier<Boolean> turnToAngleSupplier;
     private final PIDController turnToAngleController;
-    private Filter xFilter, yFilter, turningFilter;
+    private Filter magnitudeFilter, turningFilter;
     private Translation2d robotOrientedJoystickDirection;
     private Supplier<DodgeDirection> dodgeDirectionSupplier;
 
@@ -77,21 +78,12 @@ public class SwerveJoystickCommand extends CommandBase {
         this.turnToAngleSupplier = turnToAngleSupplier;
         this.desiredAngle = desiredAngleSupplier;
 
-        this.xFilter = new NewDriverFilter(
+        this.magnitudeFilter = new DriverFilter(
             ControllerConstants.kDeadband, 
-            kMinimumMotorOutput,
-            kTeleDriveMaxSpeedMetersPerSecond, 
-            kDriveAlpha, 
-            kTeleMaxAcceleration, 
-            kTeleMaxDeceleration);
-        this.yFilter = new NewDriverFilter(
-            ControllerConstants.kDeadband, 
-            kMinimumMotorOutput,
-            kTeleDriveMaxSpeedMetersPerSecond, 
-            kDriveAlpha, 
-            kTeleMaxAcceleration, 
-            kTeleMaxDeceleration);
-        this.turningFilter = new NewDriverFilter(
+            kMinimumMotorOutput, 
+            kTeleDriveMaxSpeedMetersPerSecond);
+        
+        this.turningFilter = new OldDriverFilter2(
             ControllerConstants.kRotationDeadband, 
             kMinimumMotorOutput,
             kTeleDriveMaxAngularSpeedRadiansPerSecond, 
@@ -129,9 +121,14 @@ public class SwerveJoystickCommand extends CommandBase {
         double xSpeed = xSpdFunction.get();
         double ySpeed = -ySpdFunction.get();
 
+        double magnitude = Math.sqrt(xSpeed*xSpeed + ySpeed*ySpeed);
+        double filteredMagnitude = magnitudeFilter.calculate(magnitude);
+
+        double scale = filteredMagnitude / magnitude;
+
         double filteredTurningSpeed;
-        double filteredXSpeed = xFilter.calculate(xSpeed);
-        double filteredYSpeed = yFilter.calculate(ySpeed);
+        double filteredXSpeed = xSpeed * scale;
+        double filteredYSpeed = ySpeed * scale;
 
         // Turn to angle
         if (turnToAngleSupplier.get()) {
@@ -153,9 +150,11 @@ public class SwerveJoystickCommand extends CommandBase {
         }
 
         if (precisionSupplier.get()) {
-            filteredXSpeed /= 4;
-            filteredYSpeed /= 4;
-            filteredTurningSpeed /= 4; // Also slows down the turn to angle speed
+            filteredXSpeed /= 2;
+            filteredYSpeed /= 2;
+            if (!turnToAngleSupplier.get()) {
+                filteredTurningSpeed /= 2; // Also slows down the turn to angle speed
+            }
         }
         
         ChassisSpeeds chassisSpeeds;

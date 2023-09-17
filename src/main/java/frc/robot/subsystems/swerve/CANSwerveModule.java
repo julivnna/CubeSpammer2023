@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
@@ -75,6 +76,8 @@ public class CANSwerveModule implements SwerveModule {
 
         this.driveMotor.setInverted(invertDriveMotor);
         this.turnMotor.setInverted(invertTurningMotor);
+        this.driveMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 30, 0.1));
+        this.turnMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 30, 0.1));
         this.canCoder = new CANCoder(CANCoderId, ModuleConstants.kCANivoreName);
         this.invertTurningEncoder = CANCoderReversed;
         this.CANCoderOffsetDegrees = CANCoderOffsetDegrees;

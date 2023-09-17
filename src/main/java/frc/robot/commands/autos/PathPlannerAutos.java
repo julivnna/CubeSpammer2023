@@ -12,8 +12,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.PathPlannerConstants;
-import frc.robot.Constants.ShooterConstants;
-import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
 import static frc.robot.Constants.PathPlannerConstants.*;
@@ -43,8 +41,8 @@ public class PathPlannerAutos {
     }
 
     public static void initPathGroup(String pathName) {
-        if (cachedPaths.containsKey(pathName)) {
-            DriverStation.reportWarning(String.format("Path '%s' has been loaded more than once.", pathName), true);
+        if (cachedPathGroups.containsKey(pathName)) {
+            DriverStation.reportWarning(String.format("Path group '%s' has been loaded more than once.", pathName), true);
         }
 
         List<PathPlannerTrajectory> path = PathPlanner.loadPathGroup(pathName, kPPPathConstraints);

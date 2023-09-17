@@ -9,6 +9,8 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS4Controller;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -52,6 +54,7 @@ public class RobotContainer {
   // public Gyro imu = new Pigeon(60);
   public SwerveDrivetrain swerveDrive;
   public Shooter shooter = new Shooter();
+  public PowerDistribution pdp = new PowerDistribution(1, ModuleType.kCTRE);
 
   private final CommandPS4Controller commandDriverController = new CommandPS4Controller(
       ControllerConstants.kDriverControllerPort);
@@ -101,8 +104,10 @@ public class RobotContainer {
         commandDriverController::getLeftX, // Vertical Translation
         // () -> 0.0, // debug
         commandDriverController::getRightX, // Rotation
-        driverController::getSquareButton, // Field oriented
+
+        driverController::getTriangleButton, // Field oriented
         // () -> false, // Field oriented
+
         driverController::getSquareButton, // Towing
         // Dodge
         // () -> {return badPS5.getL1Button() || badPS5.getR1Button();},
@@ -118,15 +123,11 @@ public class RobotContainer {
           return DodgeDirection.NONE;
         },
         // driverController::getR2Button, // Precision/"Sniper Button"
-        () -> false, // Precision mode (disabled)
-        // () -> driverController.getR1Button() || driverController.getL1Button(), // Turn to angle
-        () -> false, // Turn to angle (disabled)
+        () -> driverController.getSquareButton(), // Precision mode (disabled)
+        () -> driverController.getCircleButton(), // Turn to angle
+        // () -> false, // Turn to angle (disabled)
         () -> { // Turn To angle Direction
-          if (driverController.getR1Button()) {
-            return 180.0;
-          } else {
-            return 0.0;
-          }
+          return 0.0;
         }
       ));
 
@@ -216,6 +217,8 @@ public class RobotContainer {
     shooter.initShuffleboard(loggingLevel);
     swerveDrive.initShuffleboard(loggingLevel);
     swerveDrive.initModuleShuffleboard(loggingLevel);
+    ShuffleboardTab tab = Shuffleboard.getTab("Main");
+    tab.addNumber("Total Current Draw", pdp::getTotalCurrent);
   }
 
   public void reportAllToSmartDashboard() {

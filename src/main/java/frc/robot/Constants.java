@@ -209,7 +209,7 @@ public final class Constants {
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = //
       kPhysicalMaxAngularSpeedRadiansPerSecond * 0.75;
     public static final double kTurnToAngleMaxAngularSpeedRadiansPerSecond 
-      = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
+      = kPhysicalMaxAngularSpeedRadiansPerSecond;
     public static final double kTurnToBigAngleMaxAngularSpeedRadiansPerSecond = 1.5 * Math.PI;
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
@@ -231,7 +231,7 @@ public final class Constants {
   }
 
   public static final class SwerveAutoConstants {
-    public static final double kPTurnToAngle = SmartDashboard.getNumber("kP Theta Teleop", 10.0);
+    public static final double kPTurnToAngle = SmartDashboard.getNumber("kP Theta Teleop", 6);
     public static final double kITurnToAngle = SmartDashboard.getNumber("kI Theta Teleop", 0);
     public static final double kDTurnToAngle = SmartDashboard.getNumber("kD Theta Teleop", 0.2);
     public static final double kTurnToAnglePositionToleranceAngle = 5;

@@ -4,7 +4,6 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -14,11 +13,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveAutoConstants;
 import frc.robot.Constants.SwerveDriveConstants;
-import frc.robot.filters.DriverFilter;
+import frc.robot.util.filters.Filter;
 import frc.robot.filters.OldDriverFilter2;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveDrivetrain.DRIVE_MODE;
-import frc.robot.util.filters.Filter;
 
 import static frc.robot.Constants.SwerveDriveConstants.*;
 
@@ -31,12 +29,9 @@ public class SwerveJoystickCommand extends CommandBase {
     private final Supplier<Double> desiredAngle;
     private final Supplier<Boolean> turnToAngleSupplier;
     private final PIDController turnToAngleController;
-    private Filter magnitudeFilter, turningFilter;
+    private Filter xFilter, yFilter, turningFilter;
     private Translation2d robotOrientedJoystickDirection;
     private Supplier<DodgeDirection> dodgeDirectionSupplier;
-
-    private SlewRateLimiter xLimiter = new SlewRateLimiter(10, -10, 0);
-    private SlewRateLimiter yLimiter = new SlewRateLimiter(10, -10, 0);
 
     public enum DodgeDirection {
         LEFT,
@@ -82,11 +77,20 @@ public class SwerveJoystickCommand extends CommandBase {
         this.turnToAngleSupplier = turnToAngleSupplier;
         this.desiredAngle = desiredAngleSupplier;
 
-        this.magnitudeFilter = new DriverFilter(
+        this.xFilter = new OldDriverFilter2(
             ControllerConstants.kDeadband, 
-            kMinimumMotorOutput, 
-            kTeleDriveMaxSpeedMetersPerSecond);
-        
+            kMinimumMotorOutput,
+            kTeleDriveMaxSpeedMetersPerSecond, 
+            kDriveAlpha, 
+            kTeleMaxAcceleration, 
+            kTeleMaxDeceleration);
+        this.yFilter = new OldDriverFilter2(
+            ControllerConstants.kDeadband, 
+            kMinimumMotorOutput,
+            kTeleDriveMaxSpeedMetersPerSecond, 
+            kDriveAlpha, 
+            kTeleMaxAcceleration, 
+            kTeleMaxDeceleration);
         this.turningFilter = new OldDriverFilter2(
             ControllerConstants.kRotationDeadband, 
             kMinimumMotorOutput,
@@ -105,7 +109,7 @@ public class SwerveJoystickCommand extends CommandBase {
             SwerveAutoConstants.kTurnToAnglePositionToleranceAngle, 
             SwerveAutoConstants.kTurnToAngleVelocityToleranceAnglesPerSec * 0.02);
         
-        this.turnToAngleController.enableContinuousInput(0, 360);
+        this.turnToAngleController.enableContinuousInput(-180, 180);
 
         addRequirements(swerveDrive);
     }
@@ -125,17 +129,15 @@ public class SwerveJoystickCommand extends CommandBase {
         double xSpeed = xSpdFunction.get();
         double ySpeed = -ySpdFunction.get();
 
-        double magnitude = Math.sqrt(xSpeed*xSpeed + ySpeed*ySpeed);
-        double filteredMagnitude = magnitudeFilter.calculate(magnitude);
-
-        double scale = filteredMagnitude / magnitude;
-
         double filteredTurningSpeed;
-        double filteredXSpeed = xLimiter.calculate(xSpeed * scale);
-        double filteredYSpeed = yLimiter.calculate(ySpeed * scale);
+        double filteredXSpeed = xFilter.calculate(xSpeed);
+        double filteredYSpeed = yFilter.calculate(ySpeed);
 
         // Turn to angle
         if (turnToAngleSupplier.get()) {
+            turnToAngleController.setP(SmartDashboard.getNumber("kP Theta Teleop", 10.0));
+            turnToAngleController.setI(SmartDashboard.getNumber("kI Theta Teleop", 10.0));
+            turnToAngleController.setD(SmartDashboard.getNumber("kD Theta Teleop", 10.0));
             double targetAngle = desiredAngle.get();
             turningSpeed = turnToAngleController.calculate(swerveDrive.getImu().getHeading(), targetAngle);
             turningSpeed = Math.toRadians(turningSpeed);
@@ -154,11 +156,9 @@ public class SwerveJoystickCommand extends CommandBase {
         }
 
         if (precisionSupplier.get()) {
-            filteredXSpeed /= 2;
-            filteredYSpeed /= 2;
-            if (!turnToAngleSupplier.get()) {
-                filteredTurningSpeed /= 2; // Also slows down the turn to angle speed
-            }
+            filteredXSpeed /= 4;
+            filteredYSpeed /= 4;
+            filteredTurningSpeed /= 4; // Also slows down the turn to angle speed
         }
         
         ChassisSpeeds chassisSpeeds;

@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -84,6 +85,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    // SmartDashboard.putNumber("kP Theta Teleop", 10.0);
+    // SmartDashboard.putNumber("kI Theta Teleop", 0);
+    // SmartDashboard.putNumber("kD Theta Teleop", 0.2);
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

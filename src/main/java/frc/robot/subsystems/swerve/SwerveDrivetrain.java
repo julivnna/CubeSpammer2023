@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveDriveConstants;
@@ -323,6 +325,15 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
             case ALL:
                 tab.add("Field Position", field).withSize(6, 3);
                 tab.add("Zero Modules", Commands.runOnce(this::zeroModules));
+                tab.addString(("Current Command"), () -> {
+                    Command currCommand = this.getCurrentCommand();
+                    if (currCommand == null) {
+                        return "null";
+                    } else {
+                        return currCommand.getName();
+                    }
+                }
+                );
                 // Might be negative because our swerveDriveKinematics is flipped across the Y axis
             case MEDIUM:
                 tab.addNumber("Encoder Resets", () -> this.numEncoderResets);

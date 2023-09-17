@@ -27,6 +27,7 @@ import frc.robot.Constants.WristConstants;
 import frc.robot.commands.SwerveJoystickCommand;
 import frc.robot.commands.TheGreatBalancingAct;
 import frc.robot.commands.SwerveJoystickCommand.DodgeDirection;
+import frc.robot.commands.autos.Balance;
 import frc.robot.commands.autos.PathPlannerAutos;
 import frc.robot.commands.autos.SquareTest;
 import frc.robot.subsystems.Shooter;
@@ -141,6 +142,7 @@ public class RobotContainer {
     commandDriverController.share().onTrue(Commands.runOnce(imu::zeroHeading).andThen(() -> imu.setOffset(180)));
     commandDriverController.options().onTrue(Commands.runOnce(swerveDrive::resetEncoders));
     commandDriverController.options().onTrue(Commands.runOnce(wrist::resetEncoders));
+    commandDriverController.PS().whileTrue(new TheGreatBalancingAct(swerveDrive));
 
     // commandDriverController.triangle().whileTrue(new TheGreatBalancingAct(swerveDrive));
     commandDriverController.circle()
@@ -199,7 +201,7 @@ public class RobotContainer {
     autoChooser.addOption("Path Planner TestSquare4", () -> new SquareTest(PathPlannerAutos.autoBuilder));
     autoChooser.addOption("Path Planner 3Piece Short", () -> PathPlannerAutos.pathplannerAuto("3Piece Short", swerveDrive));
     autoChooser.addOption("Path Planner 3Piece Long", () -> PathPlannerAutos.pathplannerAuto("3Piece Long", swerveDrive));
-    autoChooser.addOption("Path Planner Balance", () -> PathPlannerAutos.pathplannerAuto("Balance", swerveDrive));
+    autoChooser.addOption("Path Planner Balance", () -> new Balance(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
     autoChooser.addOption("Path Planner DirectBalance", () -> PathPlannerAutos.pathplannerAuto("DirectBalance", swerveDrive));
 
 

@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -33,6 +34,9 @@ public class SwerveJoystickCommand extends CommandBase {
     private Filter magnitudeFilter, turningFilter;
     private Translation2d robotOrientedJoystickDirection;
     private Supplier<DodgeDirection> dodgeDirectionSupplier;
+
+    private SlewRateLimiter xLimiter = new SlewRateLimiter(10, -10, 0);
+    private SlewRateLimiter yLimiter = new SlewRateLimiter(10, -10, 0);
 
     public enum DodgeDirection {
         LEFT,
@@ -127,8 +131,8 @@ public class SwerveJoystickCommand extends CommandBase {
         double scale = filteredMagnitude / magnitude;
 
         double filteredTurningSpeed;
-        double filteredXSpeed = xSpeed * scale;
-        double filteredYSpeed = ySpeed * scale;
+        double filteredXSpeed = xLimiter.calculate(xSpeed * scale);
+        double filteredYSpeed = yLimiter.calculate(ySpeed * scale);
 
         // Turn to angle
         if (turnToAngleSupplier.get()) {

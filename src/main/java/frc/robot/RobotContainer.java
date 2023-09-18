@@ -106,8 +106,8 @@ public class RobotContainer {
         // () -> 0.0, // debug
         commandDriverController::getRightX, // Rotation
 
-        driverController::getTriangleButton, // Field oriented
-        // () -> false, // Field oriented
+        // driverController::getTriangleButton, // Field oriented
+        () -> false, // Field oriented
 
         driverController::getCrossButton, // Towing
         // Dodge
@@ -124,7 +124,7 @@ public class RobotContainer {
           return DodgeDirection.NONE;
         },
         // driverController::getR2Button, // Precision/"Sniper Button"
-        () -> driverController.getSquareButton(), // Precision mode (disabled)
+        () -> driverController.getR2Button(), // Precision mode (disabled)
         () -> driverController.getCircleButton(), // Turn to angle
         // () -> false, // Turn to angle (disabled)
         () -> { // Turn To angle Direction
@@ -143,6 +143,7 @@ public class RobotContainer {
     commandDriverController.options().onTrue(Commands.runOnce(swerveDrive::resetEncoders));
     commandDriverController.options().onTrue(Commands.runOnce(wrist::resetEncoders));
     commandDriverController.PS().whileTrue(new TheGreatBalancingAct(swerveDrive));
+    commandDriverController.triangle().onTrue(shooter.setPower(1)).onFalse(shooter.setPower(0));
 
     // commandDriverController.triangle().whileTrue(new TheGreatBalancingAct(swerveDrive));
     commandDriverController.circle()
@@ -166,15 +167,27 @@ public class RobotContainer {
     //     .andThen(wrist.motionMagicCommand(WristConstants.kWristStow))
     //   );
 
+    Trigger voltTrigger = new Trigger(() -> Math.abs(pdp.getVoltage()) < 8);
+    voltTrigger.onTrue(
+      Commands.sequence(
+        Commands.waitSeconds(0.25),
+        Commands.runOnce(() -> swerveDrive.resetEncoders())
+      )
+    );
+
     commandDriverController.L1()
-      .onTrue(shooter.outtakeLowUpdated())
-      .onFalse(shooter.setPowerZero());
+      .whileTrue(Commands.sequence(
+        wrist.motionMagicCommand((WristConstants.kWristGround + WristConstants.kWristStow) / 2),
+        Commands.waitSeconds(0.25),
+        shooter.outtakeLowUpdated()
+      ))
+      .onFalse(shooter.setPowerZero().alongWith(wrist.motionMagicCommand(WristConstants.kWristStow)));
     
     commandDriverController.R1()
       .onTrue(shooter.outtakeMidUpdated())
       .onFalse(shooter.setPowerZero());
 
-    commandDriverController.R2()
+    commandDriverController.triangle()
       .onTrue(shooter.outtakeHighUpdated())
       .onFalse(shooter.setPowerZero());
 

@@ -10,7 +10,7 @@
         "x": 1.7357424955875551,
         "y": 1.0391443005108238
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -35,7 +35,7 @@
         "x": 4.755488340450188,
         "y": 0.7347879715566882
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -60,7 +60,7 @@
         "x": 5.847461638039604,
         "y": 0.9135334509985259
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -85,7 +85,7 @@
         "x": 1.7537527080423954,
         "y": 0.6508925838364498
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -110,7 +110,7 @@
         "x": 1.7727498702860656,
         "y": 0.45676672549926234
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -135,7 +135,7 @@
         "x": 5.472560346830093,
         "y": 0.7650842652112658
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -160,7 +160,7 @@
         "x": 6.6258963287157355,
         "y": 2.123965273571573
       },
-      "holonomicAngle": 0,
+      "holonomicAngle": 180.0,
       "isReversal": true,
       "velOverride": null,
       "isLocked": false,
@@ -185,7 +185,7 @@
         "x": 3.1429795607773396,
         "y": 0.5595392387365979
       },
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -207,7 +207,7 @@
         "y": 1.061982636785786
       },
       "nextControl": null,
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,

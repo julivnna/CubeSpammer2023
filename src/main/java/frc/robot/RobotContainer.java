@@ -29,7 +29,10 @@ import frc.robot.Constants.WristConstants;
 import frc.robot.commands.SwerveJoystickCommand;
 import frc.robot.commands.TheGreatBalancingAct;
 import frc.robot.commands.SwerveJoystickCommand.DodgeDirection;
+import frc.robot.commands.autos.Auto3PieceLong;
+import frc.robot.commands.autos.Auto3PieceShort;
 import frc.robot.commands.autos.Balance;
+import frc.robot.commands.autos.DirectBalance;
 import frc.robot.commands.autos.PathPlannerAutos;
 import frc.robot.commands.autos.SquareTest;
 import frc.robot.subsystems.Shooter;
@@ -205,7 +208,8 @@ public class RobotContainer {
   private void initAutoChoosers() {
     // Remember to load the pathplanner paths here
     final String[] paths = {
-      "TestPath", "TestSquare", "Test Line", "TestSquare3", "3Piece Short","3Piece Long","Balance","DirectBalance"
+       "3Piece Short","3Piece Long","Balance","DirectBalance", "SquareTest"
+      // old paths "TestPath", "TestSquare", "Test Line", "TestSquare3"
     };
     
     PathPlannerAutos.init(swerveDrive);
@@ -216,19 +220,20 @@ public class RobotContainer {
     }
 
     autoChooser.addOption("Do Nothing", Commands::none);
-    autoChooser.addOption("Path Planner Test Auto", () -> PathPlannerAutos.pathplannerAuto("TestPath", swerveDrive));
-    autoChooser.addOption("Path Planner TestSquare", () -> PathPlannerAutos.pathplannerAuto("TestSquare", swerveDrive));
-    autoChooser.addOption("Path Planner Test3", () -> PathPlannerAutos.pathplannerAuto("Test Line", swerveDrive));
-    autoChooser.addOption("Path Planner TestSquare3", () -> PathPlannerAutos.pathplannerAuto("TestSquare3", swerveDrive));
-    autoChooser.addOption("Path Planner TestSquare4", () -> new SquareTest(PathPlannerAutos.autoBuilder));
-    autoChooser.addOption("Path Planner 3Piece Short", () -> PathPlannerAutos.pathplannerAuto("3Piece Short", swerveDrive));
-    autoChooser.addOption("Path Planner 3Piece Long", () -> PathPlannerAutos.pathplannerAuto("3Piece Long", swerveDrive));
     autoChooser.addOption("Path Planner Balance", () -> new Balance(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
-    autoChooser.addOption("Path Planner DirectBalance", () -> PathPlannerAutos.pathplannerAuto("DirectBalance", swerveDrive));
-
-
-
-
+    autoChooser.addOption("Path Planner 3PieceShort", () -> new Auto3PieceShort(PathPlannerAutos.autoBuilder,swerveDrive, shooter, wrist));
+    autoChooser.addOption("Path Planner 3PieceLong", () -> new Auto3PieceLong(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
+    autoChooser.addOption("Path Planner DirectBalance", () -> new DirectBalance(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
+    autoChooser.addOption("Path Planner SquareTest", () -> new SquareTest(PathPlannerAutos.autoBuilder));
+    // these are the auto paths in the old format (not the actual full auto command)
+    // autoChooser.addOption("Path Planner Test Auto", () -> PathPlannerAutos.pathplannerAuto("TestPath", swerveDrive));
+    // autoChooser.addOption("Path Planner TestSquare", () -> PathPlannerAutos.pathplannerAuto("TestSquare", swerveDrive));
+    // autoChooser.addOption("Path Planner Test3", () -> PathPlannerAutos.pathplannerAuto("Test Line", swerveDrive));
+    // autoChooser.addOption("Path Planner TestSquare3", () -> PathPlannerAutos.pathplannerAuto("TestSquare3", swerveDrive));
+    // autoChooser.addOption("Path Planner TestSquare4", () -> new SquareTest(PathPlannerAutos.autoBuilder));
+    // autoChooser.addOption("Path Planner 3Piece Short", () -> PathPlannerAutos.pathplannerAuto("3Piece Short", swerveDrive));
+    // autoChooser.addOption("Path Planner 3Piece Long", () -> PathPlannerAutos.pathplannerAuto("3Piece Long", swerveDrive));
+    // autoChooser.addOption("Path Planner DirectBalance", () -> PathPlannerAutos.pathplannerAuto("DirectBalance", swerveDrive));
 
     ShuffleboardTab autosTab = Shuffleboard.getTab("Autos");
 

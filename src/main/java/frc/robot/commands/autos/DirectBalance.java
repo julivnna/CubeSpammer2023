@@ -10,6 +10,7 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.WristConstants;
 import frc.robot.commands.TheGreatBalancingAct;
 import frc.robot.subsystems.Shooter;
@@ -22,16 +23,23 @@ public class DirectBalance extends SequentialCommandGroup {
         
         addCommands(
             Commands.sequence(
-                Commands.runOnce(() -> swerve.getImu().zeroAll()),
-                autoBuilder.resetPose(pathGroup.get(0)),
-                wrist.motionMagicCommand(WristConstants.kWristHigh)),
-                shoot.outtakeHigh(),
-                Commands.waitSeconds(1),
-                shoot.setPower(0),
-                wrist.motionMagicCommand(WristConstants.kWristStow),
-                autoBuilder.followPathWithEvents(pathGroup.get(0)),
-                new TheGreatBalancingAct(swerve)
-            );
+                Commands.deadline(
+                    new WaitCommand(14.5),
+                    Commands.sequence(
+                        Commands.runOnce(() -> swerve.getImu().zeroAll()),
+                        autoBuilder.resetPose(pathGroup.get(0)),
+                        wrist.motionMagicCommand(WristConstants.kWristHigh)),
+                        shoot.outtakeHigh(),
+                        Commands.waitSeconds(1),
+                        shoot.setPower(0),
+                        wrist.motionMagicCommand(WristConstants.kWristStow),
+                        autoBuilder.followPathWithEvents(pathGroup.get(0)),
+                        new TheGreatBalancingAct(swerve)
+                    ),
+                    new InstantCommand(() -> swerve.towModules()
+                )
+            )
+        );
     }
     
 }

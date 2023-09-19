@@ -80,15 +80,6 @@ public class PathPlannerAutos {
             swerveDrive::setChassisSpeeds, 
             events,
             swerveDrive);
-
-        
-        events.put("Wait3", 
-            Commands.waitSeconds(3)
-        );
-        
-        events.put("Print", 
-            new InstantCommand(() -> System.out.println("HELLO WORLD"))
-        ); 
     }
 
     /**

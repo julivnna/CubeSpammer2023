@@ -2,6 +2,7 @@ package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -57,7 +58,7 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
     /**
      * Construct a new {@link SwerveDrivetrain}
      */
-    public SwerveDrivetrain(Gyro gyro, SwerveModuleType moduleType) throws IllegalArgumentException {
+    public SwerveDrivetrain(Gyro gyro, SwerveModuleType moduleType, PrimalSunflower sunflower) throws IllegalArgumentException {
         switch (moduleType) {
             case CANCODER:
                 frontLeft = new CANSwerveModule(
@@ -102,7 +103,7 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
         this.gyro = gyro;
         this.poseEstimator = new SwerveDrivePoseEstimator(kDriveKinematics, gyro.getRotation2d(), getModulePositions(), new Pose2d());
         this.poseEstimator.setVisionMeasurementStdDevs(kBaseVisionPoseSTD);
-        this.sunflower = new PrimalSunflower(VisionConstants.limelightName, this);
+        this.sunflower = sunflower;
         // this.odometer = new SwerveDriveOdometry(
         //     kDriveKinematics, 
         //     new Rotation2d(0), 
@@ -123,9 +124,11 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
         }
         // odometer.update(gyro.getRotation2d(), getModulePositions());
         poseEstimator.update(gyro.getRotation2d(), getModulePositions());
-        if (sunflower.getPose3d() != null) {
-            poseEstimator.addVisionMeasurement(sunflower.getPose3d().toPose2d(), Timer.getFPGATimestamp());
+        Pose3d sunflowerPose3d = sunflower.getPose3d();
+        if (sunflowerPose3d != null) {
+            poseEstimator.addVisionMeasurement(sunflowerPose3d.toPose2d(), Timer.getFPGATimestamp());
         }
+        field.setRobotPose(poseEstimator.getEstimatedPosition());
     }
     
     //****************************** RESETTERS ******************************/

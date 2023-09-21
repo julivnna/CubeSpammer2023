@@ -279,5 +279,7 @@ public final class Constants {
   public static final class VisionConstants {
     public static final String limelightName = "limelight-high";
     public static final int aprilTagPipeline = 4;
+    public static final double fieldXOffset = 8; // Guess
+    public static final double fieldYOffset = 3.5; // Guess
   }
 }

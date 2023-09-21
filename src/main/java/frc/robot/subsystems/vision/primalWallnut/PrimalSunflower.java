@@ -16,6 +16,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -52,7 +53,7 @@ public class PrimalSunflower implements Reportable {
 
     //points in the path to get to the closest grid
     PathPoint firstPoint = new PathPoint(new Translation2d(robotPos[0], robotPos[1]), Rotation2d.fromDegrees(0));
-    PathPoint secondPoint = new PathPoint(new Translation2d(1, robotPos[1]), Rotation2d.fromDegrees(0));
+    PathPoint secondPoint = new PathPoint(new Translation2d(robotPos[0], robotPos[1]), Rotation2d.fromDegrees(0));
     PathPoint thirdPoint = new PathPoint(new Translation2d(robotPos[0], robotPos[1]), Rotation2d.fromDegrees(0));
 
     private Limelight limelight;
@@ -75,8 +76,8 @@ public class PrimalSunflower implements Reportable {
     */
     public PrimalSunflower(String limelightName, SwerveDrivetrain drivetrain) {
         // this.drivetrain = drivetrain;   UNCOMMENR LATER
-        SmartDashboard.putBoolean("LimelightHelper inited", true);
         try {
+            SmartDashboard.putBoolean("LimelightHelper inited", true);
             limelight = new Limelight(limelightName);
             limelight.setLightState(LightMode.OFF);
             limelight.setPipeline(4);
@@ -116,6 +117,7 @@ public class PrimalSunflower implements Reportable {
         Pose3d pos = new Pose3d();
         if(limelight.hasValidTarget()) {
             pos = limelightUser.getPose3d(); // Replace w different met.
+            field.setRobotPose(pos.toPose2d());
             return new Double[]{pos.getX(), pos.getY(), pos.getZ()};
         }
         return yee;
@@ -250,7 +252,6 @@ public class PrimalSunflower implements Reportable {
                 tab.addNumber("Traj Point 3 Pose Y", () -> thirdPoint.position.getY());
 
                 tab.add("Field Position", field).withSize(6, 3);
-
             case MEDIUM:
                 
             case MINIMAL:

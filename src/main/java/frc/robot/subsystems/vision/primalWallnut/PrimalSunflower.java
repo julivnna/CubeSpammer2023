@@ -1,5 +1,7 @@
 package frc.robot.subsystems.vision.primalWallnut;
 
+import java.util.List;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -10,10 +12,16 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.PathPlannerConstants;
+import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Reportable;
 import frc.robot.subsystems.Shooter;
@@ -58,6 +66,8 @@ public class PrimalSunflower implements Reportable {
 
     private String llname;
 
+    private Field2d field;
+
     /*
      * Params:
      * limelightName = name of the limelight
@@ -78,6 +88,8 @@ public class PrimalSunflower implements Reportable {
             SmartDashboard.putBoolean("LimelightHelper inited", false);
             limelightUser = null;
         }
+
+        field = new Field2d();
 
         // SmartDashboard.putNumber("Tx P", 0);       
         // SmartDashboard.putNumber("Tx I", 0);
@@ -168,11 +180,38 @@ public class PrimalSunflower implements Reportable {
         SmartDashboard.putString("ATag Third Point Coords", "X: " + thirdPoint.position.getX() + " Y: " + thirdPoint.position.getY());
 
         return PathPlanner.generatePath(
-            new PathConstraints(3, 3),
+            PathPlannerConstants.kPPPathConstraints,
             firstPoint,
             secondPoint,
             thirdPoint
             );
+    }
+
+    public Trajectory useFertilizer() {
+        robotPos = generateSun();
+        Double[] gridPos = getClosestZombieTile();
+
+        Double yDist = gridPos[1] - robotPos[1];
+        Double xDist = gridPos[0] - robotPos[0];
+        Double offset = 0.1;
+        
+        SmartDashboard.putString("ATag First Point Coords", "X: " + firstPoint.position.getX() + " Y: " + firstPoint.position.getY());
+        SmartDashboard.putString("ATag Second Point Coords", "X: " + secondPoint.position.getX() + " Y: " + secondPoint.position.getY());
+        SmartDashboard.putString("ATag Third Point Coords", "X: " + thirdPoint.position.getX() + " Y: " + thirdPoint.position.getY());
+
+        
+        Trajectory trajectory = 
+            TrajectoryGenerator.generateTrajectory(
+                new Pose2d(xDist - offset, robotPos[1], Rotation2d.fromDegrees(0)),
+                List.of(
+                    new Translation2d(generateSun()[0], yDist) // might break because only one translation2d
+                ),
+                new Pose2d(new Translation2d(offset, robotPos[1]), Rotation2d.fromDegrees(0)),
+                new TrajectoryConfig(3, SwerveDriveConstants.kTeleMaxAcceleration) // constants for debugging purposes
+            );
+
+        field.getObject("traj").setTrajectory(trajectory);
+        return trajectory; 
     }
 
     public void reportToSmartDashboard(LOG_LEVEL priority) {
@@ -209,6 +248,8 @@ public class PrimalSunflower implements Reportable {
 
                 tab.addNumber("Traj Point 3 Pose X", () -> thirdPoint.position.getX());
                 tab.addNumber("Traj Point 3 Pose Y", () -> thirdPoint.position.getY());
+
+                tab.add("Field Position", field).withSize(6, 3);
 
             case MEDIUM:
                 

@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import java.time.Instant;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.WristConstants;
 import frc.robot.commands.SwerveJoystickCommand;
 import frc.robot.commands.TheGreatBalancingAct;
@@ -41,6 +43,7 @@ import frc.robot.subsystems.imu.NavX;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveDrivetrain.DRIVE_MODE;
 import frc.robot.subsystems.swerve.SwerveDrivetrain.SwerveModuleType;
+import frc.robot.subsystems.vision.primalWallnut.PrimalSunflower;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -82,12 +85,14 @@ public class RobotContainer {
 
   private SendableChooser<Supplier<CommandBase>> autoChooser = new SendableChooser<Supplier<CommandBase>>();
 
+  private PrimalSunflower sunflower = new PrimalSunflower(VisionConstants.limelightName, swerveDrive);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     try {
-      swerveDrive = new SwerveDrivetrain(imu, SwerveModuleType.CANCODER);
+      swerveDrive = new SwerveDrivetrain(imu, SwerveModuleType.CANCODER, sunflower);
     } catch (IllegalArgumentException e) {
       DriverStation.reportError("Illegal Swerve Drive Module Type", e.getStackTrace());
     }
@@ -170,13 +175,13 @@ public class RobotContainer {
     //     .andThen(wrist.motionMagicCommand(WristConstants.kWristStow))
     //   );
 
-    Trigger voltTrigger = new Trigger(() -> Math.abs(pdp.getVoltage()) < 8);
-    voltTrigger.onTrue(
-      Commands.sequence(
-        Commands.waitSeconds(0.25),
-        Commands.runOnce(() -> swerveDrive.resetEncoders())
-      )
-    );
+    // Trigger voltTrigger = new Trigger(() -> Math.abs(pdp.getVoltage()) < 8);
+    // voltTrigger.onTrue(
+    //   Commands.sequence(
+    //     Commands.waitSeconds(0.25),
+    //     Commands.runOnce(() -> swerveDrive.resetEncoders())
+    //   )
+    // );
 
     commandDriverController.L1()
       .whileTrue(Commands.sequence(
@@ -194,6 +199,10 @@ public class RobotContainer {
       .onTrue(shooter.outtakeHighUpdated())
       .onFalse(shooter.setPowerZero());
 
+    commandOperatorController.square()
+      .onTrue(new InstantCommand(() -> sunflower.useFertilizer()));
+    commandOperatorController.cross()
+      .onTrue(new InstantCommand(() -> sunflower.usePlantFood()));  
   }
 
   private void initAutoChoosers() {
@@ -235,6 +244,7 @@ public class RobotContainer {
     imu.initShuffleboard(loggingLevel);
     wrist.initShuffleboard(loggingLevel);
     shooter.initShuffleboard(loggingLevel);
+    sunflower.initShuffleboard(loggingLevel);
     swerveDrive.initShuffleboard(loggingLevel);
     swerveDrive.initModuleShuffleboard(loggingLevel);
     ShuffleboardTab tab = Shuffleboard.getTab("Main");

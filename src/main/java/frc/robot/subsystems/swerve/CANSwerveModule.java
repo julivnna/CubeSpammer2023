@@ -174,7 +174,8 @@ public class CANSwerveModule implements SwerveModule {
     }
 
     public void flipModules() {
-        this.currentAngle += 180;
+        this.CANCoderOffsetDegrees.set(this.CANCoderOffsetDegrees.get() + 180);
+        this.CANCoderOffsetDegrees.uploadPreferences();
         //CANCoderConstants.kFLOffsetDeg.set(frontLeft.getTurnOffset() + frontLeft.getTurningPosition())
         resetEncoder();
     }

@@ -170,6 +170,11 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
         CANCoderConstants.kFROffsetDeg.set(frontRight.getTurnOffset() + frontRight.getTurningPosition());
         CANCoderConstants.kBLOffsetDeg.set(backLeft.getTurnOffset() + backLeft.getTurningPosition());
         CANCoderConstants.kBROffsetDeg.set(backRight.getTurnOffset() + backRight.getTurningPosition());
+        CANCoderConstants.kFLOffsetDeg.uploadPreferences();
+        CANCoderConstants.kFROffsetDeg.uploadPreferences();
+        CANCoderConstants.kBLOffsetDeg.uploadPreferences();
+        CANCoderConstants.kBROffsetDeg.uploadPreferences();
+
         
         resetEncoders();
     }

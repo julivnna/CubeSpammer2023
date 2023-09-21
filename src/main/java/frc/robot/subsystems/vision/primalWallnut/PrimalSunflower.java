@@ -176,28 +176,16 @@ public class PrimalSunflower implements Reportable {
     /**
      * @return PathPlannerTrajectory to get to the closest grid
      */
-    public PathPlannerTrajectory usePlantFood() {
+    public PathPlannerTrajectory toNearestGrid() {
         robotPos = generateSun();
         Double[] gridPos = getClosestZombieTile();
 
-        Double yDist = gridPos[1] - robotPos[1];
-        Double xDist = gridPos[0] - robotPos[0];
-        Double offset = 0.1;
-
-        firstPoint = new PathPoint(new Translation2d(xDist - offset, robotPos[1]), Rotation2d.fromDegrees(0));
-        secondPoint = new PathPoint(new Translation2d(generateSun()[0], yDist), Rotation2d.fromDegrees(0));
-        thirdPoint = new PathPoint(new Translation2d(offset, robotPos[1]), Rotation2d.fromDegrees(0));
-        
-        SmartDashboard.putString("ATag First Point Coords", "X: " + firstPoint.position.getX() + " Y: " + firstPoint.position.getY());
-        SmartDashboard.putString("ATag Second Point Coords", "X: " + secondPoint.position.getX() + " Y: " + secondPoint.position.getY());
-        SmartDashboard.putString("ATag Third Point Coords", "X: " + thirdPoint.position.getX() + " Y: " + thirdPoint.position.getY());
-
         return PathPlanner.generatePath(
             PathPlannerConstants.kPPPathConstraints,
-            firstPoint,
-            secondPoint,
-            thirdPoint
-            );
+            List.of(
+                new PathPoint(new Translation2d(gridPos[0], gridPos[1]), Rotation2d.fromDegrees(180))
+            )
+        );
     }
 
     /**
@@ -212,7 +200,6 @@ public class PrimalSunflower implements Reportable {
         Trajectory trajectory = 
             TrajectoryGenerator.generateTrajectory(
                 List.of(
-                    swerveDrive.getPose(),
                     new Pose2d(new Translation2d(gridPos[0], gridPos[1]), Rotation2d.fromDegrees(180))
                 ),
                 new TrajectoryConfig(PathPlannerConstants.kPPMaxVelocity, PathPlannerConstants.kPPMaxAcceleration) // constants for debugging purposes

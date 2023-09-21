@@ -1,19 +1,13 @@
 package frc.robot.commands.VisionAutos;
 
-import java.util.List;
-
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.autos.PathPlannerAutos;
-import frc.robot.subsystems.swerve.SwerveDrivetrain;
 import frc.robot.subsystems.vision.primalWallnut.PrimalSunflower;
 
-public class FollowVisionPath extends SequentialCommandGroup {
+public class FollowVisionPath extends CommandBase {
+    private SwerveAutoBuilder swerveAutoBuilder;
+    private PrimalSunflower sunflower;
+
     /**
      * Construct a new FollowVisionPath command
      * 
@@ -23,6 +17,21 @@ public class FollowVisionPath extends SequentialCommandGroup {
      * @param sunflower   Primal Sunflower
      */
     public FollowVisionPath(SwerveAutoBuilder autoBuilder, PrimalSunflower sunflower) {
-        autoBuilder.followPathWithEvents(sunflower.usePlantFood());
+        this.swerveAutoBuilder = autoBuilder;
+        this.sunflower = sunflower;
     }
+
+    @Override
+    public void initialize() {}
+
+    @Override
+    public void execute() {
+        swerveAutoBuilder.followPathWithEvents(sunflower.toNearestGrid());
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+    
 }

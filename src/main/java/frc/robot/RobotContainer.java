@@ -203,7 +203,7 @@ public class RobotContainer {
     commandOperatorController.square()
       .onTrue(new InstantCommand(() -> new ToNearestGridDebug(swerveDrive, sunflower)));
     commandOperatorController.cross()
-      .onTrue(new InstantCommand(() -> sunflower.usePlantFood()));
+      .onTrue(new InstantCommand(() -> sunflower.toNearestGrid()));
   }
 
   private void initAutoChoosers() {

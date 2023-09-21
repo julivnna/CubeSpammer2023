@@ -14,6 +14,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.SwerveDriveConstants.CANCoderConstants;
 import frc.robot.util.preferences.PrefDouble;
 
 import static frc.robot.Constants.*;
@@ -84,7 +86,6 @@ public class CANSwerveModule implements SwerveModule {
         this.CANCoderOffsetDegrees = CANCoderOffsetDegrees;
         
         this.desiredState = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
-
         initEncoders();
     }
 
@@ -170,6 +171,12 @@ public class CANSwerveModule implements SwerveModule {
         currentTurnPercent = turnPower;
 
         turnMotor.set(ControlMode.PercentOutput, turnPower);
+    }
+
+    public void flipModules() {
+        this.currentAngle += 180;
+        //CANCoderConstants.kFLOffsetDeg.set(frontLeft.getTurnOffset() + frontLeft.getTurningPosition())
+        resetEncoder();
     }
     
     //****************************** GETTERS ******************************/
@@ -321,6 +328,8 @@ public class CANSwerveModule implements SwerveModule {
                 tab.addNumber("Desired Angle", () -> desiredAngle);
                 tab.addBoolean("Velocity Control", () -> this.velocityControl);
                 tab.addNumber("Angle Difference", () -> desiredAngle - currentAngle);
+
+                tab.add("Flip",Commands.runOnce(this::flipModules));
                 // tab.addNumber("Drive Motor Bus Voltage", driveMotor::getBusVoltage);
             case MINIMAL:
                 break;

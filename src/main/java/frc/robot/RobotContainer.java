@@ -29,6 +29,7 @@ import frc.robot.Constants.WristConstants;
 import frc.robot.commands.SwerveJoystickCommand;
 import frc.robot.commands.TheGreatBalancingAct;
 import frc.robot.commands.SwerveJoystickCommand.DodgeDirection;
+import frc.robot.commands.VisionAutos.ToNearestGridDebug;
 import frc.robot.commands.autos.Auto3PieceLong;
 import frc.robot.commands.autos.Auto3PieceShort;
 import frc.robot.commands.autos.Balance;
@@ -85,7 +86,7 @@ public class RobotContainer {
 
   private SendableChooser<Supplier<CommandBase>> autoChooser = new SendableChooser<Supplier<CommandBase>>();
 
-  private PrimalSunflower sunflower = new PrimalSunflower(VisionConstants.limelightName, swerveDrive);
+  private PrimalSunflower sunflower = new PrimalSunflower(VisionConstants.kLimelightName, swerveDrive);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -200,7 +201,7 @@ public class RobotContainer {
       .onFalse(shooter.setPowerZero());
 
     commandOperatorController.square()
-      .onTrue(new InstantCommand(() -> sunflower.useFertilizer()));
+      .onTrue(new InstantCommand(() -> new ToNearestGridDebug(swerveDrive, sunflower)));
     commandOperatorController.cross()
       .onTrue(new InstantCommand(() -> sunflower.usePlantFood()));  
   }

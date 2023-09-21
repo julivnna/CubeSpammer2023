@@ -34,17 +34,28 @@ import frc.robot.subsystems.vision.jurrasicMarsh.LimelightHelperUser;
 import frc.robot.subsystems.vision.jurrasicMarsh.LimelightHelpers;
 
 public class PrimalSunflower implements Reportable {
-    // Just filler positions
+    // XYZ coordinates of all grid positions.
+    // Relative to bottom left corner of field (closest to blue alliance cable side) being (0, 0, 0)
     private Double[][] gridPositions = {
-        {6.5, 1.1, 0.0},
-        {6.5, 0.4, 0.0},
-        {6.5, -0.15, 0.0},
-        {6.5, -0.7, 0.0},
-        {6.5, -1.25, 0.0},
-        {6.5, -1.8, 0.0},
-        {6.5, -2.35, 0.0},
-        {6.5, -2.95, 0.0},
-        {6.5, -3.55, 0.0}
+        // {6.5, 1.1, 0.0},
+        // {6.5, 0.4, 0.0},
+        // {6.5, -0.15, 0.0},
+        // {6.5, -0.7, 0.0},
+        // {6.5, -1.25, 0.0},
+        // {6.5, -1.8, 0.0},
+        // {6.5, -2.35, 0.0},
+        // {6.5, -2.95, 0.0},
+        // {6.5, -3.55, 0.0}
+
+        {1.75, 0.41, 0.0},
+        {1.75, 1.06, 0.0},
+        {1.75, 1.61, 0.0},
+        {1.75, 2.19, 0.0},
+        {1.75, 2.75, 0.0},
+        {1.75, 3.30, 0.0},
+        {1.75, 3.87, 0.0},
+        {1.75, 4.42, 0.0},
+        {1.75, 5.06, 0.0}
     };
 
     //robot position
@@ -111,7 +122,7 @@ public class PrimalSunflower implements Reportable {
         if (limelight == null) {
             return yee;
         }
-        limelight.setPipeline(VisionConstants.aprilTagPipeline);
+        limelight.setPipeline(VisionConstants.kAprilTagPipeline);
         
         Pose3d pos = new Pose3d();
         if(limelight.hasValidTarget()) {
@@ -126,7 +137,7 @@ public class PrimalSunflower implements Reportable {
             return null;
         }
 
-        limelight.setPipeline(VisionConstants.aprilTagPipeline);
+        limelight.setPipeline(VisionConstants.kAprilTagPipeline);
         
         if(limelight.hasValidTarget()) {
             return limelightUser.getPose3d(); // Replace w different met? Idk i just copied it from generateSun()
@@ -187,27 +198,22 @@ public class PrimalSunflower implements Reportable {
             );
     }
 
-    public Trajectory useFertilizer() {
+    /**
+     * Debug method to generate trajectory to nearest grid and display on shuffleboard.
+     * 
+     * @return Trajectory to get to the closest grid.
+     */
+    public Trajectory toNearestGridDebug(SwerveDrivetrain swerveDrive) {
         robotPos = generateSun();
-        Double[] gridPos = getClosestZombieTile();
+        Double[] gridPos = getClosestZombieTile(); // Get coordinates of closest grid
 
-        Double yDist = gridPos[1] - robotPos[1];
-        Double xDist = gridPos[0] - robotPos[0];
-        Double offset = 0.1;
-        
-        SmartDashboard.putString("ATag First Point Coords", "X: " + firstPoint.position.getX() + " Y: " + firstPoint.position.getY());
-        SmartDashboard.putString("ATag Second Point Coords", "X: " + secondPoint.position.getX() + " Y: " + secondPoint.position.getY());
-        SmartDashboard.putString("ATag Third Point Coords", "X: " + thirdPoint.position.getX() + " Y: " + thirdPoint.position.getY());
-
-        
         Trajectory trajectory = 
             TrajectoryGenerator.generateTrajectory(
-                new Pose2d(xDist - offset, robotPos[1], Rotation2d.fromDegrees(0)),
                 List.of(
-                    new Translation2d(generateSun()[0], yDist) // might break because only one translation2d
+                    swerveDrive.getPose(),
+                    new Pose2d(new Translation2d(gridPos[0], gridPos[1]), Rotation2d.fromDegrees(180))
                 ),
-                new Pose2d(new Translation2d(offset, robotPos[1]), Rotation2d.fromDegrees(0)),
-                new TrajectoryConfig(3, SwerveDriveConstants.kTeleMaxAcceleration) // constants for debugging purposes
+                new TrajectoryConfig(PathPlannerConstants.kPPMaxVelocity, PathPlannerConstants.kPPMaxAcceleration) // constants for debugging purposes
             );
 
         field.getObject("traj").setTrajectory(trajectory);

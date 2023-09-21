@@ -259,8 +259,8 @@ public final class Constants {
   }
 
   public static final class PathPlannerConstants {
-    private static final double kPPMaxVelocity = 3;
-    private static final double kPPMaxAcceleration = 3;
+    public static final double kPPMaxVelocity = 3;
+    public static final double kPPMaxAcceleration = 3;
     public static final PathConstraints kPPPathConstraints = new PathConstraints(kPPMaxVelocity, kPPMaxAcceleration);
 
     public static final double kPP_P = new PrefDouble("PP_kP", 0.25).get();
@@ -277,7 +277,8 @@ public final class Constants {
   }
 
   public static final class VisionConstants {
-    public static final String limelightName = "limelight-high";
-    public static final int aprilTagPipeline = 4;
+    public static final String kLimelightName = "limelight-high";
+    public static final int kAprilTagPipeline = 4;
+    public static final double kSlidingOffset = 0.4; // Meters away from grid while robot is sliding.
   }
 }

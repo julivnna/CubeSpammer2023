@@ -14,6 +14,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.SwerveDriveConstants.CANCoderConstants;
+import frc.robot.util.preferences.PrefDouble;
 
 import static frc.robot.Constants.*;
 
@@ -31,7 +34,7 @@ public class CANSwerveModule implements SwerveModule {
 
     private final PIDController turningController;
     private final boolean invertTurningEncoder;
-    private double CANCoderOffsetDegrees;
+    private PrefDouble CANCoderOffsetDegrees; 
 
     private double currentPercent = 0;
     private double currentTurnPercent = 0;
@@ -56,7 +59,7 @@ public class CANSwerveModule implements SwerveModule {
      * @param CANCoderReversed
      */
     public CANSwerveModule(int driveMotorId, int turningMotorId, boolean invertDriveMotor, boolean invertTurningMotor, 
-    int CANCoderId, double CANCoderOffsetDegrees, boolean CANCoderReversed) {
+    int CANCoderId, PrefDouble CANCoderOffsetDegrees, boolean CANCoderReversed) {
         this.driveMotor = new TalonFX(driveMotorId, ModuleConstants.kCANivoreName);
         this.turnMotor = new TalonFX(turningMotorId, ModuleConstants.kCANivoreName);
 
@@ -83,7 +86,6 @@ public class CANSwerveModule implements SwerveModule {
         this.CANCoderOffsetDegrees = CANCoderOffsetDegrees;
         
         this.desiredState = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
-
         initEncoders();
     }
 
@@ -130,7 +132,7 @@ public class CANSwerveModule implements SwerveModule {
      * Reset the CANCoder's relative encoder using its absolute encoder
      */
     public void resetEncoder() {
-        double startAngle = (canCoder.getAbsolutePosition() - this.CANCoderOffsetDegrees) % 360;
+        double startAngle = (canCoder.getAbsolutePosition() - this.CANCoderOffsetDegrees.get()) % 360;
         canCoder.setPosition(startAngle);
     }
 
@@ -169,6 +171,13 @@ public class CANSwerveModule implements SwerveModule {
         currentTurnPercent = turnPower;
 
         turnMotor.set(ControlMode.PercentOutput, turnPower);
+    }
+
+    public void flipModules() {
+        this.CANCoderOffsetDegrees.set(this.CANCoderOffsetDegrees.get() + 180);
+        this.CANCoderOffsetDegrees.uploadPreferences();
+        //CANCoderConstants.kFLOffsetDeg.set(frontLeft.getTurnOffset() + frontLeft.getTurningPosition())
+        resetEncoder();
     }
     
     //****************************** GETTERS ******************************/
@@ -254,7 +263,7 @@ public class CANSwerveModule implements SwerveModule {
     }
 
     public double getTurnOffset() {
-        return this.CANCoderOffsetDegrees;
+        return this.CANCoderOffsetDegrees.get();
     }
 
     //****************************** SETTERS ******************************/
@@ -281,7 +290,7 @@ public class CANSwerveModule implements SwerveModule {
     }
 
     public void setTurnOffset(double offset) {
-        this.CANCoderOffsetDegrees = offset;
+        this.CANCoderOffsetDegrees.set(offset);
         resetEncoder();
     }
 
@@ -301,7 +310,7 @@ public class CANSwerveModule implements SwerveModule {
                 break;
             case ALL:
                 
-                tab.addNumber("Turn Offset", () -> this.CANCoderOffsetDegrees);
+                tab.addNumber("Turn Offset", () -> this.CANCoderOffsetDegrees.get());
                 tab.addNumber("Turn percent (motor controller)", turnMotor::getMotorOutputPercent);
                 tab.addNumber("Turn percent (current)", () -> this.currentTurnPercent);
             case MEDIUM:
@@ -320,6 +329,8 @@ public class CANSwerveModule implements SwerveModule {
                 tab.addNumber("Desired Angle", () -> desiredAngle);
                 tab.addBoolean("Velocity Control", () -> this.velocityControl);
                 tab.addNumber("Angle Difference", () -> desiredAngle - currentAngle);
+
+                tab.add("Flip",Commands.runOnce(this::flipModules));
                 // tab.addNumber("Drive Motor Bus Voltage", driveMotor::getBusVoltage);
             case MINIMAL:
                 break;
@@ -337,7 +348,7 @@ public class CANSwerveModule implements SwerveModule {
                 SmartDashboard.putNumber("Turn Motor #" + turnMotorID + " Current", turnMotor.getStatorCurrent());
                 SmartDashboard.putNumber("Drive Motor #" + driveMotorID + " Voltage", driveMotor.getMotorOutputVoltage());
                 SmartDashboard.putNumber("Turn Motor #" + turnMotorID + " Voltage", turnMotor.getMotorOutputVoltage());
-                SmartDashboard.putNumber("Turn Offset", this.CANCoderOffsetDegrees);
+                SmartDashboard.putNumber("Turn Offset", this.CANCoderOffsetDegrees.get());
             case MEDIUM:
                 SmartDashboard.putNumber("Module velocity #" + driveMotorID, getDriveVelocity());
                 SmartDashboard.putNumber("Drive percent #" + driveMotorID, driveMotor.getMotorOutputPercent());

@@ -280,5 +280,7 @@ public final class Constants {
     public static final String kLimelightName = "limelight-high";
     public static final int kAprilTagPipeline = 4;
     public static final double kSlidingOffset = 0.4; // Meters away from grid while robot is sliding.
+    public static final double fieldXOffset = 8; // Guess
+    public static final double fieldYOffset = 3.5; // Guess
   }
 }

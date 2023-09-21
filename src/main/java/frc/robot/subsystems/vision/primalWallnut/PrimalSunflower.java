@@ -235,14 +235,15 @@ public class PrimalSunflower implements Reportable {
                 tab.addNumber("Closest Grid ID", () -> getClosestZombieLane());
                 tab.addBoolean("AprilTag Found", () -> limelight.hasValidTarget());
                 
-                tab.addNumber("Traj Point 1 Pose X", () -> firstPoint.position.getX());
-                tab.addNumber("Traj Point 1 Pose Y", () -> firstPoint.position.getY());
+                // Only trajectory point is the grid position now.
+                // tab.addNumber("Traj Point 1 Pose X", () -> firstPoint.position.getX());
+                // tab.addNumber("Traj Point 1 Pose Y", () -> firstPoint.position.getY());
 
-                tab.addNumber("Traj Point 2 Pose X", () -> secondPoint.position.getX());
-                tab.addNumber("Traj Point 2 Pose Y", () -> secondPoint.position.getY());
+                // tab.addNumber("Traj Point 2 Pose X", () -> secondPoint.position.getX());
+                // tab.addNumber("Traj Point 2 Pose Y", () -> secondPoint.position.getY());
 
-                tab.addNumber("Traj Point 3 Pose X", () -> thirdPoint.position.getX());
-                tab.addNumber("Traj Point 3 Pose Y", () -> thirdPoint.position.getY());
+                // tab.addNumber("Traj Point 3 Pose X", () -> thirdPoint.position.getX());
+                // tab.addNumber("Traj Point 3 Pose Y", () -> thirdPoint.position.getY());
 
                 tab.add("Field Position", field).withSize(6, 3);
             case MEDIUM:

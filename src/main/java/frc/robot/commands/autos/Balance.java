@@ -25,7 +25,7 @@ public class Balance extends SequentialCommandGroup {
         addCommands(
             Commands.sequence(
                 Commands.deadline(
-                    new WaitCommand(14),
+                    new WaitCommand(14.5),
                     Commands.sequence(
                         Commands.runOnce(() -> swerve.getImu().zeroAll()),
                         autoBuilder.resetPose(pathGroup.get(0)),

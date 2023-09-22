@@ -41,13 +41,13 @@ public final class Constants {
     public static final int kWristID = 20;
     // public static final int kRightWristID = 0;
     public static final int kLeftEncoderID = 15;
-    public static final int kWristStow = 26000;
-    public static final int kWristStowPowerOff = 26334;
-    public static final int kWristGround = 1000;
+    public static final int kWristStow = 39000; // multiplied by 1.5
+    public static final int kWristStowPowerOff = 39501; // multiplied by 1.5
+    public static final int kWristGround = 1500; // multiplied by 1.5
     public static final int kWristLow = kWristStow;
     public static final int kWristMid = kWristStow;
     public static final int kWristHigh = kWristStow;
-    public static final int kWristOff = 23000; // everything after this is basically stow
+    public static final int kWristOff = 34500; // everything after this is basically stow // multiplied by 1.5
     
     public static final int kWristLowerLimit = 0;
     public static final int kWristUpperLimit = kWristStow;
@@ -58,11 +58,11 @@ public final class Constants {
     public static final PrefDouble kWristF = new PrefDouble("WristF", 0);
     public static final double kLowPassAlpha = 0.11765;
     public static final double kJoystickScale = 500;
-    public static final int kWristCruiseVelocity = 10000;
+    public static final int kWristCruiseVelocity = 9000;
     public static final int kWristMotionAcceleration = 10000;
     public static final double kWristDeadband = 0.05;
     public static final PrefDouble kWristFF = new PrefDouble("Wrist_FF", 0.05);
-    public static final double kWristGearRatio = 40;
+    public static final double kWristGearRatio = 60;
     public static final double kFalconTicksPerAbsoluteTicks = kWristGearRatio * 2048/4096;
     public static final double kDegreesPerTick = 360 / kWristGearRatio / 2048;
 

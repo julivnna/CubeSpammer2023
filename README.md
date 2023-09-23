@@ -1,5 +1,7 @@
 # CubeSpammer2023
 
+[![CI](https://github.com/nerdherd/CubeSpammer2023/actions/workflows/build.yml/badge.svg)](https://github.com/nerdherd/CubeSpammer2023/actions/workflows/build.yml)
+
 FRC Team 687's code for its first Charged Up 2023 offseason robot.
 
 ## How to Use

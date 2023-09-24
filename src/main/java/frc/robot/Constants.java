@@ -43,7 +43,7 @@ public final class Constants {
     public static final int kLeftEncoderID = 15;
     public static final int kWristStow = 39000; //43087; //39000; // multiplied by 1.5 
     public static final int kWristStowPowerOff = 39501; // multiplied by 1.5
-    public static final int kWristGround = 10;//1500; // multiplied by 1.5
+    public static final int kWristGround = 4000; //Was 10                    //1500; // multiplied by 1.5
     public static final int kWristLow = kWristStow;
     public static final int kWristMid = kWristStow;
     public static final int kWristHigh = kWristStow;

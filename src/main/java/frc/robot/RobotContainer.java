@@ -167,7 +167,7 @@ public class RobotContainer {
     // R1:  press = aim mid   let go = score + stow
     // R2:  press = aim high  let go = score + stow
     commandOperatorController.L2()
-      .onTrue(wrist.motionMagicCommand((WristConstants.kWristGround))
+      .onTrue(wrist.motionMagicCommand((WristConstants.kWristMow))
         .andThen(shooter.intakeUpdated()))
       .onFalse(wrist.motionMagicCommand((WristConstants.kWristStow))
         .andThen(shooter.holdUpdated()));
@@ -210,7 +210,7 @@ public class RobotContainer {
 
     //Vaccuum / Mow the lawn
     commandOperatorController.triangle()
-      .onTrue(wrist.motionMagicCommand(WristConstants.kWristMow) // ** ADD TARGET TICKS CONSTANT FOR MOW
+      .onTrue(wrist.motionMagicCommand(WristConstants.kWristGround) // ** ADD TARGET TICKS CONSTANT FOR MOW
         .andThen(shooter.intakeUpdated()))
       .onFalse(wrist.motionMagicCommand(WristConstants.kWristStow)
         .andThen(shooter.holdUpdated()));

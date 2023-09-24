@@ -45,6 +45,7 @@ public final class Constants {
     public static final int kWristStowPowerOff = 39501; // multiplied by 1.5
     public static final int kWristGround = 10;//1500; // multiplied by 1.5
     public static final int kWristLow = kWristStow;
+    public static final int kWristMow = 1000; // Tune later for low but not too low
     public static final int kWristMid = kWristStow;
     public static final int kWristHigh = kWristStow;
     public static final int kWristOff = 32400; //34500; // everything after this is basically stow // multiplied by 1.5

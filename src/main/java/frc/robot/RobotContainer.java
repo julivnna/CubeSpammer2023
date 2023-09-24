@@ -166,7 +166,7 @@ public class RobotContainer {
     // L1:  press = aim low   let go = score + stow
     // R1:  press = aim mid   let go = score + stow
     // R2:  press = aim high  let go = score + stow
-    commandDriverController.L2()
+    commandOperatorController.L2()
       .onTrue(wrist.motionMagicCommand((WristConstants.kWristGround))
         .andThen(shooter.intakeUpdated()))
       .onFalse(wrist.motionMagicCommand((WristConstants.kWristStow))
@@ -196,17 +196,25 @@ public class RobotContainer {
     //   )
     //   .onFalse(shooter.setPowerZero().alongWith(wrist.motionMagicCommand(WristConstants.kWristStow)));
     
-    commandDriverController.L1()
+    commandOperatorController.L1()
       .onTrue(shooter.outtakeLowUpdated())
       .onFalse(shooter.setPowerZero());
 
-    commandDriverController.R1()
+    commandOperatorController.R1()
       .onTrue(shooter.outtakeMidUpdated())
       .onFalse(shooter.setPowerZero());
 
-    commandDriverController.triangle()
+    commandOperatorController.R2()
       .onTrue(shooter.outtakeHighUpdated())
       .onFalse(shooter.setPowerZero());
+
+    //Vaccuum / Mow the lawn
+    commandOperatorController.triangle()
+      .onTrue(wrist.motionMagicCommand(WristConstants.kWristMow) // ** ADD TARGET TICKS CONSTANT FOR MOW
+        .andThen(shooter.intakeUpdated()))
+      .onFalse(wrist.motionMagicCommand(WristConstants.kWristStow)
+        .andThen(shooter.holdUpdated()));
+
 
     // commandOperatorController.square()
     //   .onTrue(new InstantCommand(() -> new ToNearestGridDebug(swerveDrive, sunflower)));

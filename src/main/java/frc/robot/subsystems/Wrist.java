@@ -25,12 +25,12 @@ public class Wrist extends SubsystemBase implements Reportable {
     private TalonFX wrist;
     private int targetTicks = WristConstants.kWristStow;
     public BooleanSupplier atTargetPosition = () -> false;
-    private TalonSRX leftEncoder;
+    // private TalonSRX leftEncoder;
     private ExponentialSmoothingFilter joystickFilter = new ExponentialSmoothingFilter(WristConstants.kLowPassAlpha);
 
     public Wrist() {
         wrist = new TalonFX(WristConstants.kWristID);
-        leftEncoder = new TalonSRX(WristConstants.kLeftEncoderID);
+        // leftEncoder = new TalonSRX(WristConstants.kLeftEncoderID);
         init();
         resetEncoders();
         wrist.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 30, 0.1));
@@ -54,9 +54,9 @@ public class Wrist extends SubsystemBase implements Reportable {
     public void init() {
         wrist.setNeutralMode(NeutralMode.Brake);
         wrist.setInverted(true);
-        leftEncoder.setInverted(false);
-        leftEncoder.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Absolute, 0, 1000);
-        leftEncoder.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Relative, 1, 1000);
+        // leftEncoder.setInverted(false);
+        // leftEncoder.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Absolute, 0, 1000);
+        // leftEncoder.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.CTRE_MagEncoder_Relative, 1, 1000);
         //test
         zeroEncodersStow();
         wrist.config_kP(0, WristConstants.kWristP.get());
@@ -70,8 +70,9 @@ public class Wrist extends SubsystemBase implements Reportable {
     }
 
     public void resetEncoders(){
-        double absoluteTicks = leftEncoder.getSelectedSensorPosition(0);
-        wrist.setSelectedSensorPosition(absoluteTicks * WristConstants.kFalconTicksPerAbsoluteTicks, 0, 100);
+        // double absoluteTicks = leftEncoder.getSelectedSensorPosition(0);
+        // wrist.setSelectedSensorPosition(absoluteTicks * WristConstants.kFalconTicksPerAbsoluteTicks, 0, 100);
+        wrist.setSelectedSensorPosition(WristConstants.kWristStow);
         WristConstants.kWristP.loadPreferences();
         WristConstants.kWristI.loadPreferences();
         WristConstants.kWristD.loadPreferences();
@@ -149,8 +150,8 @@ public class Wrist extends SubsystemBase implements Reportable {
     }
 
     public void zeroEncodersStow() {
-        leftEncoder.setSelectedSensorPosition(WristConstants.kWristStowPowerOff / WristConstants.kFalconTicksPerAbsoluteTicks, 1, 1000);
-        leftEncoder.setSelectedSensorPosition(WristConstants.kWristStowPowerOff / WristConstants.kFalconTicksPerAbsoluteTicks, 0, 1000);
+        // leftEncoder.setSelectedSensorPosition(WristConstants.kWristStowPowerOff / WristConstants.kFalconTicksPerAbsoluteTicks, 1, 1000);
+        // leftEncoder.setSelectedSensorPosition(WristConstants.kWristStowPowerOff / WristConstants.kFalconTicksPerAbsoluteTicks, 0, 1000);
         wrist.setSelectedSensorPosition(WristConstants.kWristStowPowerOff, 0, 1000);
     }
 
@@ -167,16 +168,16 @@ public class Wrist extends SubsystemBase implements Reportable {
                 tab.addNumber("Motor Output", wrist::getMotorOutputPercent);
                 tab.addString("Control Mode", wrist.getControlMode()::toString);
                 tab.add("Zero wrist angle", Commands.runOnce(() -> {
-                    leftEncoder.setSelectedSensorPosition(0, 1, 1000);
-                    leftEncoder.setSelectedSensorPosition(0, 0, 1000);
+                    // leftEncoder.setSelectedSensorPosition(0, 1, 1000);
+                    // leftEncoder.setSelectedSensorPosition(0, 0, 1000);
                     wrist.setSelectedSensorPosition(0, 0, 1000);
                     resetEncoders();
                 }));
                 // tab.addNumber("Wrist Target Velocity", wrist::getActiveTrajectoryVelocity); 
                 // tab.addNumber("Closed loop error", wrist::getClosedLoopError);
                 tab.add("Stow wrist angle", Commands.runOnce(() -> {
-                    leftEncoder.setSelectedSensorPosition(WristConstants.kWristStowPowerOff / WristConstants.kFalconTicksPerAbsoluteTicks, 1, 1000);
-                    leftEncoder.setSelectedSensorPosition(WristConstants.kWristStowPowerOff / WristConstants.kFalconTicksPerAbsoluteTicks, 0, 1000);
+                    // leftEncoder.setSelectedSensorPosition(WristConstants.kWristStowPowerOff / WristConstants.kFalconTicksPerAbsoluteTicks, 1, 1000);
+                    // leftEncoder.setSelectedSensorPosition(WristConstants.kWristStowPowerOff / WristConstants.kFalconTicksPerAbsoluteTicks, 0, 1000);
                     wrist.setSelectedSensorPosition(WristConstants.kWristStowPowerOff, 0, 1000);
                 }));
 
@@ -189,8 +190,8 @@ public class Wrist extends SubsystemBase implements Reportable {
 
             case MINIMAL:
                 tab.addNumber("Current Wrist Ticks", wrist::getSelectedSensorPosition);
-                tab.addNumber("Current Wrist Absolute Ticks", () -> leftEncoder.getSelectedSensorPosition(0));
-                tab.addNumber("Current Wrist Absolute Angle", () -> leftEncoder.getSelectedSensorPosition(0) / 4096 * 360);
+                // tab.addNumber("Current Wrist Absolute Ticks", () -> leftEncoder.getSelectedSensorPosition(0));
+                // tab.addNumber("Current Wrist Absolute Angle", () -> leftEncoder.getSelectedSensorPosition(0) / 4096 * 360);
                 tab.addNumber("Target Wrist Ticks", () -> targetTicks);
                 tab.addNumber("MotionMagic Velocity", wrist::getActiveTrajectoryVelocity);
                 tab.addNumber("MotionMagic Position", wrist::getActiveTrajectoryPosition);

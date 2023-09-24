@@ -29,7 +29,7 @@ import frc.robot.Constants.WristConstants;
 import frc.robot.commands.SwerveJoystickCommand;
 import frc.robot.commands.TheGreatBalancingAct;
 import frc.robot.commands.SwerveJoystickCommand.DodgeDirection;
-import frc.robot.commands.VisionAutos.ToNearestGridDebug;
+// import frc.robot.commands.VisionAutos.ToNearestGridDebug;
 import frc.robot.commands.autos.Auto3PieceLong;
 import frc.robot.commands.autos.Auto3PieceShort;
 import frc.robot.commands.autos.Balance;
@@ -107,6 +107,8 @@ public class RobotContainer {
   }
 
   public void initDefaultCommands() {
+    wrist.resetEncoders(); // Wrist must start in stow position
+
     swerveDrive.setDefaultCommand(
       new SwerveJoystickCommand(
         swerveDrive,
@@ -150,7 +152,7 @@ public class RobotContainer {
     // These button bindings are chosen for testing, and may be changed based on
     commandDriverController.share().onTrue(Commands.runOnce(imu::zeroHeading).andThen(() -> imu.setOffset(180)));
     commandDriverController.options().onTrue(Commands.runOnce(swerveDrive::resetEncoders));
-    commandDriverController.options().onTrue(Commands.runOnce(wrist::resetEncoders));
+    // commandDriverController.options().onTrue(Commands.runOnce(wrist::resetEncoders));
     commandDriverController.PS().whileTrue(new TheGreatBalancingAct(swerveDrive));
     commandDriverController.triangle().onTrue(shooter.setPower(1)).onFalse(shooter.setPower(0));
 
@@ -184,14 +186,20 @@ public class RobotContainer {
     //   )
     // );
 
-    commandDriverController.L1()
-      .whileTrue(Commands.sequence(
-        wrist.motionMagicCommand((WristConstants.kWristGround + WristConstants.kWristStow) / 2),
-        Commands.waitSeconds(0.25),
-        shooter.outtakeLowUpdated()
-      ))
-      .onFalse(shooter.setPowerZero().alongWith(wrist.motionMagicCommand(WristConstants.kWristStow)));
+    // commandDriverController.L1()
+    //   .whileTrue(Commands.sequence(
+    //     // wrist.motionMagicCommand((WristConstants.kWristGround + WristConstants.kWristStow) / 2),
+    //     // Commands.waitSeconds(0.25),
+    //     wrist.motionMagicCommand((WristConstants.kWristStow))
+    //     .andThen(shooter.holdUpdated()))
+    //     .andThen(shooter.outtakeLowUpdated())
+    //   )
+    //   .onFalse(shooter.setPowerZero().alongWith(wrist.motionMagicCommand(WristConstants.kWristStow)));
     
+    commandDriverController.L1()
+      .onTrue(shooter.outtakeLowUpdated())
+      .onFalse(shooter.setPowerZero());
+
     commandDriverController.R1()
       .onTrue(shooter.outtakeMidUpdated())
       .onFalse(shooter.setPowerZero());
@@ -200,10 +208,10 @@ public class RobotContainer {
       .onTrue(shooter.outtakeHighUpdated())
       .onFalse(shooter.setPowerZero());
 
-    commandOperatorController.square()
-      .onTrue(new InstantCommand(() -> new ToNearestGridDebug(swerveDrive, sunflower)));
-    commandOperatorController.cross()
-      .onTrue(new InstantCommand(() -> sunflower.toNearestGrid()));
+    // commandOperatorController.square()
+    //   .onTrue(new InstantCommand(() -> new ToNearestGridDebug(swerveDrive, sunflower)));
+    // commandOperatorController.cross()
+    //   .onTrue(new InstantCommand(() -> sunflower.toNearestGrid()));
   }
 
   private void initAutoChoosers() {

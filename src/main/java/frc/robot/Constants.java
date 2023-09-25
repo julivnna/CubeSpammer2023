@@ -43,9 +43,9 @@ public final class Constants {
     public static final int kLeftEncoderID = 15;
     public static final int kWristStow = 39000; //43087; //39000; // multiplied by 1.5 
     public static final int kWristStowPowerOff = 39501; // multiplied by 1.5
-    public static final int kWristGround = 100;//1500; // multiplied by 1.5
+    public static final int kWristGround = 1000; //1500; // multiplied by 1.5
     public static final int kWristLow = kWristStow;
-    public static final int kWristMow = 4000; // Tune later for low but not too low
+    public static final int kWristMow = 10000; // Tune later for low but not too low
     public static final int kWristMid = kWristStow;
     public static final int kWristHigh = kWristStow;
     public static final int kWristOff = 32400; //34500; // everything after this is basically stow // multiplied by 1.5

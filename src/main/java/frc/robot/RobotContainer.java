@@ -166,8 +166,14 @@ public class RobotContainer {
     // L1:  press = aim low   let go = score + stow
     // R1:  press = aim mid   let go = score + stow
     // R2:  press = aim high  let go = score + stow
-    commandOperatorController.L2()
-      .onTrue(wrist.motionMagicCommand((WristConstants.kWristMow))
+    int temp = WristConstants.kWristGround;
+
+    // commandOperatorController.square()
+    //   .onTrue(temp += 10)
+    //   .onFalse(temp -= 10);
+
+    commandOperatorController.triangle()
+      .onTrue(wrist.motionMagicCommand((WristConstants.kWristGround))
         .andThen(shooter.intakeUpdated()))
       .onFalse(wrist.motionMagicCommand((WristConstants.kWristStow))
         .andThen(shooter.holdUpdated()));
@@ -202,15 +208,15 @@ public class RobotContainer {
 
     commandOperatorController.R1()
       .onTrue(shooter.outtakeMidUpdated())
-      .onFalse(shooter.setPowerZero());
+      .onFalse(shooter.setPowerZero()); 
 
-    commandOperatorController.R2()
+    commandOperatorController.R2() // Circle
       .onTrue(shooter.outtakeHighUpdated())
       .onFalse(shooter.setPowerZero());
 
     //Vaccuum / Mow the lawn
-    commandOperatorController.triangle()
-      .onTrue(wrist.motionMagicCommand(WristConstants.kWristGround) // ** ADD TARGET TICKS CONSTANT FOR MOW
+    commandOperatorController.L2() // Triangle
+      .onTrue(wrist.motionMagicCommand(WristConstants.kWristMow) // ** ADD TARGET TICKS CONSTANT FOR MOW
         .andThen(shooter.intakeUpdated()))
       .onFalse(wrist.motionMagicCommand(WristConstants.kWristStow)
         .andThen(shooter.holdUpdated()));

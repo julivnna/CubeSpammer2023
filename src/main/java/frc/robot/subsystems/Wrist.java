@@ -24,6 +24,7 @@ import frc.robot.util.filters.ExponentialSmoothingFilter;
 public class Wrist extends SubsystemBase implements Reportable {
     private TalonFX wrist;
     private int targetTicks = WristConstants.kWristStow;
+    private int targetIntakeTicks = WristConstants.kWristLowPickup;
     public BooleanSupplier atTargetPosition = () -> false;
     // private TalonSRX leftEncoder;
     private ExponentialSmoothingFilter joystickFilter = new ExponentialSmoothingFilter(WristConstants.kLowPassAlpha);
@@ -107,6 +108,23 @@ public class Wrist extends SubsystemBase implements Reportable {
         double angle = ticks * WristConstants.kDegreesPerTick % 360;
         return angle;
     }
+
+    public CommandBase changeIntakeTargetTicks(int increment) {
+        return Commands.runOnce(() -> {targetIntakeTicks += increment;});
+    }
+
+    public CommandBase resetIntakeTargetTicks() {
+        return Commands.runOnce(() -> {targetIntakeTicks = 10000;});
+    }
+
+    public int returnIntakeTargetTicks() {
+        return targetIntakeTicks;
+    }
+
+
+    // public void changeTargetTicks(int increment) {
+    //     targetPickupTicks += increment;
+    // }
 
     public double getWristAngleRadians() {
         return Math.toRadians(getWristAngle());

@@ -76,6 +76,13 @@ public class Shooter extends SubsystemBase {
         return setPower(0,0);
     }
 
+    public CommandBase outtakeFullUpdated() {
+        return Commands.runOnce(() -> {
+            topMotor.set(ControlMode.PercentOutput, ShooterConstants.kTopFullOuttakePower.get());
+            bottomMotor.set(ControlMode.PercentOutput, ShooterConstants.kBottomFullOuttakePower.get());
+        });
+    }
+
     public CommandBase outtakeHighUpdated() {
         return Commands.runOnce(() -> {
             topMotor.set(ControlMode.PercentOutput, ShooterConstants.kTopHighOuttakePower.get());
@@ -96,6 +103,7 @@ public class Shooter extends SubsystemBase {
             bottomMotor.set(ControlMode.PercentOutput, ShooterConstants.kBottomLowOuttakePower.get());
         });
     }
+
 
     public CommandBase intakeUpdated() {
         return Commands.runOnce(() -> {

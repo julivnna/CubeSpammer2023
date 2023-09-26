@@ -43,9 +43,11 @@ public final class Constants {
     public static final int kLeftEncoderID = 15;
     public static final int kWristStow = 39000; //43087; //39000; // multiplied by 1.5 
     public static final int kWristStowPowerOff = 39501; // multiplied by 1.5
-    public static final int kWristGround = 1000; //1500; // multiplied by 1.5
+    
+    public static final int kWristSuperLowPickup = 1000; //1500; // multiplied by 1.5
+    public static final int kWristLowPickup = 10000; // Tune later for low but not too low
+
     public static final int kWristLow = kWristStow;
-    public static final int kWristMow = 10000; // Tune later for low but not too low
     public static final int kWristMid = kWristStow;
     public static final int kWristHigh = kWristStow;
     public static final int kWristOff = 32400; //34500; // everything after this is basically stow // multiplied by 1.5
@@ -76,6 +78,7 @@ public final class Constants {
     public static final PrefDouble kTopLowOuttakePower = new PrefDouble("TopLowOuttakePower", 0.1); //0.5
     public static final PrefDouble kTopMidOuttakePower = new PrefDouble("TopMidOuttakePower", 0.4); //0.5
     public static final PrefDouble kTopHighOuttakePower = new PrefDouble("TopHighOuttakePower", 0.5); //0.5
+    public static final PrefDouble kTopFullOuttakePower = new PrefDouble("TopFullOuttakePower", 0.75);
     public static final PrefDouble kTopIntakeNeutralPower = new PrefDouble("TopIntakeNeutralPower", -0.05); //-0.25
     public static final PrefDouble kTopCubeCurrent = new PrefDouble("TopCubeCurrent", 30); // tune this!
 
@@ -83,6 +86,7 @@ public final class Constants {
     public static final PrefDouble kBottomLowOuttakePower = new PrefDouble("BottomLowOuttakePower", 0.2); //0.5
     public static final PrefDouble kBottomMidOuttakePower = new PrefDouble("BottomMidOuttakePower",0.4); //0.5
     public static final PrefDouble kBottomHighOuttakePower = new PrefDouble("BottomHighOuttakePower", 0.5); //0.5
+    public static final PrefDouble kBottomFullOuttakePower = new PrefDouble("BottomFullOuttakePower", 0.75);
     public static final PrefDouble kBottomIntakeNeutralPower = new PrefDouble("BottomIntakeNeutralPower", -0.05); //-0.25
     public static final PrefDouble kBottomCubeCurrent = new PrefDouble("BottomCubeCurrent", 30); // tune this!
   }

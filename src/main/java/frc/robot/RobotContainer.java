@@ -166,17 +166,12 @@ public class RobotContainer {
     // L1:  press = aim low   let go = score + stow
     // R1:  press = aim mid   let go = score + stow
     // R2:  press = aim high  let go = score + stow
-    int temp = WristConstants.kWristGround;
 
     // commandOperatorController.square()
     //   .onTrue(temp += 10)
     //   .onFalse(temp -= 10);
 
-    commandOperatorController.triangle()
-      .onTrue(wrist.motionMagicCommand((WristConstants.kWristGround))
-        .andThen(shooter.intakeUpdated()))
-      .onFalse(wrist.motionMagicCommand((WristConstants.kWristStow))
-        .andThen(shooter.holdUpdated()));
+    
 
     // Trigger cubeTrigger = new Trigger(shooter::hasCube);
     // cubeTrigger.onTrue(
@@ -201,25 +196,58 @@ public class RobotContainer {
     //     .andThen(shooter.outtakeLowUpdated())
     //   )
     //   .onFalse(shooter.setPowerZero().alongWith(wrist.motionMagicCommand(WristConstants.kWristStow)));
+
+    commandOperatorController.povUp()
+      .onTrue(wrist.changeIntakeTargetTicks(100));
     
+    commandOperatorController.povDown()
+      .onTrue(wrist.changeIntakeTargetTicks(-100));
+    
+    commandOperatorController.options()
+      .onTrue(wrist.resetIntakeTargetTicks());
+
+
+    commandOperatorController.triangle()
+    .onTrue(wrist.motionMagicCommand((WristConstants.kWristHigh))
+      .andThen(shooter.outtakeHighUpdated()))
+    .onFalse(wrist.motionMagicCommand((WristConstants.kWristStow))
+      .andThen(shooter.holdUpdated()));
+
+    commandOperatorController.circle()
+    .onTrue(wrist.motionMagicCommand((WristConstants.kWristMid))
+      .andThen(shooter.outtakeMidUpdated()))
+    .onFalse(wrist.motionMagicCommand((WristConstants.kWristStow))
+      .andThen(shooter.holdUpdated()));
+
+    commandOperatorController.cross()
+    .onTrue(wrist.motionMagicCommand((WristConstants.kWristLow))
+      .andThen(shooter.outtakeLowUpdated()))
+    .onFalse(wrist.motionMagicCommand((WristConstants.kWristStow))
+      .andThen(shooter.holdUpdated()));
+
     commandOperatorController.L1()
-      .onTrue(shooter.outtakeLowUpdated())
-      .onFalse(shooter.setPowerZero());
-
-    commandOperatorController.R1()
-      .onTrue(shooter.outtakeMidUpdated())
-      .onFalse(shooter.setPowerZero()); 
-
-    commandOperatorController.R2() // Circle
-      .onTrue(shooter.outtakeHighUpdated())
-      .onFalse(shooter.setPowerZero());
+      .onTrue(shooter.intakeUpdated()
+        .andThen(wrist.motionMagicCommand(WristConstants.kWristSuperLowPickup)))
+      .onFalse(shooter.holdUpdated());
 
     //Vaccuum / Mow the lawn
     commandOperatorController.L2() // Triangle
-      .onTrue(wrist.motionMagicCommand(WristConstants.kWristMow) // ** ADD TARGET TICKS CONSTANT FOR MOW
-        .andThen(shooter.intakeUpdated()))
-      .onFalse(wrist.motionMagicCommand(WristConstants.kWristStow)
-        .andThen(shooter.holdUpdated()));
+    .onTrue(shooter.intakeUpdated() // ** ADD TARGET TICKS CONSTANT FOR MOW
+      .andThen(wrist.motionMagicCommand(wrist.returnIntakeTargetTicks())))
+    .onFalse(shooter.holdUpdated());
+
+    commandOperatorController.R1()
+      .onTrue(shooter.outtakeFullUpdated())
+      .onFalse(shooter.holdUpdated()); 
+
+    commandOperatorController.R2() // Circle
+      .onTrue(wrist.motionMagicCommand(WristConstants.kWristStow))
+      .onFalse(shooter.holdUpdated());
+
+    
+
+
+      
 
 
     // commandOperatorController.square()

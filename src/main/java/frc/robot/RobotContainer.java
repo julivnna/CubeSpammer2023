@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -198,13 +199,19 @@ public class RobotContainer {
     //   .onFalse(shooter.setPowerZero().alongWith(wrist.motionMagicCommand(WristConstants.kWristStow)));
 
     commandOperatorController.povUp()
-      .onTrue(wrist.changeIntakeTargetTicks(100));
+      .onTrue(wrist.changeIntakeTargetTicks(100)
+        .andThen(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.returnIntakeTargetTicks())));
+
     
     commandOperatorController.povDown()
-      .onTrue(wrist.changeIntakeTargetTicks(-100));
+      .onTrue(wrist.changeIntakeTargetTicks(-100)
+        .andThen(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.returnIntakeTargetTicks())));
+
     
     commandOperatorController.options()
-      .onTrue(wrist.resetIntakeTargetTicks());
+      .onTrue(wrist.resetIntakeTargetTicks()
+        .andThen(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.returnIntakeTargetTicks())));
+
 
 
     commandOperatorController.triangle()
@@ -233,7 +240,8 @@ public class RobotContainer {
     //Vaccuum / Mow the lawn
     commandOperatorController.L2() // Triangle
     .onTrue(shooter.intakeUpdated() // ** ADD TARGET TICKS CONSTANT FOR MOW
-      .andThen(wrist.motionMagicCommand(wrist.returnIntakeTargetTicks())))
+      .andThen(wrist.motionMagicCommand(wrist.returnIntakeTargetTicks())
+        .andThen(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.returnIntakeTargetTicks()))))
     .onFalse(shooter.holdUpdated());
 
     commandOperatorController.R1()

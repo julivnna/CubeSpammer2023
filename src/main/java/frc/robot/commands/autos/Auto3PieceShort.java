@@ -31,7 +31,7 @@ public class Auto3PieceShort extends SequentialCommandGroup {
                     autoBuilder.followPathWithEvents(pathGroup.get(0))
                 ),
                 Commands.parallel(
-                    wrist.motionMagicCommand(WristConstants.kWristGround),
+                    wrist.motionMagicCommand(WristConstants.kWristSuperLowPickup),
                     autoBuilder.followPathWithEvents(pathGroup.get(1)),
                     shoot.setPower(ShooterConstants.kTopIntakePower.get(), ShooterConstants.kBottomIntakePower.get())
                 ),
@@ -49,7 +49,7 @@ public class Auto3PieceShort extends SequentialCommandGroup {
                     autoBuilder.followPathWithEvents(pathGroup.get(4))
                 ),
                 Commands.parallel(
-                    wrist.motionMagicCommand(WristConstants.kWristGround),
+                    wrist.motionMagicCommand(WristConstants.kWristSuperLowPickup),
                     autoBuilder.followPathWithEvents(pathGroup.get(5)),
                     shoot.setPower(ShooterConstants.kTopIntakePower.get(), ShooterConstants.kBottomIntakePower.get())
                 ),

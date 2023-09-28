@@ -44,8 +44,8 @@ public final class Constants {
     public static final int kWristStow = 39000; //43087; //39000; // multiplied by 1.5 
     public static final int kWristStowPowerOff = 39501; // multiplied by 1.5
     
-    public static final int kWristSuperLowPickup = 1000; //1500; // multiplied by 1.5
-    public static final int kWristLowPickup = 10000; // Tune later for low but not too low
+    public static final int kWristSuperLowPickup = 2000; //1500; // multiplied by 1.5
+    public static final int kWristLowPickup = 7500; // Tune later for low but not too low
 
     public static final int kWristLow = kWristStow;
     public static final int kWristMid = kWristStow;
@@ -76,9 +76,9 @@ public final class Constants {
     public static final int kBottomMotorID = 19;
     public static final PrefDouble kTopIntakePower = new PrefDouble("TopIntakePower", -0.35); //-0.3
     public static final PrefDouble kTopLowOuttakePower = new PrefDouble("TopLowOuttakePower", 0.1); //0.5
-    public static final PrefDouble kTopMidOuttakePower = new PrefDouble("TopMidOuttakePower", 0.4); //0.5
-    public static final PrefDouble kTopHighOuttakePower = new PrefDouble("TopHighOuttakePower", 0.5); //0.5
-    public static final PrefDouble kTopFullOuttakePower = new PrefDouble("TopFullOuttakePower", 0.75);
+    public static final PrefDouble kTopMidOuttakePower = new PrefDouble("TopMidOuttakePower", 0.3); //0.5
+    public static final PrefDouble kTopHighOuttakePower = new PrefDouble("TopHighOuttakePower", 0.4); //0.5
+    public static final PrefDouble kTopFullOuttakePower = new PrefDouble("TopFullOuttakePower", (0.8));
     public static final PrefDouble kTopIntakeNeutralPower = new PrefDouble("TopIntakeNeutralPower", -0.05); //-0.25
     public static final PrefDouble kTopCubeCurrent = new PrefDouble("TopCubeCurrent", 30); // tune this!
 

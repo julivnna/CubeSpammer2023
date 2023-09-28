@@ -87,7 +87,7 @@ public class RobotContainer {
 
   private SendableChooser<Supplier<CommandBase>> autoChooser = new SendableChooser<Supplier<CommandBase>>();
 
-  private PrimalSunflower sunflower = new PrimalSunflower(VisionConstants.kLimelightName, swerveDrive);
+  private PrimalSunflower sunflower = new PrimalSunflower(VisionConstants.kLimelightName);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -200,17 +200,17 @@ public class RobotContainer {
 
     commandOperatorController.povUp()
       .onTrue(wrist.changeIntakeTargetTicks(100)
-        .andThen(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.returnIntakeTargetTicks())));
+        .andThen(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.getIntakeTargetTicks())));
 
     
     commandOperatorController.povDown()
       .onTrue(wrist.changeIntakeTargetTicks(-100)
-        .andThen(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.returnIntakeTargetTicks())));
+        .andThen(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.getIntakeTargetTicks())));
 
     
     commandOperatorController.options()
       .onTrue(wrist.resetIntakeTargetTicks()
-        .andThen(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.returnIntakeTargetTicks())));
+        .andThen(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.getIntakeTargetTicks())));
 
 
 
@@ -218,19 +218,19 @@ public class RobotContainer {
     .onTrue(wrist.motionMagicCommand((WristConstants.kWristHigh))
       .andThen(shooter.outtakeHighUpdated()))
     .onFalse(wrist.motionMagicCommand((WristConstants.kWristStow))
-      .andThen(shooter.holdUpdated()));
+      .andThen(shooter.setPowerZero()));
 
     commandOperatorController.circle()
     .onTrue(wrist.motionMagicCommand((WristConstants.kWristMid))
       .andThen(shooter.outtakeMidUpdated()))
     .onFalse(wrist.motionMagicCommand((WristConstants.kWristStow))
-      .andThen(shooter.holdUpdated()));
+      .andThen(shooter.setPowerZero()));
 
     commandOperatorController.cross()
     .onTrue(wrist.motionMagicCommand((WristConstants.kWristLow))
       .andThen(shooter.outtakeLowUpdated()))
     .onFalse(wrist.motionMagicCommand((WristConstants.kWristStow))
-      .andThen(shooter.holdUpdated()));
+      .andThen(shooter.setPowerZero()));
 
     commandOperatorController.L1()
       .onTrue(shooter.intakeUpdated()
@@ -240,13 +240,14 @@ public class RobotContainer {
     //Vaccuum / Mow the lawn
     commandOperatorController.L2() // Triangle
     .onTrue(shooter.intakeUpdated() // ** ADD TARGET TICKS CONSTANT FOR MOW
-      .andThen(wrist.motionMagicCommand(wrist.returnIntakeTargetTicks())
-        .andThen(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.returnIntakeTargetTicks()))))
-    .onFalse(shooter.holdUpdated());
+      .andThen(wrist.motionMagicCommand(wrist.getIntakeTargetTicks())
+        .andThen(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.getIntakeTargetTicks()))))
+    .onFalse(shooter.holdUpdated()
+      .andThen(() -> wrist.setNormalTargetTicks()));
 
     commandOperatorController.R1()
       .onTrue(shooter.outtakeFullUpdated())
-      .onFalse(shooter.holdUpdated()); 
+      .onFalse(shooter.setPowerZero()); 
 
     commandOperatorController.R2() // Circle
       .onTrue(wrist.motionMagicCommand(WristConstants.kWristStow))

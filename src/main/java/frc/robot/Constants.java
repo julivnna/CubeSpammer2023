@@ -282,7 +282,8 @@ public final class Constants {
   }
 
   public static final class VisionConstants {
-    public static final String kLimelightName = "limelight-high";
+    public static final String kLimelightBackName = "limelight-back";
+    public static final String kLimelightFrontName = "limelight-front";
     public static final int kAprilTagPipeline = 4;
     public static final double kSlidingOffset = 0.4; // Meters away from grid while robot is sliding.
     public static final double fieldXOffset = 8; // Guess

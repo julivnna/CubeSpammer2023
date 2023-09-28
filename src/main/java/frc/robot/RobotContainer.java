@@ -88,14 +88,16 @@ public class RobotContainer {
 
   private SendableChooser<Supplier<CommandBase>> autoChooser = new SendableChooser<Supplier<CommandBase>>();
 
-  private PrimalSunflower sunflower = new PrimalSunflower(VisionConstants.kLimelightName);
+  private PrimalSunflower backSunflower = new PrimalSunflower(VisionConstants.kLimelightBackName);
+  private PrimalSunflower frontSunflower = new PrimalSunflower(VisionConstants.kLimelightFrontName);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
     try {
-      swerveDrive = new SwerveDrivetrain(imu, SwerveModuleType.CANCODER, sunflower);
+      // Pass in "sunflowers" in reverse order of priority (most important last)
+      swerveDrive = new SwerveDrivetrain(imu, SwerveModuleType.CANCODER, backSunflower, frontSunflower);
     } catch (IllegalArgumentException e) {
       DriverStation.reportError("Illegal Swerve Drive Module Type", e.getStackTrace());
     }
@@ -305,7 +307,7 @@ public class RobotContainer {
     imu.initShuffleboard(loggingLevel);
     wrist.initShuffleboard(loggingLevel);
     shooter.initShuffleboard(loggingLevel);
-    sunflower.initShuffleboard(loggingLevel);
+    backSunflower.initShuffleboard(loggingLevel);
     swerveDrive.initShuffleboard(loggingLevel);
     swerveDrive.initModuleShuffleboard(loggingLevel);
     ShuffleboardTab tab = Shuffleboard.getTab("Main");

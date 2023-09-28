@@ -37,7 +37,7 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
     private final Gyro gyro;
     // private final SwerveDriveOdometry odometer;
     private final SwerveDrivePoseEstimator poseEstimator;
-    private final PrimalSunflower sunflower; 
+    private final PrimalSunflower[] sunflowers; 
     private DRIVE_MODE driveMode = DRIVE_MODE.FIELD_ORIENTED;
 
     private Field2d field;
@@ -58,7 +58,7 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
     /**
      * Construct a new {@link SwerveDrivetrain}
      */
-    public SwerveDrivetrain(Gyro gyro, SwerveModuleType moduleType, PrimalSunflower sunflower) throws IllegalArgumentException {
+    public SwerveDrivetrain(Gyro gyro, SwerveModuleType moduleType, PrimalSunflower... sunflowers) throws IllegalArgumentException {
         switch (moduleType) {
             case CANCODER:
                 frontLeft = new CANSwerveModule(
@@ -103,7 +103,7 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
         this.gyro = gyro;
         this.poseEstimator = new SwerveDrivePoseEstimator(kDriveKinematics, gyro.getRotation2d(), getModulePositions(), new Pose2d());
         this.poseEstimator.setVisionMeasurementStdDevs(kBaseVisionPoseSTD);
-        this.sunflower = sunflower;
+        this.sunflowers = sunflowers;
         // this.odometer = new SwerveDriveOdometry(
         //     kDriveKinematics, 
         //     new Rotation2d(0), 
@@ -124,10 +124,15 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
         }
         // odometer.update(gyro.getRotation2d(), getModulePositions());
         poseEstimator.update(gyro.getRotation2d(), getModulePositions());
-        Pose3d sunflowerPose3d = sunflower.getPose3d();
-        if (sunflowerPose3d != null) {
-            poseEstimator.addVisionMeasurement(sunflowerPose3d.toPose2d(), Timer.getFPGATimestamp());
+
+        // Higher priority limelights get passed in second
+        for (PrimalSunflower sf : sunflowers) {
+            Pose3d sunflowerPose3d = sf.getPose3d();
+            if (sunflowerPose3d != null) {
+                poseEstimator.addVisionMeasurement(sunflowerPose3d.toPose2d(), Timer.getFPGATimestamp());
+            }
         }
+
         field.setRobotPose(poseEstimator.getEstimatedPosition());
     }
     

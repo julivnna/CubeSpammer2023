@@ -85,6 +85,7 @@ public class PrimalSunflower implements Reportable {
     */
     public PrimalSunflower(String limelightName) {
         // this.drivetrain = drivetrain;   UNCOMMENR LATER
+        llname = limelightName;
         try {
             SmartDashboard.putBoolean("LimelightHelper inited", true);
             limelight = new Limelight(limelightName);
@@ -221,7 +222,7 @@ public class PrimalSunflower implements Reportable {
             case OFF:
                 break;
             case ALL:
-                tab = Shuffleboard.getTab("Vision");
+                tab = Shuffleboard.getTab(llname);
                 tab.addNumber("Robot Pose X", () -> generateSun()[0]);
                 tab.addNumber("Robot Pose Y", () -> generateSun()[1]);
                 tab.addNumber("Robot Pose Z", () -> generateSun()[2]);
@@ -243,7 +244,7 @@ public class PrimalSunflower implements Reportable {
                 // tab.addNumber("Traj Point 3 Pose X", () -> thirdPoint.position.getX());
                 // tab.addNumber("Traj Point 3 Pose Y", () -> thirdPoint.position.getY());
 
-                tab.add("Field Position", field).withSize(6, 3);
+                // tab.add("Field Position", field).withSize(6, 3);
             case MEDIUM:
                 
             case MINIMAL:

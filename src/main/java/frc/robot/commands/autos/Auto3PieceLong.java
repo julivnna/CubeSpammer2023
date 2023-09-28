@@ -61,10 +61,11 @@ public class Auto3PieceLong extends SequentialCommandGroup {
                     wrist.motionMagicCommand(WristConstants.kWristStow),
                     shoot.setPower(ShooterConstants.kTopIntakeNeutralPower.get(), ShooterConstants.kBottomIntakeNeutralPower.get())
                 ),
-                shoot.outtakeLow(),
+                shoot.outtakeLow()
+                // ,
 
                 // End auto, prepare imu for teleop
-                Commands.runOnce(() -> swerve.getImu().setOffset(180))
+                // Commands.runOnce(() -> swerve.getImu().setOffset(180))
 
                 // ,
                 // shoot.setPower(ShooterConstants.kTopIntakeNeutralPower.get(), ShooterConstants.kBottomIntakeNeutralPower.get()),

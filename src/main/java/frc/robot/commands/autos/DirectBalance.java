@@ -36,9 +36,7 @@ public class DirectBalance extends SequentialCommandGroup {
                         autoBuilder.followPathWithEvents(pathGroup.get(0)),
                         new TheGreatBalancingAct(swerve)
                     ),
-                    Commands.runOnce(() -> swerve.towModules()),
-                    Commands.runOnce(() -> swerve.getImu().setOffset(180)
-                )
+                    Commands.runOnce(() -> swerve.towModules())
             )
         );
     }

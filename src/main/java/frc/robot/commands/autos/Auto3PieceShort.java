@@ -24,24 +24,43 @@ public class Auto3PieceShort extends SequentialCommandGroup {
             Commands.sequence(
                 Commands.runOnce(() -> swerve.getImu().zeroAll()),
                 autoBuilder.resetPose(pathGroup.get(0)),
-                wrist.motionMagicCommand(WristConstants.kWristHigh),
+                wrist.motionMagicCommand(WristConstants.kWristStow),
                 shoot.outtakeHigh(),
                 Commands.parallel(
-                    wrist.motionMagicCommand(WristConstants.kWristStow),
-                    autoBuilder.followPathWithEvents(pathGroup.get(0))
-                )
-                ,
-                Commands.parallel(
-                    // wrist.motionMagicCommand(WristConstants.kWristLowPickup),
-                    autoBuilder.followPathWithEvents(pathGroup.get(1)),
+                    wrist.motionMagicCommand(WristConstants.kWristLowPickup),
+                    autoBuilder.followPathWithEvents(pathGroup.get(0)),
                     shoot.setPower(ShooterConstants.kTopIntakePower.get(), ShooterConstants.kBottomIntakePower.get())
                 ),
-                // wrist.motionMagicCommand(WristConstants.kWristStow)
-                // ,
+                wrist.motionMagicCommand(WristConstants.kWristLowPickup)
+                ,
+                Commands.sequence(
+                    Commands.waitSeconds(0.5),
+                    wrist.motionMagicCommand(WristConstants.kWristStow),
+                    Commands.parallel(
+                        autoBuilder.followPathWithEvents(pathGroup.get(1))
+                    ),
+                    shoot.outtakeLow()
+
+                ),
                 Commands.parallel(
                     autoBuilder.followPathWithEvents(pathGroup.get(2)),
+                    Commands.sequence(
+                        Commands.waitSeconds(0.5),
+                        wrist.motionMagicCommand(WristConstants.kWristLowPickup)
+                    ),
+                    shoot.setPower(ShooterConstants.kTopIntakePower.get(), ShooterConstants.kBottomIntakePower.get())
+                ),
+                
+                // wrist.motionMagicCommand(WristConstants.kWristLowPickup)
+                // ,
+                Commands.parallel(
+                    autoBuilder.followPathWithEvents(pathGroup.get(3)),
+                    wrist.motionMagicCommand(WristConstants.kWristLowPickup),
                     shoot.setPower(ShooterConstants.kTopIntakeNeutralPower.get(), ShooterConstants.kBottomIntakeNeutralPower.get())
                 )
+                ,
+                shoot.outtakeLow()
+
                 // ,
                 // shoot.setPower(ShooterConstants.kTopIntakeNeutralPower.get(), ShooterConstants.kBottomIntakeNeutralPower.get()),
                 // autoBuilder.followPathWithEvents(pathGroup.get(3)),

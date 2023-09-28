@@ -2,8 +2,6 @@ package frc.robot.commands.autos;
 
 import java.util.List;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
@@ -26,22 +24,26 @@ public class Auto3PieceShort extends SequentialCommandGroup {
                 autoBuilder.resetPose(pathGroup.get(0)),
                 wrist.motionMagicCommand(WristConstants.kWristStow),
                 shoot.outtakeHigh(),
+
+                // Go to intake
                 Commands.parallel(
                     wrist.motionMagicCommand(WristConstants.kWristLowPickup),
                     autoBuilder.followPathWithEvents(pathGroup.get(0)),
                     shoot.setPower(ShooterConstants.kTopIntakePower.get(), ShooterConstants.kBottomIntakePower.get())
                 ),
-                wrist.motionMagicCommand(WristConstants.kWristLowPickup)
-                ,
+
+                // Intake and come back to shoot
                 Commands.sequence(
+                    Commands.runOnce(() -> swerve.towModules()),
                     Commands.waitSeconds(0.5),
                     wrist.motionMagicCommand(WristConstants.kWristStow),
                     Commands.parallel(
                         autoBuilder.followPathWithEvents(pathGroup.get(1))
                     ),
                     shoot.outtakeLow()
-
                 ),
+
+                // Go back to intake
                 Commands.parallel(
                     autoBuilder.followPathWithEvents(pathGroup.get(2)),
                     Commands.sequence(
@@ -51,15 +53,18 @@ public class Auto3PieceShort extends SequentialCommandGroup {
                     shoot.setPower(ShooterConstants.kTopIntakePower.get(), ShooterConstants.kBottomIntakePower.get())
                 ),
                 
-                // wrist.motionMagicCommand(WristConstants.kWristLowPickup)
-                // ,
-                Commands.parallel(
-                    autoBuilder.followPathWithEvents(pathGroup.get(3)),
-                    wrist.motionMagicCommand(WristConstants.kWristLowPickup),
-                    shoot.setPower(ShooterConstants.kTopIntakeNeutralPower.get(), ShooterConstants.kBottomIntakeNeutralPower.get())
-                )
-                ,
-                shoot.outtakeLow()
+                // Intake and come back to shoot
+                Commands.sequence(
+                    Commands.runOnce(() -> swerve.towModules()),
+                    Commands.waitSeconds(0.5),
+                    wrist.motionMagicCommand(WristConstants.kWristStow),
+                    shoot.setPower(ShooterConstants.kTopIntakeNeutralPower.get(), ShooterConstants.kBottomIntakeNeutralPower.get()),
+                    autoBuilder.followPathWithEvents(pathGroup.get(3))
+                ),
+                shoot.outtakeLow(),
+
+                // End auto, prepare imu for teleop
+                Commands.runOnce(() -> swerve.getImu().setOffset(180))
 
                 // ,
                 // shoot.setPower(ShooterConstants.kTopIntakeNeutralPower.get(), ShooterConstants.kBottomIntakeNeutralPower.get()),

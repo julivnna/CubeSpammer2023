@@ -36,7 +36,8 @@ public class Balance extends SequentialCommandGroup {
                         autoBuilder.followPathWithEvents(pathGroup.get(1)),
                         new TheGreatBalancingAct(swerve)
                     ),
-                    new InstantCommand(() -> swerve.towModules())
+                    Commands.runOnce(() -> swerve.towModules()),
+                    Commands.runOnce(() -> swerve.getImu().setOffset(180))
                 )
             )
         );

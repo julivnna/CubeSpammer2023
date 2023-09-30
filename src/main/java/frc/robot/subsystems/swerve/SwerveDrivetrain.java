@@ -126,12 +126,12 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
         poseEstimator.update(gyro.getRotation2d(), getModulePositions());
 
         // Higher priority limelights get passed in second
-        for (PrimalSunflower sf : sunflowers) {
-            Pose3d sunflowerPose3d = sf.getPose3d();
-            if (sunflowerPose3d != null) {
-                poseEstimator.addVisionMeasurement(sunflowerPose3d.toPose2d(), Timer.getFPGATimestamp());
-            }
-        }
+        // for (PrimalSunflower sf : sunflowers) {
+        //     Pose3d sunflowerPose3d = sf.getPose3d();
+        //     if (sunflowerPose3d != null) {
+        //         poseEstimator.addVisionMeasurement(sunflowerPose3d.toPose2d(), Timer.getFPGATimestamp());
+        //     }
+        // }
 
         field.setRobotPose(poseEstimator.getEstimatedPosition());
     }

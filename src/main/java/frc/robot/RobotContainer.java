@@ -119,10 +119,10 @@ public class RobotContainer {
         () -> -commandDriverController.getLeftY(), // Horizontal translation
         commandDriverController::getLeftX, // Vertical Translation
         // () -> 0.0, // debug
-        commandDriverController::getRightX, // Rotation
+        commandDriverController::getRightX, // Rotationaq
 
-        // driverController::getTriangleButton, // Field oriented
-        () -> false, // Field oriented
+        driverController::getTriangleButton, // Field oriented
+        // () -> false, // Field oriented
 
         driverController::getCrossButton, // Towing
         // Dodge
@@ -157,7 +157,7 @@ public class RobotContainer {
     commandDriverController.share().onTrue(Commands.runOnce(imu::zeroHeading).andThen(() -> imu.setOffset(180)));
     commandDriverController.options().onTrue(Commands.runOnce(swerveDrive::resetEncoders));
     // commandDriverController.options().onTrue(Commands.runOnce(wrist::resetEncoders));
-    commandDriverController.PS().whileTrue(new TheGreatBalancingAct(swerveDrive));
+    // commandDriverController.PS().whileTrue(new TheGreatBalancingAct(swerveDrive));
     commandDriverController.triangle().onTrue(shooter.setPower(1)).onFalse(shooter.setPower(0));
 
     // commandDriverController.triangle().whileTrue(new TheGreatBalancingAct(swerveDrive));
@@ -307,7 +307,8 @@ public class RobotContainer {
     imu.initShuffleboard(loggingLevel);
     wrist.initShuffleboard(loggingLevel);
     shooter.initShuffleboard(loggingLevel);
-    backSunflower.initShuffleboard(loggingLevel);
+    // backSunflower.initShuffleboard(loggingLevel);
+    // frontSunflower.initShuffleboard(loggingLevel);
     swerveDrive.initShuffleboard(loggingLevel);
     swerveDrive.initModuleShuffleboard(loggingLevel);
     ShuffleboardTab tab = Shuffleboard.getTab("Main");

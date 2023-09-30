@@ -37,6 +37,10 @@ import frc.robot.commands.autos.Auto3PieceShort;
 import frc.robot.commands.autos.Balance;
 import frc.robot.commands.autos.DirectBalance;
 import frc.robot.commands.autos.PathPlannerAutos;
+import frc.robot.commands.autos.PreloadTaxiLong;
+import frc.robot.commands.autos.PreloadTaxiPickupLong;
+import frc.robot.commands.autos.PreloadTaxiPickupShort;
+import frc.robot.commands.autos.PreloadTaxiShort;
 import frc.robot.commands.autos.SquareTest;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
@@ -121,8 +125,8 @@ public class RobotContainer {
         // () -> 0.0, // debug
         commandDriverController::getRightX, // Rotationaq
 
-        driverController::getTriangleButton, // Field oriented
-        // () -> false, // Field oriented
+        // driverController::getTriangleButton, // Field oriented
+        () -> false, // Field oriented
 
         driverController::getCrossButton, // Towing
         // Dodge
@@ -202,12 +206,12 @@ public class RobotContainer {
     //   .onFalse(shooter.setPowerZero().alongWith(wrist.motionMagicCommand(WristConstants.kWristStow)));
 
     commandOperatorController.povUp()
-      .onTrue(wrist.changeIntakeTargetTicks(100)
+      .onTrue(wrist.changeIntakeTargetTicks(500)
         .andThen(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.getIntakeTargetTicks())));
 
     
     commandOperatorController.povDown()
-      .onTrue(wrist.changeIntakeTargetTicks(-100)
+      .onTrue(wrist.changeIntakeTargetTicks(-500)
         .andThen(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.getIntakeTargetTicks())));
 
     
@@ -242,9 +246,9 @@ public class RobotContainer {
 
     //Vaccuum / Mow the lawn
     commandOperatorController.L2() // Triangle
-    .onTrue(shooter.intakeUpdated() // ** ADD TARGET TICKS CONSTANT FOR MOW
-      .andThen(wrist.motionMagicCommand(wrist.getIntakeTargetTicks())
-        .andThen(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.getIntakeTargetTicks()))))
+    .onTrue(shooter.intakeUpdated()) // ** ADD TARGET TICKS CONSTANT FOR MOW
+    .whileTrue(wrist.intake())
+    .onTrue(Commands.runOnce(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.getIntakeTargetTicks())))
     .onFalse(shooter.holdUpdated()
       .andThen(() -> wrist.setNormalTargetTicks()));
 
@@ -271,7 +275,7 @@ public class RobotContainer {
   private void initAutoChoosers() {
     // Remember to load the pathplanner paths here
     final String[] paths = {
-       "3Piece Short", "Balance", "DirectBalance", "3PieceLong2"
+       "3Piece Short", "Balance", "DirectBalance", "3PieceLong2", "PreloadTaxiShort", "PreloadTaxiLong"
       // old paths "TestPath", "TestSquare", "Test Line", "TestSquare3", "SquareTest"
     };
     
@@ -283,10 +287,14 @@ public class RobotContainer {
     }
 
     autoChooser.addOption("Do Nothing", Commands::none);
-    autoChooser.addOption("PP Balance", () -> new Balance(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
-    autoChooser.addOption("PP 3Short", () -> new Auto3PieceShort(PathPlannerAutos.autoBuilder,swerveDrive, shooter, wrist));
-    autoChooser.addOption("PP 3Long2", () -> new Auto3PieceLong(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
-    autoChooser.addOption("PP DirectBalance", () -> new DirectBalance(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
+    autoChooser.addOption("Balance", () -> new Balance(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
+    autoChooser.addOption("3Short", () -> new Auto3PieceShort(PathPlannerAutos.autoBuilder,swerveDrive, shooter, wrist));
+    autoChooser.addOption("3Long2", () -> new Auto3PieceLong(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
+    autoChooser.addOption("No Taxi Balance", () -> new DirectBalance(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
+    autoChooser.addOption("Preload Taxi Short", () -> new PreloadTaxiShort(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
+    autoChooser.addOption("Preload Taxi Long", () -> new PreloadTaxiLong(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
+    autoChooser.addOption("Preload Pickup Short", () -> new PreloadTaxiPickupShort(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
+    autoChooser.addOption("Preload Pickup Long", () -> new PreloadTaxiPickupLong(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
     // autoChooser.addOption("PP SquareTest", () -> new SquareTest(PathPlannerAutos.autoBuilder));
     // these are the auto paths in the old format (not the actual full auto command)
     // autoChooser.addOption("Path Planner Test Auto", () -> PathPlannerAutos.pathplannerAuto("TestPath", swerveDrive));

@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
@@ -149,6 +150,18 @@ public class Wrist extends SubsystemBase implements Reportable {
             wrist.configMotionAcceleration(WristConstants.kWristMotionAcceleration);
             setTargetTicks(position);
         });
+    }
+
+    // public CommandBase motionMagicCommand(Supplier<Integer> position) {
+    //     return Commands.run(() -> 
+    //         () -> setTargetTicks(position.get())
+    //     );
+    // }
+
+    public CommandBase intake() {
+        return Commands.run(
+            () -> setTargetTicks(targetIntakeTicks)
+        );
     }
 
     public void setTargetTicks(int targetTicks) {

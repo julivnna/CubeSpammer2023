@@ -37,6 +37,7 @@ import frc.robot.commands.autos.Auto3PieceShort;
 import frc.robot.commands.autos.Balance;
 import frc.robot.commands.autos.DirectBalance;
 import frc.robot.commands.autos.PathPlannerAutos;
+import frc.robot.commands.autos.PreloadLow;
 import frc.robot.commands.autos.PreloadTaxiLong;
 import frc.robot.commands.autos.PreloadTaxiPickupLong;
 import frc.robot.commands.autos.PreloadTaxiPickupShort;
@@ -239,6 +240,10 @@ public class RobotContainer {
     .onFalse(wrist.motionMagicCommand((WristConstants.kWristStow))
       .andThen(shooter.setPowerZero()));
 
+    commandOperatorController.square()
+      .onTrue(shooter.intakeUpdated())
+      .onFalse(shooter.holdUpdated());
+
     commandOperatorController.L1()
       .onTrue(shooter.intakeUpdated()
         .andThen(wrist.motionMagicCommand(WristConstants.kWristSuperLowPickup)))
@@ -288,13 +293,14 @@ public class RobotContainer {
 
     autoChooser.addOption("Do Nothing", Commands::none);
     autoChooser.addOption("Balance", () -> new Balance(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
-    autoChooser.addOption("3Short", () -> new Auto3PieceShort(PathPlannerAutos.autoBuilder,swerveDrive, shooter, wrist));
-    autoChooser.addOption("3Long2", () -> new Auto3PieceLong(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
     autoChooser.addOption("No Taxi Balance", () -> new DirectBalance(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
+    autoChooser.addOption("Preload Only", () -> new PreloadLow(swerveDrive, shooter, wrist));
     autoChooser.addOption("Preload Taxi Short", () -> new PreloadTaxiShort(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
     autoChooser.addOption("Preload Taxi Long", () -> new PreloadTaxiLong(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
     autoChooser.addOption("Preload Pickup Short", () -> new PreloadTaxiPickupShort(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
     autoChooser.addOption("Preload Pickup Long", () -> new PreloadTaxiPickupLong(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
+    autoChooser.addOption("3Short", () -> new Auto3PieceShort(PathPlannerAutos.autoBuilder,swerveDrive, shooter, wrist));
+    autoChooser.addOption("3Long2", () -> new Auto3PieceLong(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
     // autoChooser.addOption("PP SquareTest", () -> new SquareTest(PathPlannerAutos.autoBuilder));
     // these are the auto paths in the old format (not the actual full auto command)
     // autoChooser.addOption("Path Planner Test Auto", () -> PathPlannerAutos.pathplannerAuto("TestPath", swerveDrive));

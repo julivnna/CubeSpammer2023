@@ -25,13 +25,14 @@ public class Balance extends SequentialCommandGroup {
         addCommands(
             Commands.sequence(
                 Commands.deadline(
-                    new WaitCommand(14.5),
+                    new WaitCommand(14.1),
                     Commands.sequence(
                         Commands.runOnce(() -> swerve.getImu().zeroAll()),
                         autoBuilder.resetPose(pathGroup.get(0)),
-                        wrist.motionMagicCommand(WristConstants.kWristHigh),
-                        shoot.outtakeHigh(),
                         wrist.motionMagicCommand(WristConstants.kWristStow),
+                        Commands.waitSeconds(0.25),
+                        shoot.outtakeHigh(),
+                        Commands.waitSeconds(0.5),
                         autoBuilder.followPathWithEvents(pathGroup.get(0)),
                         autoBuilder.followPathWithEvents(pathGroup.get(1)),
                         new TheGreatBalancingAct(swerve)

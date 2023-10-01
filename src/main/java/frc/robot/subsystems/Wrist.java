@@ -115,7 +115,7 @@ public class Wrist extends SubsystemBase implements Reportable {
     }
 
     public CommandBase resetIntakeTargetTicks() {
-        return Commands.runOnce(() -> {targetIntakeTicks = 75000;});
+        return Commands.runOnce(() -> {targetIntakeTicks = WristConstants.kWristLowPickup;});
     }
 
     public void setIntakeTargetTicks() {

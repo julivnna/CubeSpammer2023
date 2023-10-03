@@ -93,7 +93,7 @@ public class RobotContainer {
 
   private SendableChooser<Supplier<CommandBase>> autoChooser = new SendableChooser<Supplier<CommandBase>>();
 
-  private PrimalSunflower backSunflower = new PrimalSunflower(VisionConstants.kLimelightBackName);
+  // private PrimalSunflower backSunflower = new PrimalSunflower(VisionConstants.kLimelightBackName);
   private PrimalSunflower frontSunflower = new PrimalSunflower(VisionConstants.kLimelightFrontName);
 
   /**
@@ -102,7 +102,7 @@ public class RobotContainer {
   public RobotContainer() {
     try {
       // Pass in "sunflowers" in reverse order of priority (most important last)
-      swerveDrive = new SwerveDrivetrain(imu, SwerveModuleType.CANCODER, backSunflower, frontSunflower);
+      swerveDrive = new SwerveDrivetrain(imu, SwerveModuleType.CANCODER, frontSunflower);
     } catch (IllegalArgumentException e) {
       DriverStation.reportError("Illegal Swerve Drive Module Type", e.getStackTrace());
     }

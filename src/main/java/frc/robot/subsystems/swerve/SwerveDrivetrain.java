@@ -29,10 +29,10 @@ import frc.robot.subsystems.Reportable;
 import static frc.robot.Constants.SwerveDriveConstants.*;
 
 public class SwerveDrivetrain extends SubsystemBase implements Reportable {
-    private final SwerveModule frontLeft;
-    private final SwerveModule frontRight;
-    private final SwerveModule backLeft;
-    private final SwerveModule backRight;
+    public final SwerveModule frontLeft;
+    public final SwerveModule frontRight;
+    public final SwerveModule backLeft;
+    public final SwerveModule backRight;
 
     private final Gyro gyro;
     // private final SwerveDriveOdometry odometer;

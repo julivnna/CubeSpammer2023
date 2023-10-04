@@ -79,7 +79,7 @@ public class FollowTrajectoryCommand extends CommandBase {
         autoDrive.autoDrive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false);
         autoDrive.updateOdometry();
 
-        currentTrajectoryState = autoCtrl.getCurrentState(); // to be verified: use autoCtrl state or use drive pose????
+        currentTrajectoryState = autoCtrl.getCurrentState(); // to be verified: use autoCtrl state or use odometry pose????
         //trajectory.sample(drive.getPose());???????????????
     }
 

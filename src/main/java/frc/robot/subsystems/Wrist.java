@@ -30,6 +30,14 @@ public class Wrist extends SubsystemBase implements Reportable {
     // private TalonSRX leftEncoder;
     private ExponentialSmoothingFilter joystickFilter = new ExponentialSmoothingFilter(WristConstants.kLowPassAlpha);
 
+    public class PositionConfigData {
+        public int CalibratedDefaultValue;
+        public int RealtimeValue_RAM;
+        public int StepSize;
+        public int MAX;
+        public int MIN;
+    }
+
     public Wrist() {
         wrist = new TalonFX(WristConstants.kWristID);
         // leftEncoder = new TalonSRX(WristConstants.kLeftEncoderID);

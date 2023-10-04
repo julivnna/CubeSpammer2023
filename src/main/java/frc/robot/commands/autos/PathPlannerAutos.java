@@ -10,8 +10,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.PathPlannerConstants;
+import frc.robot.commands.autos.ramsete.RamseteAutoBuilder;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 
 import static frc.robot.Constants.PathPlannerConstants.*;
@@ -22,6 +24,7 @@ public class PathPlannerAutos {
     private static HashMap<String, Command> events = new HashMap<>();
 
     public static SwerveAutoBuilder autoBuilder;
+    public static RamseteAutoBuilder ramseteAutoBuilder;
 
     /**
      * Load the selected path from storage.
@@ -78,6 +81,14 @@ public class PathPlannerAutos {
             PathPlannerConstants.kPPTranslationPIDConstants,
             PathPlannerConstants.kPPRotationPIDConstants,
             swerveDrive::setChassisSpeeds, 
+            events,
+            swerveDrive);
+        
+        ramseteAutoBuilder = new RamseteAutoBuilder(
+            swerveDrive::getPose,
+            swerveDrive::resetOdometry,
+            new RamseteController(),
+            swerveDrive::setChassisSpeeds,
             events,
             swerveDrive);
     }

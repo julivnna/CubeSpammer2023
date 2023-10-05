@@ -53,6 +53,8 @@ public class FollowTrajectoryCommand extends CommandBase {
         trajectoryDuration = trajectory.getTotalTimeSeconds(); // to be checed if it's correct...
         this.autoDrive = autoDrive;
         this.autoCtrl = new AutoController(trajectory);
+        SmartDashboard.putNumber("trajectoryDuration", trajectoryDuration);
+      
     }
 
     @Override
@@ -98,6 +100,7 @@ public class FollowTrajectoryCommand extends CommandBase {
     public boolean isFinished() {
         // Check if the trajectory has finished or arrived based on position
         if (currentTrajectoryState == null) {
+            SmartDashboard.putBoolean("trajectory isFinished by null", true);
             return true;
         }
 
@@ -108,11 +111,12 @@ public class FollowTrajectoryCommand extends CommandBase {
         if (remainingDistance <= kTolerance) {
             //System.out.println("Trajectory Arrived");
             // Perform any actions needed when the trajectory arrives
+            SmartDashboard.putBoolean("trajectory isFinished by distance", true);
             return true;
         }
 
         // to be added: add the duration check to finish the route, better to add it to AutoController
-        
+        SmartDashboard.putBoolean("trajectory isFinished", false);
         return false; // You may implement a condition to end the command when the trajectory is complete
     }
 

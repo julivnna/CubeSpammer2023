@@ -35,14 +35,14 @@ public class Auto3PieceShort extends SequentialCommandGroup {
             new Translation2d(0.25, new Rotation2d(0))
         ), 
         new Pose2d(2.0, 4.43, new Rotation2d(0)), config);
-        FollowTrajectoryCommand traj = new FollowTrajectoryCommand(trajectory, poseEstm);
+        FollowTrajectoryCommand trajFollower = new FollowTrajectoryCommand(trajectory, poseEstm);
         
         addCommands(
             Commands.sequence(
                 Commands.runOnce(() -> swerve.getImu().zeroAll()),
                 // wrist.motionMagicCommand(WristConstants.kWristStow),
                 // shoot.outtakeHigh(),
-                traj
+                trajFollower
                 
 
                 // Go to intake

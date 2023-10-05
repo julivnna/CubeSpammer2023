@@ -138,7 +138,7 @@ public class DrivetrainPoseEstm {
     //     m_poseEstimator.addVisionMeasurement(
     //             camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
     if(limelight.hasValidTarget()) {
-      m_poseEstimator.addVisionMeasurement(limelightUser.getPose3d().toPose2d(), Timer.getFPGATimestamp());
+      m_poseEstimator.addVisionMeasurement(limelightUser.getPose3d().toPose2d(), Timer.getFPGATimestamp() - 0.0);
       SmartDashboard.putNumber("getcamPose_X", limelightUser.getPose3d().toPose2d().getX());
       SmartDashboard.putNumber("getcamPose_Y", limelightUser.getPose3d().toPose2d().getY());
     }

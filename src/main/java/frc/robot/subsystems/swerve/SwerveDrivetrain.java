@@ -119,7 +119,7 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
      */
     @Override
     public void periodic() {
-        if (!DriverStation.isTest()) {
+        /*if (!DriverStation.isTest()) {
             runModules();
         }
         // odometer.update(gyro.getRotation2d(), getModulePositions());
@@ -133,7 +133,7 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
         //     }
         // }
 
-        field.setRobotPose(poseEstimator.getEstimatedPosition());
+        field.setRobotPose(poseEstimator.getEstimatedPosition());*/
     }
     
     //****************************** RESETTERS ******************************/

@@ -43,6 +43,7 @@ import frc.robot.commands.autos.PreloadTaxiPickupLong;
 import frc.robot.commands.autos.PreloadTaxiPickupShort;
 import frc.robot.commands.autos.PreloadTaxiShort;
 import frc.robot.commands.autos.SquareTest;
+import frc.robot.commands.autos.TwoPiece;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Reportable.LOG_LEVEL;
@@ -301,6 +302,8 @@ public class RobotContainer {
     autoChooser.addOption("Preload Pickup Long", () -> new PreloadTaxiPickupLong(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
     autoChooser.addOption("3Short", () -> new Auto3PieceShort(PathPlannerAutos.autoBuilder,swerveDrive, shooter, wrist));
     autoChooser.addOption("3Long2", () -> new Auto3PieceLong(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
+    autoChooser.addOption("TwoPiece", () -> new TwoPiece(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
+
     // autoChooser.addOption("PP SquareTest", () -> new SquareTest(PathPlannerAutos.autoBuilder));
     // these are the auto paths in the old format (not the actual full auto command)
     // autoChooser.addOption("Path Planner Test Auto", () -> PathPlannerAutos.pathplannerAuto("TestPath", swerveDrive));

@@ -27,14 +27,17 @@ import frc.robot.subsystems.vision.pvpe.FollowTrajectoryCommand;
 
 public class Auto3PieceShort extends SequentialCommandGroup {
     public Auto3PieceShort(SwerveAutoBuilder autoBuilder, SwerveDrivetrain swerve, Shooter shoot, Wrist wrist) {
-        List<PathPlannerTrajectory> pathGroup = PathPlannerAutos.getPathGroup("3Piece Short");
+        //List<PathPlannerTrajectory> pathGroup = PathPlannerAutos.getPathGroup("3Piece Short");
         DrivetrainPoseEstm poseEstm = new DrivetrainPoseEstm(swerve);
+
         TrajectoryConfig config = new TrajectoryConfig(1.25 * 0.75, 2.5 / 2);
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(1.75, 4.43, new Rotation2d(0)), 
         List.of(
-            new Translation2d(2, new Rotation2d(0))
+            new Translation2d(2.5, 4.43),
+            new Translation2d(3, 4.43)
         ), 
         new Pose2d(3.75, 4.43, new Rotation2d(0)), config);
+
         FollowTrajectoryCommand trajFollower = new FollowTrajectoryCommand(trajectory, poseEstm);
         
         addCommands(

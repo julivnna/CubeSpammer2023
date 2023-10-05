@@ -138,6 +138,12 @@ public class DrivetrainPoseEstm {
     //     m_poseEstimator.addVisionMeasurement(
     //             camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
     if(limelight.hasValidTarget()) {
+      // // measured or estimated "tl" and "cl" values
+      // double targetLatency = limelight.getDeltaTime(); // actual "tl" value
+      // double cameraLatency = getCameraLatency(); // Replace with actual "cl" value
+      // // Calculate the total image latency
+      // double totalLatency = targetLatency + cameraLatency;
+
       m_poseEstimator.addVisionMeasurement(limelightUser.getPose3d().toPose2d(), Timer.getFPGATimestamp() - 0.0); // to be added: latency?
       SmartDashboard.putNumber("getcamPose_X", limelightUser.getPose3d().toPose2d().getX());
       SmartDashboard.putNumber("getcamPose_Y", limelightUser.getPose3d().toPose2d().getY());

@@ -214,5 +214,21 @@
     "properties": {
       "persistent": true
     }
+  },
+  {
+    "name": "/Preferences/TopFullOuttakePower",
+    "type": "double",
+    "value": 0.8,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Preferences/BottomFullOuttakePower",
+    "type": "double",
+    "value": 0.75,
+    "properties": {
+      "persistent": true
+    }
   }
 ]

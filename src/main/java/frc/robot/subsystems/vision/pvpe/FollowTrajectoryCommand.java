@@ -60,11 +60,18 @@ public class FollowTrajectoryCommand extends CommandBase {
         //m_poseEstimator.resetPosition(null, getModulePositions(), getCtrlsPoseEstimate());
         autoDrive.resetAutoDriveOdometry(autoCtrl.getInitialPose().getRotation(), autoCtrl.getInitialPose() );
         currentTrajectoryState = trajectory.sample(0);
-        autoCtrl.startPath();
+        
     }
 
+    private boolean started = false;
     @Override
     public void execute() {
+
+        if(!started)
+        {
+            started = true;
+            autoCtrl.startPath();
+        }
         //desiredDtState = trajectory.sample(System.currentTimeMillis() / 1000.0); // Replace with your time source
         //Pose2d robotPose = odometry.getPoseMeters();
         //ChassisSpeeds adjustedSpeeds = ramseteController.calculate(robotPose, desiredDtState);
@@ -81,6 +88,8 @@ public class FollowTrajectoryCommand extends CommandBase {
 
         currentTrajectoryState = autoCtrl.getCurrentState(); // to be verified: use autoCtrl state or use odometry pose????
         //trajectory.sample(drive.getPose());???????????????
+        
+        
     }
 
     private static final double kTolerance = 0.1; // Tolerance for position-based check

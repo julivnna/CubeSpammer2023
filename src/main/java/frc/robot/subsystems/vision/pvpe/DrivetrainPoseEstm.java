@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.WristConstants;
 import frc.robot.Constants.SwerveDriveConstants.CANCoderConstants;
 import frc.robot.subsystems.Shooter;
@@ -42,6 +43,10 @@ import frc.robot.subsystems.imu.Gyro;
 import frc.robot.subsystems.swerve.CANSwerveModule;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveModule;
+import frc.robot.subsystems.vision.Limelight;
+import frc.robot.subsystems.vision.Limelight.LightMode;
+import frc.robot.subsystems.vision.jurrasicMarsh.LimelightHelperUser;
+
 import static frc.robot.Constants.SwerveDriveConstants.*;
 
 /** Represents a swerve drive style drivetrain. */
@@ -62,11 +67,17 @@ public class DrivetrainPoseEstm {
   below are robot specific, and should be tuned. */
   private final PoseEstimator m_poseEstimator;
   private final Gyro m_gyro;
-  public PhotonCameraWrapper pcw;
+  //public PhotonCameraWrapper pcw;
+  private Limelight limelight = new Limelight(VisionConstants.kLimelightFrontName);
+  private LimelightHelperUser limelightUser = new LimelightHelperUser(VisionConstants.kLimelightFrontName);
   private SwerveDrivetrain drive;
 
   public DrivetrainPoseEstm(SwerveDrivetrain drive) {
-    pcw = new PhotonCameraWrapper();
+    if(limelight != null) {
+      limelight.setLightState(LightMode.OFF);
+      limelight.setPipeline(4);
+    }
+    //pcw = new PhotonCameraWrapper();
     this.drive = drive;
     m_gyro = drive.getImu();
     m_gyro.zeroAll(); //m_gyro.reset(); //to be checked: if it's face to 0?
@@ -107,7 +118,8 @@ public class DrivetrainPoseEstm {
 
   /** Updates the field relative position of the robot. */
   public void updateOdometry() {
-    m_poseEstimator.update(
+    m_poseEstimator.updateWithTime(
+      Timer.getFPGATimestamp(),
         m_gyro.getRotation2d(),
         drive.getModulePositions());
 
@@ -118,19 +130,24 @@ public class DrivetrainPoseEstm {
     //     ExampleGlobalMeasurementSensor.getEstimatedGlobalPose(
     //         m_poseEstimator.getEstimatedPosition()),
     //     Timer.getFPGATimestamp() - 0.3);
-    Optional<EstimatedRobotPose> result =
-                pcw.getEstimatedGlobalPose(m_poseEstimator.getEstimatedPosition());
+    // Optional<EstimatedRobotPose> result =
+    //             pcw.getEstimatedGlobalPose(m_poseEstimator.getEstimatedPosition());
 
-    if (result.isPresent()) {
-        EstimatedRobotPose camPose = result.get();
-        m_poseEstimator.addVisionMeasurement(
-                camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
-        
-        SmartDashboard.putNumber("getcamPose_X", camPose.estimatedPose.toPose2d().getX());
-        SmartDashboard.putNumber("getcamPose_Y", camPose.estimatedPose.toPose2d().getY());
+    // if (result.isPresent()) {
+    //     EstimatedRobotPose camPose = result.get();
+    //     m_poseEstimator.addVisionMeasurement(
+    //             camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+    if(limelight.hasValidTarget()) {
+      m_poseEstimator.addVisionMeasurement(limelightUser.getPose3d().toPose2d(), Timer.getFPGATimestamp());
+      SmartDashboard.putNumber("getcamPose_X", limelightUser.getPose3d().toPose2d().getX());
+      SmartDashboard.putNumber("getcamPose_Y", limelightUser.getPose3d().toPose2d().getY());
     }
+        
+    //     SmartDashboard.putNumber("getcamPose_X", camPose.estimatedPose.toPose2d().getX());
+    //     SmartDashboard.putNumber("getcamPose_Y", camPose.estimatedPose.toPose2d().getY());
+    // }
     
-    SmartDashboard.putBoolean("getApriltagPresent", result.isPresent());
+    //SmartDashboard.putBoolean("getApriltagPresent", result.isPresent());
 
     SmartDashboard.putNumber("getEstimatedPosition_X", m_poseEstimator.getEstimatedPosition().getX());
     SmartDashboard.putNumber("getEstimatedPosition_Y", m_poseEstimator.getEstimatedPosition().getY());

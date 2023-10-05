@@ -29,6 +29,10 @@ public class EasyTesting extends SequentialCommandGroup {
 
     public EasyTesting(boolean testing, SwerveDrivetrain swerve, Shooter shooter, Wrist wrist) {
         addTrajectory(3, swerve);
+        addTrajectory(3, swerve);
+        addTrajectory(3, swerve);
+        addTrajectory(3, swerve);
+        addTrajectory(2, swerve);
         
         addCommands(
             Commands.sequence(

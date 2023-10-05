@@ -124,15 +124,14 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
         }
         // odometer.update(gyro.getRotation2d(), getModulePositions());
         poseEstimator.update(gyro.getRotation2d(), getModulePositions());
+        poseEstimator.addVisionMeasurement(getPose(), Timer.getFPGATimestamp());
 
-        // Pose3d sunflowerPose3d = sunflower.getPose3d();
-        // if (sunflowerPose3d != null) {
-        //     SmartDashboard.putString("Pose", sunflowerPose3d.toString());
-        //     poseEstimator.addVisionMeasurement(sunflowerPose3d.toPose2d(), Timer.getFPGATimestamp());
-        // } else {
-        //     SmartDashboard.putString("Pose", "null");
-            
-        // }
+        if (sunflower.within1Meter(poseEstimator.getEstimatedPosition())) {
+            SmartDashboard.putString("Pose", sunflower.getPose3d().toString());
+            poseEstimator.addVisionMeasurement(sunflower.getPose3d().toPose2d(), Timer.getFPGATimestamp());
+        } else {
+            SmartDashboard.putString("Pose", "null");
+        }
 
         field.setRobotPose(poseEstimator.getEstimatedPosition());
     }

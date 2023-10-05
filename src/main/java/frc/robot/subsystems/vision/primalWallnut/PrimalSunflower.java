@@ -8,6 +8,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPoint;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -172,6 +173,13 @@ public class PrimalSunflower implements Reportable {
         return gridPositions[getClosestZombieLane()];
     }
 
+    public boolean within1Meter(Pose2d currentPose) {
+        double distance;
+        if(getPose3d() == null) return false;
+        distance = Math.sqrt(Math.pow(currentPose.getY() - getPose3d().getY(), 2) + Math.pow(currentPose.getX() - getPose3d().getX(), 2));
+        return distance <= 1;
+    }
+
     /**
      * @return PathPlannerTrajectory to get to the closest grid
      */
@@ -223,9 +231,9 @@ public class PrimalSunflower implements Reportable {
                 break;
             case ALL:
                 tab = Shuffleboard.getTab(llname);
-                tab.addNumber("Robot Pose X", () -> generateSun()[0]);
-                tab.addNumber("Robot Pose Y", () -> generateSun()[1]);
-                tab.addNumber("Robot Pose Z", () -> generateSun()[2]);
+                tab.addNumber("Robot Pose X", () -> getPose3d().getX());
+                tab.addNumber("Robot Pose Y", () -> getPose3d().getY());
+                tab.addNumber("Robot Pose Z", () -> getPose3d().getZ());
 
                 tab.addNumber("Closest Grid X", () -> getClosestZombieTile()[0]);
                 tab.addNumber("Closest Grid Y", () -> getClosestZombieTile()[1]);

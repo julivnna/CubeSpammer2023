@@ -54,7 +54,7 @@ public class DrivetrainPoseEstm {
   //public static final double kMaxSpeed = 3.0; // 3 meters per second
   //public static final double kMaxAngularSpeed = Math.PI; // 1/2 rotation per second
 
-  private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.381);
+  private final Translation2d m_frontLeftLocation = new Translation2d(0.381, 0.381); // to be confirmed: +/- dir?
   private final Translation2d m_frontRightLocation = new Translation2d(0.381, -0.381);
   private final Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.381);
   private final Translation2d m_backRightLocation = new Translation2d(-0.381, -0.381);
@@ -138,7 +138,7 @@ public class DrivetrainPoseEstm {
     //     m_poseEstimator.addVisionMeasurement(
     //             camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
     if(limelight.hasValidTarget()) {
-      m_poseEstimator.addVisionMeasurement(limelightUser.getPose3d().toPose2d(), Timer.getFPGATimestamp() - 0.0);
+      m_poseEstimator.addVisionMeasurement(limelightUser.getPose3d().toPose2d(), Timer.getFPGATimestamp() - 0.0); // to be added: latency?
       SmartDashboard.putNumber("getcamPose_X", limelightUser.getPose3d().toPose2d().getX());
       SmartDashboard.putNumber("getcamPose_Y", limelightUser.getPose3d().toPose2d().getY());
     }

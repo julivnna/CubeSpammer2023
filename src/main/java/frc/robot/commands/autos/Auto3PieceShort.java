@@ -32,9 +32,9 @@ public class Auto3PieceShort extends SequentialCommandGroup {
         TrajectoryConfig config = new TrajectoryConfig(1.25 * 0.75, 2.5 / 2);
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(1.75, 4.43, new Rotation2d(0)), 
         List.of(
-            new Translation2d(0.25, new Rotation2d(0))
+            new Translation2d(2, new Rotation2d(0))
         ), 
-        new Pose2d(2.0, 4.43, new Rotation2d(0)), config);
+        new Pose2d(3.75, 4.43, new Rotation2d(0)), config);
         FollowTrajectoryCommand trajFollower = new FollowTrajectoryCommand(trajectory, poseEstm);
         
         addCommands(

@@ -27,6 +27,7 @@ public class AutoController {
     boolean isRunning = false;
 
     Trajectory.State desiredDtState;
+    double totalTimeSeconds = 0;
 
     public AutoController() {
     //     "ID": 5,
@@ -56,14 +57,14 @@ public class AutoController {
     public AutoController( Trajectory trajectory)
     {
         this.trajectory = trajectory;
-        //trajectory.
+        totalTimeSeconds = trajectory.getTotalTimeSeconds();
     }
 
     public void setNewTrajectory( Trajectory trajectory) // to be done: alot reset need to do
     {
         stopPath();
         this.trajectory = trajectory;
-        //trajectory.
+        totalTimeSeconds = trajectory.getTotalTimeSeconds();
     }
 
     /**
@@ -99,7 +100,10 @@ public class AutoController {
             double elapsed = timer.get();
             desiredDtState = trajectory.sample(elapsed);
 
-            // to be checked?? if the time is expired for this trajectory???
+            if(elapsed > totalTimeSeconds)
+            {
+                // to be checked?? if the time is expired for this trajectory???
+            }
         } else {
             desiredDtState = new Trajectory.State();
         }

@@ -22,12 +22,16 @@ import static frc.robot.Constants.SwerveDriveConstants.*;
 
 public class SwerveJoystickCommand extends CommandBase {
     private final SwerveDrivetrain swerveDrive;
-    private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction;
+    private final Supplier<Double> xSpdFunction, ySpdFunction; 
+    private final Supplier<Boolean> turningLeftFunction;
+    private final Supplier<Boolean> turningRightFunction;
     private final Supplier<Boolean> fieldOrientedFunction;
     private final Supplier<Boolean> towSupplier, precisionSupplier;
     private final Supplier<Boolean> dodgeSupplier;
     private final Supplier<Double> desiredAngle;
     private final Supplier<Boolean> turnToAngleSupplier;
+    private final Supplier<Double> turnClock3and9Supplier;
+    private final Supplier<Double> turnClock12and6Supplier;
     private final PIDController turnToAngleController;
     private Filter xFilter, yFilter, turningFilter;
     private Translation2d robotOrientedJoystickDirection;
@@ -45,19 +49,23 @@ public class SwerveJoystickCommand extends CommandBase {
      * @param swerveDrive           The Swerve Drive subsystem
      * @param xSpdFunction          A supplier returning the desired x speed
      * @param ySpdFunction          A supplier returning the desired y speed
-     * @param turningSpdFunction    A supplier returning the desired turning speed
+     * @param turningLeftFunction    A supplier returning the desired turning speed
+     * @param turningRightFunction    A supplier returning the desired turning speed
      * @param fieldOrientedFunction A boolean supplier that toggles field oriented/robot oriented mode.
      * @param towSupplier           A boolean supplier that toggles the tow mode.
      * @param dodgeSupplier         A boolean supplier that toggles the dodge mode.
      * @param dodgeDirectionSupplier A supplier that supplies the dodge direction.
      * @param precisionSupplier     A boolean supplier that toggles the precision mode.
      */
+    
     public SwerveJoystickCommand(SwerveDrivetrain swerveDrive,
             Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, 
-            Supplier<Double> turningSpdFunction,
+            Supplier<Boolean> turningLeftFunction, Supplier<Boolean> turningRightFunction, 
             Supplier<Boolean> fieldOrientedFunction, Supplier<Boolean> towSupplier, 
             Supplier<Boolean> dodgeSupplier, 
             Supplier<DodgeDirection> dodgeDirectionSupplier, 
+            Supplier<Double> xDirectionSupplier,
+            Supplier<Double> yDirectionSupplier,
             Supplier<Boolean> precisionSupplier,
             Supplier<Boolean> turnToAngleSupplier, 
             Supplier<Double> desiredAngleSupplier
@@ -65,9 +73,12 @@ public class SwerveJoystickCommand extends CommandBase {
         this.swerveDrive = swerveDrive;
         this.xSpdFunction = xSpdFunction;
         this.ySpdFunction = ySpdFunction;
-        this.turningSpdFunction = turningSpdFunction;
+        this.turningLeftFunction = turningLeftFunction;
+        this.turningRightFunction = turningRightFunction;
         this.fieldOrientedFunction = fieldOrientedFunction;
         this.towSupplier = towSupplier;
+        this.turnClock3and9Supplier = xDirectionSupplier;
+        this.turnClock12and6Supplier = yDirectionSupplier;
 
         this.dodgeSupplier = dodgeSupplier;
         this.dodgeDirectionSupplier = dodgeDirectionSupplier;
@@ -114,6 +125,7 @@ public class SwerveJoystickCommand extends CommandBase {
         addRequirements(swerveDrive);
     }
 
+
     @Override
     public void initialize() {}
 
@@ -125,7 +137,7 @@ public class SwerveJoystickCommand extends CommandBase {
         }
 
         // get speeds
-        double turningSpeed;
+        double turningSpeed = 0.6;
         double xSpeed = xSpdFunction.get();
         double ySpeed = -ySpdFunction.get();
 
@@ -133,12 +145,79 @@ public class SwerveJoystickCommand extends CommandBase {
         double filteredXSpeed = xFilter.calculate(xSpeed);
         double filteredYSpeed = yFilter.calculate(ySpeed);
 
+        double clock3and9 = this.turnClock3and9Supplier.get(); //deadband?
+        double clock12and6 = this.turnClock12and6Supplier.get(); //deadband?
+
+        boolean leftTurning = this.turningLeftFunction.get();
+        boolean rightTurning = this.turningRightFunction.get();
+
+        double turnToFixedAngle = 0;
+        boolean turnToFixedAngle_Enable = false;
+        if( clock3and9 > 0.5 )
+        {
+            turnToFixedAngle_Enable = true;
+            if( clock12and6 > 0.5)
+            {
+                // 1,2
+                turnToFixedAngle = 135;
+            }
+            else if(clock12and6 < -0.5)
+            {
+                //4, 5
+                turnToFixedAngle = 45;
+            }
+            else {
+                // 3
+                turnToFixedAngle = 90;
+            }
+        }
+        else if( clock3and9 < -0.5)
+        {
+            turnToFixedAngle_Enable = true;
+            if( clock12and6 > 0.5)
+            {
+                // 10,11
+                turnToFixedAngle = -135;
+            }
+            else if(clock12and6 < -0.5)
+            {
+                //7, 8
+                turnToFixedAngle = -45;
+            }
+            else {
+                // 9
+                turnToFixedAngle = -90;
+            }
+        }
+        else 
+        {
+            if( clock12and6 > 0.5)
+            {
+                turnToFixedAngle_Enable = true;
+                // 12
+                turnToFixedAngle = 179;
+            }
+            else if(clock12and6 < -0.5)
+            {
+                turnToFixedAngle_Enable = true;
+                //6
+                turnToFixedAngle = 0;
+            }
+            else 
+            {
+                // doesn't move
+                turnToFixedAngle_Enable = false;
+            }
+        }
+
+
         // Turn to angle
-        if (turnToAngleSupplier.get()) {
+        if( turnToFixedAngle_Enable) {
+        //if (turnToAngleSupplier.get()) {
             // turnToAngleController.setP(SmartDashboard.getNumber("kP Theta Teleop", SwerveAutoConstants.kPTurnToAngle));
             // turnToAngleController.setI(SmartDashboard.getNumber("kI Theta Teleop", SwerveAutoConstants.kITurnToAngle));
             // turnToAngleController.setD(SmartDashboard.getNumber("kD Theta Teleop", SwerveAutoConstants.kDTurnToAngle));
-            double targetAngle = desiredAngle.get();
+            double targetAngle = turnToFixedAngle;//desiredAngle.get();
             turningSpeed = turnToAngleController.calculate(swerveDrive.getImu().getHeading(), targetAngle);
             turningSpeed = Math.toRadians(turningSpeed);
             turningSpeed = MathUtil.clamp(
@@ -150,8 +229,12 @@ public class SwerveJoystickCommand extends CommandBase {
             ySpeed += 0.01;
         } else {
             // Manual turning
-            turningSpeed = turningSpdFunction.get();
-            turningSpeed *= -1;
+            if(leftTurning && !rightTurning)
+                turningSpeed = 1*turningSpeed;
+            if(rightTurning && !leftTurning)
+                turningSpeed = -1*turningSpeed;
+            else
+                turningSpeed = 0;
             filteredTurningSpeed = turningFilter.calculate(turningSpeed);
         }
 

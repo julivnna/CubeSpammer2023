@@ -125,7 +125,8 @@ public class RobotContainer {
         () -> -commandDriverController.getLeftY(), // Horizontal translation
         commandDriverController::getLeftX, // Vertical Translation
         // () -> 0.0, // debug
-        commandDriverController::getRightX, // Rotationaq
+        ()->driverController.getL1Button(), // Rotationaq
+        ()->driverController.getR1Button(), // Rotationaq
 
         // driverController::getTriangleButton, // Field oriented
         () -> false, // Field oriented
@@ -144,6 +145,9 @@ public class RobotContainer {
           // }
           return DodgeDirection.NONE;
         },
+        commandDriverController::getRightX, // 3 and 9 clock direction
+        // () -> 0.0, // debug
+        commandDriverController::getRightY, // 12 and 6 clock direction
         // driverController::getR2Button, // Precision/"Sniper Button"
         () -> driverController.getR2Button(), // Precision mode (disabled)
         () -> driverController.getCircleButton(), // Turn to angle

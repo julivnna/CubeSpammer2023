@@ -7,6 +7,8 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.WristConstants;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
@@ -18,9 +20,26 @@ public class TwoPiece extends SequentialCommandGroup {
         addCommands(
             Commands.sequence(
                 autoBuilder.resetPose(pathGroup.get(0)),
-                autoBuilder.followPathWithEvents(pathGroup.get(0))
-                ,
-                autoBuilder.followPathWithEvents(pathGroup.get(1))
+                
+                // Go to position to intake
+                autoBuilder.followPathWithEvents(pathGroup.get(0)),
+                
+                // Intake and drive forward
+                Commands.parallel(
+                    wrist.motionMagicCommand(WristConstants.kWristLowPickup),
+                    autoBuilder.followPathWithEvents(pathGroup.get(1)),
+                    shoot.setPower(ShooterConstants.kTopIntakePower.get(), ShooterConstants.kBottomIntakePower.get())
+                ),
+
+                wrist.motionMagicCommand(WristConstants.kWristStow)
+
+                
+                // Stow and go to grid
+                // Commands.sequence(
+                //     // Commands.waitSeconds(0.5),
+                //     wrist.motionMagicCommand(WristConstants.kWristStow),
+                //     autoBuilder.followPathWithEvents(pathGroup.get(2))
+                // )
                 ));
     }
 }

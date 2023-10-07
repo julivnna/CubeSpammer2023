@@ -196,10 +196,10 @@ public final class Constants {
       // public static final double kBLCANCoderOffsetDegrees = 85;          
       // public static final double kBRCANCoderOffsetDegrees = 46.85;
 
-      public static final PrefDouble kFROffsetDeg = new PrefDouble("kFROffsetDeg", 25.75);
-      public static final PrefDouble kFLOffsetDeg = new PrefDouble("kFLOffsetDeg", -53.174);
-      public static final PrefDouble kBLOffsetDeg = new PrefDouble("kBLOffsetDeg", 85);
-      public static final PrefDouble kBROffsetDeg = new PrefDouble("kBROffsetDeg", 46.85);
+      public static final PrefDouble kFROffsetDeg = new PrefDouble("kFROffsetDeg", -29);
+      public static final PrefDouble kFLOffsetDeg = new PrefDouble("kFLOffsetDeg", 51);
+      public static final PrefDouble kBLOffsetDeg = new PrefDouble("kBLOffsetDeg", 185);
+      public static final PrefDouble kBROffsetDeg = new PrefDouble("kBROffsetDeg", 316);
     }
 
     public static final double kPhysicalMaxSpeedMetersPerSecond = 5;    

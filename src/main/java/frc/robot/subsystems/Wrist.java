@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.WristConstants;
 import frc.robot.util.NerdyMath;
 import frc.robot.util.filters.ExponentialSmoothingFilter;
@@ -26,30 +27,41 @@ public class Wrist extends SubsystemBase implements Reportable {
     private TalonFX wrist;
     private int targetTicks = WristConstants.kWristStow;
     private int targetIntakeTicks = WristConstants.kWristLowPickup;
+    private Supplier<Double> manualInput;
+
+    private boolean motionMagicOn = true;
+
     public BooleanSupplier atTargetPosition = () -> false;
     // private TalonSRX leftEncoder;
     private ExponentialSmoothingFilter joystickFilter = new ExponentialSmoothingFilter(WristConstants.kLowPassAlpha);
 
-    public Wrist() {
+    public Wrist(Supplier<Double> manualInput) {
         wrist = new TalonFX(WristConstants.kWristID);
         // leftEncoder = new TalonSRX(WristConstants.kLeftEncoderID);
         init();
         resetEncoders();
+        this.manualInput = manualInput;
         wrist.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 30, 0.1));
     }
 
     @Override
     public void periodic() {
-        // Turn off motor when close to stow
-        if (targetTicks > WristConstants.kWristOff && wrist.getSelectedSensorPosition() > WristConstants.kWristOff) {
-                moveWristMotionMagic();
-                // wrist.set(ControlMode.PercentOutput, 0);
-        } else {
+        if (motionMagicOn) {
+
             if (!DriverStation.isTest()) {
                 moveWristMotionMagic();
             } else {
                 wrist.set(ControlMode.PercentOutput, 0);
             }
+
+        } else {
+
+            if (Math.abs(manualInput.get()) > ControllerConstants.kDeadband) {
+                wrist.set(ControlMode.PercentOutput, 0.5 * manualInput.get());
+            } else {
+                wrist.set(ControlMode.PercentOutput, 0);
+            }
+
         }
     }
 
@@ -69,6 +81,21 @@ public class Wrist extends SubsystemBase implements Reportable {
         wrist.configMotionCruiseVelocity(WristConstants.kWristCruiseVelocity);
         wrist.configMotionAcceleration(WristConstants.kWristMotionAcceleration);
 
+    }
+
+    // Use during a match to re-enable motion magic and turn on joystick input
+    public void resetToStowPosition() {
+        toggleMotionMagic(true);
+        zeroEncodersStow();
+        this.targetIntakeTicks = WristConstants.kWristStow;
+    }
+
+    public void toggleMotionMagic(boolean motionMagicOn) {
+        this.motionMagicOn = motionMagicOn;
+    }
+
+    public void holdPosition() {
+        this.targetTicks = (int) wrist.getSelectedSensorPosition();
     }
 
     public void resetEncoders(){
@@ -125,7 +152,7 @@ public class Wrist extends SubsystemBase implements Reportable {
     public int getIntakeTargetTicks() {
         return targetIntakeTicks;
     }
-
+    
     public void setNormalTargetTicks() {
         setTargetTicks(targetTicks);
     }
@@ -165,6 +192,7 @@ public class Wrist extends SubsystemBase implements Reportable {
     }
 
     public void setTargetTicks(int targetTicks) {
+        toggleMotionMagic(true);
         this.targetTicks = targetTicks;
     }
 

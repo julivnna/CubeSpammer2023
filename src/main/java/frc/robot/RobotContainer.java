@@ -65,7 +65,7 @@ import frc.robot.subsystems.vision.primalWallnut.PrimalSunflower;
  */
 public class RobotContainer {
 
-  public Wrist wrist = new Wrist();
+  public Wrist wrist;
   public Gyro imu = new NavX();
   // public Gyro imu = new Pigeon(60);
   public SwerveDrivetrain swerveDrive;
@@ -107,6 +107,8 @@ public class RobotContainer {
     } catch (IllegalArgumentException e) {
       DriverStation.reportError("Illegal Swerve Drive Module Type", e.getStackTrace());
     }
+
+    wrist = new Wrist(() -> -operatorController.getRightY());
 
     initAutoChoosers();
 
@@ -171,6 +173,16 @@ public class RobotContainer {
       .onTrue(Commands.runOnce(() -> swerveDrive.setVelocityControl(true)))
       .onFalse(Commands.runOnce(() -> swerveDrive.setVelocityControl(false)));
     
+    commandOperatorController.options()
+      .onTrue(Commands.runOnce(wrist::resetToStowPosition));
+    
+    commandOperatorController.L3()
+      .onTrue(Commands.runOnce(() -> wrist.toggleMotionMagic(false)))
+      .onFalse(
+        Commands.runOnce(() -> wrist.toggleMotionMagic(true))
+        .andThen(Commands.runOnce(wrist::holdPosition))
+      );
+    
     // Note:
     // L2:  hold = intake     let go = stow + hold
     // L1:  press = aim low   let go = score + stow
@@ -217,7 +229,7 @@ public class RobotContainer {
         .andThen(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.getIntakeTargetTicks())));
 
     
-    commandOperatorController.options()
+    commandOperatorController.share()
       .onTrue(wrist.resetIntakeTargetTicks()
         .andThen(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.getIntakeTargetTicks())));
 
@@ -226,9 +238,9 @@ public class RobotContainer {
         .andThen(shooter.outtakeHighFlatUpdated()))
       .onFalse(shooter.setPowerZero());
     
-    commandOperatorController.touchpad()
-      .onTrue(shooter.setPower(0.05, -0.05))
-      .onFalse(shooter.setPowerZero());
+    // commandOperatorController.touchpad()
+    //   .onTrue(shooter.setPower(0.05, -0.05))
+    //   .onFalse(shooter.setPowerZero());
 
     commandOperatorController.triangle()
     .onTrue(wrist.motionMagicCommand((WristConstants.kWristHigh))

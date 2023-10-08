@@ -83,7 +83,7 @@ public class Wrist extends SubsystemBase implements Reportable {
 
     }
 
-    // Use during a match to re-enable motion magic and turn on joystick input
+    // Use during a match to re-enable motion magic and turn off joystick input
     public void resetToStowPosition() {
         toggleMotionMagic(true);
         zeroEncodersStow();
@@ -118,7 +118,7 @@ public class Wrist extends SubsystemBase implements Reportable {
             int tickChange = (int) (WristConstants.kJoystickScale * joystickInput);
             int currentTicks = (int) wrist.getSelectedSensorPosition();
 
-            tickChange = (int) joystickFilter.calculate(tickChange);
+            // tickChange = (int) joystickFilter.calculate(tickChange);
 
             targetTicks = currentTicks + tickChange;
             targetTicks = (int) NerdyMath.clamp(targetTicks, WristConstants.kWristLowerLimit, WristConstants.kWristUpperLimit);

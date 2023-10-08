@@ -155,7 +155,8 @@ public class RobotContainer {
         }
       ));
 
-      wrist.setDefaultCommand(Commands.run(() -> wrist.moveWristMotionMagicJoystick(-operatorController.getLeftY()), wrist));
+      // Removed to allow percent output joystick control
+      // wrist.setDefaultCommand(Commands.run(() -> wrist.moveWristMotionMagicJoystick(-operatorController.getLeftY()), wrist));
   }
 
   private void configureBindings() {

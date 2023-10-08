@@ -221,7 +221,14 @@ public class RobotContainer {
       .onTrue(wrist.resetIntakeTargetTicks()
         .andThen(() -> SmartDashboard.putNumber("Intake Target Ticks", wrist.getIntakeTargetTicks())));
 
-
+    commandOperatorController.PS()
+      .onTrue(wrist.motionMagicCommand((WristConstants.kWristHigh))
+        .andThen(shooter.outtakeHighFlatUpdated()))
+      .onFalse(shooter.setPowerZero());
+    
+    commandOperatorController.touchpad()
+      .onTrue(shooter.setPower(0.05, -0.05))
+      .onFalse(shooter.setPowerZero());
 
     commandOperatorController.triangle()
     .onTrue(wrist.motionMagicCommand((WristConstants.kWristHigh))

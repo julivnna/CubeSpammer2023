@@ -25,8 +25,8 @@ public class Shooter extends SubsystemBase {
         topMotor = new TalonFX(ShooterConstants.kTopMotorID);
         bottomMotor = new TalonFX(ShooterConstants.kBottomMotorID);
 
-        this.topMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 30, 0.1));
-        this.bottomMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 25, 30, 0.1));
+        this.topMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 40, 0.1));
+        this.bottomMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 40, 0.1));
 
 
         topMotor.setInverted(false);
@@ -104,6 +104,19 @@ public class Shooter extends SubsystemBase {
         });
     }
 
+    public CommandBase outtakeAutoUpdated() {
+        return Commands.runOnce(() -> {
+            topMotor.set(ControlMode.PercentOutput, ShooterConstants.kTopAutoOuttakePower.get());
+            bottomMotor.set(ControlMode.PercentOutput, ShooterConstants.kBottomAutoOuttakePower.get());
+        });
+    }
+
+    public CommandBase outtakeHighFlatUpdated() {
+        return Commands.runOnce(() -> {
+            topMotor.set(ControlMode.PercentOutput, ShooterConstants.kTopHighFlatOuttakePower.get());
+            bottomMotor.set(ControlMode.PercentOutput, ShooterConstants.kBottomHighFlatOuttakePower.get());
+        });
+    }
 
     public CommandBase intakeUpdated() {
         return Commands.runOnce(() -> {
@@ -117,6 +130,14 @@ public class Shooter extends SubsystemBase {
             topMotor.set(ControlMode.PercentOutput, ShooterConstants.kTopIntakeNeutralPower.get());
             bottomMotor.set(ControlMode.PercentOutput, ShooterConstants.kBottomIntakeNeutralPower.get());
         });
+    }
+
+    public CommandBase outtakeAutoHigh() {
+        return sequence(
+            outtakeAutoUpdated(),
+            waitSeconds(1),
+            setPowerZero()
+        );
     }
 
     public CommandBase outtakeHigh() {

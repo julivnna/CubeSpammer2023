@@ -20,6 +20,9 @@ public class TwoPiece extends SequentialCommandGroup {
         addCommands(
             Commands.sequence(
                 autoBuilder.resetPose(pathGroup.get(0)),
+                shoot.outtakeAutoHigh(),
+                
+                
                 
                 // Go to position to intake
                 autoBuilder.followPathWithEvents(pathGroup.get(0)),
@@ -31,8 +34,9 @@ public class TwoPiece extends SequentialCommandGroup {
                     shoot.setPower(ShooterConstants.kTopIntakePower.get(), ShooterConstants.kBottomIntakePower.get())
                 ),
 
-                wrist.motionMagicCommand(WristConstants.kWristStow)
-
+                wrist.motionMagicCommand(WristConstants.kWristStow),
+                shoot.setPower(ShooterConstants.kTopIntakeNeutralPower.get(), ShooterConstants.kBottomIntakeNeutralPower.get()),
+                Commands.runOnce(() -> swerve.getImu().setOffset(0))
                 
                 // Stow and go to grid
                 // Commands.sequence(

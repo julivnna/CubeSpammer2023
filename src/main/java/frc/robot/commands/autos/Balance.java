@@ -31,7 +31,7 @@ public class Balance extends SequentialCommandGroup {
                         autoBuilder.resetPose(pathGroup.get(0)),
                         wrist.motionMagicCommand(WristConstants.kWristStow),
                         Commands.waitSeconds(0.25),
-                        shoot.outtakeHigh(),
+                        shoot.outtakeAutoHigh(),
                         Commands.waitSeconds(0.5),
                         autoBuilder.followPathWithEvents(pathGroup.get(0)),
                         Commands.waitSeconds(0.5),

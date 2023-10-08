@@ -27,6 +27,7 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.WristConstants;
+import frc.robot.commands.OperatorTestCommand;
 import frc.robot.commands.SwerveJoystickCommand;
 import frc.robot.commands.TheGreatBalancingAct;
 import frc.robot.commands.SwerveJoystickCommand.DodgeDirection;
@@ -271,7 +272,9 @@ public class RobotContainer {
       .onFalse(shooter.holdUpdated());
 
     
-
+    commandOperatorController.povLeft()
+      .onTrue(wrist.freeUpDown(commandOperatorController::getRightX))
+      .onFalse(wrist.stop());
 
       
 

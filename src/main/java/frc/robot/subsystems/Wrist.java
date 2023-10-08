@@ -194,6 +194,22 @@ public class Wrist extends SubsystemBase implements Reportable {
         wrist.setSelectedSensorPosition(WristConstants.kWristStowPowerOff, 0, 1000);
     }
 
+    public CommandBase stop()
+    {
+        // cancel current ctrl, hold the arm position
+        return Commands.runOnce(() -> {
+
+        });
+    }
+
+    public CommandBase freeUpDown(Supplier<Double> currentPercent)
+    { 
+        // apply x% to current output contorl
+        return Commands.runOnce(() -> {
+
+        }); 
+    }
+
     @Override
     public void initShuffleboard(LOG_LEVEL level) { 
         if (level == LOG_LEVEL.OFF || level == LOG_LEVEL.MINIMAL) {

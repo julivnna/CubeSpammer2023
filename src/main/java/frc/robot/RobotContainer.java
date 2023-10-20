@@ -49,6 +49,7 @@ import frc.robot.subsystems.Wrist;
 import frc.robot.subsystems.Reportable.LOG_LEVEL;
 import frc.robot.subsystems.imu.Gyro;
 import frc.robot.subsystems.imu.NavX;
+import frc.robot.subsystems.imu.NavX2;
 import frc.robot.subsystems.swerve.SwerveDrivetrain;
 import frc.robot.subsystems.swerve.SwerveDrivetrain.DRIVE_MODE;
 import frc.robot.subsystems.swerve.SwerveDrivetrain.SwerveModuleType;
@@ -66,7 +67,7 @@ import frc.robot.subsystems.vision.primalWallnut.PrimalSunflower;
 public class RobotContainer {
 
   public Wrist wrist;
-  public Gyro imu = new NavX();
+  public Gyro imu = new NavX2();
   // public Gyro imu = new Pigeon(60);
   public SwerveDrivetrain swerveDrive;
   public Shooter shooter = new Shooter();
@@ -124,8 +125,8 @@ public class RobotContainer {
     swerveDrive.setDefaultCommand(
       new SwerveJoystickCommand(
         swerveDrive,
-        () -> -commandDriverController.getLeftY(), // Horizontal translation
-        commandDriverController::getLeftX, // Vertical Translation
+        () -> commandDriverController.getLeftY(), // Horizontal translation
+        () -> -commandDriverController.getLeftX(), // Vertical Translation
         // () -> 0.0, // debug
         commandDriverController::getRightX, // Rotationaq
 
@@ -147,7 +148,7 @@ public class RobotContainer {
           return DodgeDirection.NONE;
         },
         // driverController::getR2Button, // Precision/"Sniper Button"
-        () -> driverController.getR2Button(), // Precision mode (disabled)
+        () -> true, // Precision mode (disabled)
         () -> driverController.getCircleButton(), // Turn to angle
         // () -> false, // Turn to angle (disabled)
         () -> { // Turn To angle Direction

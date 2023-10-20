@@ -48,11 +48,11 @@ public class Wrist extends SubsystemBase implements Reportable {
     public void periodic() {
         if (motionMagicOn) {
 
-            if (!DriverStation.isTest()) {
-                moveWristMotionMagic();
-            } else {
+            // if (!DriverStation.isTest()) {
+            //     moveWristMotionMagic();
+            // } else {
                 wrist.set(ControlMode.PercentOutput, 0);
-            }
+            // }
 
         } else {
 

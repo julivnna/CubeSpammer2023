@@ -65,6 +65,14 @@ public class Wrist extends SubsystemBase implements Reportable {
         }
     }
 
+    // Intake current over a certain threshold
+    public boolean isCurrentOverloaded() {
+        if (this.wrist.getSupplyCurrent() > 50) {
+            return true;
+        }
+        return false;
+    }
+
     public void init() {
         wrist.setNeutralMode(NeutralMode.Brake);
         wrist.setInverted(true);
@@ -87,7 +95,8 @@ public class Wrist extends SubsystemBase implements Reportable {
     public void resetToStowPosition() {
         toggleMotionMagic(true);
         zeroEncodersStow();
-        this.targetIntakeTicks = WristConstants.kWristStow;
+        this.targetTicks = WristConstants.kWristStow;
+        //this.targetIntakeTicks = WristConstants.kWristStow;
     }
 
     public void toggleMotionMagic(boolean motionMagicOn) {

@@ -6,6 +6,8 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
+import edu.wpi.first.wpilibj.PS4Controller;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,19 +16,22 @@ import edu.wpi.first.wpilibj2.command.Commands;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Reportable.LOG_LEVEL;
 
 public class Shooter extends SubsystemBase {
     private TalonFX topMotor;
     private TalonFX bottomMotor;
+    private PS4Controller operatorPS4;
 
-    public Shooter() {
+    public Shooter(PS4Controller operator) {
         topMotor = new TalonFX(ShooterConstants.kTopMotorID);
         bottomMotor = new TalonFX(ShooterConstants.kBottomMotorID);
-
+        
         this.topMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 40, 0.1));
         this.bottomMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 40, 0.1));
+        this.operatorPS4 = operator;
 
 
         topMotor.setInverted(false);
@@ -44,6 +49,23 @@ public class Shooter extends SubsystemBase {
         topMotor.configNeutralDeadband(0.01);
         bottomMotor.configNeutralDeadband(0.01);
     }
+
+    @Override
+    public void periodic() {
+        if (topMotor.getSupplyCurrent() > 0 || bottomMotor.getSupplyCurrent() > 0) {
+            operatorPS4.setRumble(RumbleType.kBothRumble, 1);
+        } else {
+            operatorPS4.setRumble(RumbleType.kBothRumble, 0);
+        }
+    }
+
+    // Roller current over a certain threshold
+    // public boolean isCurrentOverloaded() {
+    //     if (topMotor.getSupplyCurrent() > 0.1 || bottomMotor.getSupplyCurrent() > 0.1) {
+    //         operatorPS4.setRumble(RumbleType.kBothRumble, 0);
+    //     }
+    //     operatorPS4.setRumble(RumbleType.kBothRumble, 0);;
+    // }
 
     public boolean hasCube() {
         return topMotor.getSupplyCurrent() > ShooterConstants.kTopCubeCurrent.get()

@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -69,7 +70,7 @@ public class RobotContainer {
   public Gyro imu = new NavX();
   // public Gyro imu = new Pigeon(60);
   public SwerveDrivetrain swerveDrive;
-  public Shooter shooter = new Shooter();
+  public Shooter shooter;// = new Shooter();
   public PowerDistribution pdp = new PowerDistribution(0, ModuleType.kCTRE);
 
   private final CommandPS4Controller commandDriverController = new CommandPS4Controller(
@@ -109,6 +110,7 @@ public class RobotContainer {
     }
 
     wrist = new Wrist(() -> -operatorController.getRightY());
+    shooter = new Shooter(operatorController);
 
     initAutoChoosers();
 
@@ -183,7 +185,7 @@ public class RobotContainer {
         Commands.runOnce(() -> wrist.toggleMotionMagic(true))
         .andThen(Commands.runOnce(wrist::holdPosition))
       );
-    
+
     // Note:
     // L2:  hold = intake     let go = stow + hold
     // L1:  press = aim low   let go = score + stow
@@ -285,6 +287,11 @@ public class RobotContainer {
     commandOperatorController.R2() // Circle
       .onTrue(wrist.motionMagicCommand(WristConstants.kWristStow))
       .onFalse(shooter.holdUpdated());
+
+    // Trigger rollerOverload = new Trigger(shooter::isCurrentOverloaded);
+    // rollerOverload.onTrue(
+    //   Commands.runOnce(operatorController.setRumble(RumbleType.kBothRumble, 0))
+    // );
 
     
 

@@ -119,21 +119,23 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
      */
     @Override
     public void periodic() {
-        /*if (!DriverStation.isTest()) {
-            runModules();
-        }
-        // odometer.update(gyro.getRotation2d(), getModulePositions());
+        // if (!DriverStation.isTest()) {
+        //     runModules();
+        // }
+        //odometer.update(gyro.getRotation2d(), getModulePositions());
         poseEstimator.update(gyro.getRotation2d(), getModulePositions());
 
-        // Higher priority limelights get passed in second
-        // for (PrimalSunflower sf : sunflowers) {
-        //     Pose3d sunflowerPose3d = sf.getPose3d();
-        //     if (sunflowerPose3d != null) {
-        //         poseEstimator.addVisionMeasurement(sunflowerPose3d.toPose2d(), Timer.getFPGATimestamp());
-        //     }
-        // }
+        Pose3d sunflowerPose3d = sunflower.getPose3d();
+        if (sunflowerPose3d != null && sunflower.zombieOnYourLawn() > sunflower.getPlantFood()) {
+            SmartDashboard.putString("Pose", sunflowerPose3d.toString());
+            poseEstimator.addVisionMeasurement(sunflowerPose3d.toPose2d(), Timer.getFPGATimestamp());
+            SmartDashboard.putString("Pose Vision Measurement", poseEstimator.getEstimatedPosition().toString());
+        } else {
+            SmartDashboard.putString("Pose", "null");
+            
+        }
 
-        field.setRobotPose(poseEstimator.getEstimatedPosition());*/
+        field.setRobotPose(poseEstimator.getEstimatedPosition());
     }
     
     //****************************** RESETTERS ******************************/

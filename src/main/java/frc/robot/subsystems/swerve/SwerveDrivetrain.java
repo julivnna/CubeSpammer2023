@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve;
 
+import edu.wpi.first.math.WPIMathJNI;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -8,6 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -36,6 +38,7 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
 
     private final Gyro gyro;
     // private final SwerveDriveOdometry odometer;
+    private boolean isTest = false;
     private final SwerveDrivePoseEstimator poseEstimator;
     private final PrimalSunflower sunflower; 
     private DRIVE_MODE driveMode = DRIVE_MODE.FIELD_ORIENTED;
@@ -119,7 +122,7 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
      */
     @Override
     public void periodic() {
-        if (!DriverStation.isTest()) {
+        if (!isTest) {
             runModules();
         }
         // odometer.update(gyro.getRotation2d(), getModulePositions());
@@ -172,6 +175,7 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
     }
 
     public void zeroModules() {
+        SmartDashboard.putNumber("Time", WPIUtilJNI.getSystemTime());
         CANCoderConstants.kFLOffsetDeg.set(frontLeft.getTurnOffset() + frontLeft.getTurningPosition());
         CANCoderConstants.kFROffsetDeg.set(frontRight.getTurnOffset() + frontRight.getTurningPosition());
         CANCoderConstants.kBLOffsetDeg.set(backLeft.getTurnOffset() + backLeft.getTurningPosition());
@@ -348,6 +352,8 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
                     }
                 }
                 );
+                tab.add("Toggle Test", Commands.runOnce(() -> isTest = !isTest));
+                tab.addBoolean("Test Mode", () -> isTest);
                 // Might be negative because our swerveDriveKinematics is flipped across the Y axis
             case MEDIUM:
                 tab.addNumber("Encoder Resets", () -> this.numEncoderResets);

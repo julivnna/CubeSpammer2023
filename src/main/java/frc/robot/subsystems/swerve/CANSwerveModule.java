@@ -196,6 +196,10 @@ public class CANSwerveModule implements SwerveModule {
         //CANCoderConstants.kFLOffsetDeg.set(frontLeft.getTurnOffset() + frontLeft.getTurningPosition())
         resetEncoder();
     }
+
+    public void resetDesiredAngle() {
+        this.desiredAngle = 0;
+    }
     
     //****************************** GETTERS ******************************/
 

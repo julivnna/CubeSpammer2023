@@ -18,6 +18,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.util.preferences.PrefBool;
 import frc.robot.util.preferences.PrefDouble;
 
 /**
@@ -128,6 +129,7 @@ public final class Constants {
     public static final double kDDrive = 0;
     public static final double kFDrive = 0.0469;
 
+    public static final PrefBool ktunePID = new PrefBool("TuneDrivePID", false);
     public static final String kCANivoreName = "CANivore1";
   } 
 

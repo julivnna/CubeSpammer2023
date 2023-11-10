@@ -120,9 +120,10 @@ public final class Constants {
     public static final double kDriveMotorDeadband = 0.02;
     public static final double kTurnMotorDeadband = 0.001;
 
-    public static final double kPTurning = 0.55; // 0.6
-    public static final double kITurning = 0;
-    public static final double kDTurning = 0.02; 
+    public static final PrefDouble kPTurning = new PrefDouble("kPTurning",0.55); // 0.6
+    public static final PrefDouble kITurning = new PrefDouble("kITurning",0);
+    public static final PrefDouble kDTurning = new PrefDouble("kDTurning",0.02); 
+    public static final PrefDouble kFTurning = new PrefDouble("kFTurning",0.015); 
     
     public static final double kPDrive = 0.13;
     public static final double kIDrive = 0;

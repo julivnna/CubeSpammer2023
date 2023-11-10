@@ -176,10 +176,10 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
 
     public void zeroModules() {
         SmartDashboard.putNumber("Time", WPIUtilJNI.getSystemTime());
-        CANCoderConstants.kFLOffsetDeg.set(frontLeft.getTurnOffset() + frontLeft.getTurningPosition());
-        CANCoderConstants.kFROffsetDeg.set(frontRight.getTurnOffset() + frontRight.getTurningPosition());
-        CANCoderConstants.kBLOffsetDeg.set(backLeft.getTurnOffset() + backLeft.getTurningPosition());
-        CANCoderConstants.kBROffsetDeg.set(backRight.getTurnOffset() + backRight.getTurningPosition());
+        CANCoderConstants.kFLOffsetDeg.set((frontLeft.getTurnOffset() + frontLeft.getTurningPositionDegrees()) % 360);
+        CANCoderConstants.kFROffsetDeg.set((frontRight.getTurnOffset() + frontRight.getTurningPositionDegrees()) % 360);
+        CANCoderConstants.kBLOffsetDeg.set((backLeft.getTurnOffset() + backLeft.getTurningPositionDegrees()) % 360);
+        CANCoderConstants.kBROffsetDeg.set((backRight.getTurnOffset() + backRight.getTurningPositionDegrees()) % 360);
         CANCoderConstants.kFLOffsetDeg.uploadPreferences();
         CANCoderConstants.kFROffsetDeg.uploadPreferences();
         CANCoderConstants.kBLOffsetDeg.uploadPreferences();

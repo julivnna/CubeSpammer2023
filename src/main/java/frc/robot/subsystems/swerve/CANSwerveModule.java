@@ -110,9 +110,9 @@ public class CANSwerveModule implements SwerveModule {
         this.CANCoderID = CANCoderId;
 
         this.turningController = new PIDController(
-            SmartDashboard.getNumber("kPTurning", ModuleConstants.kPTurning),
-            SmartDashboard.getNumber("kITurning", ModuleConstants.kITurning),
-            SmartDashboard.getNumber("kDTurning", ModuleConstants.kDTurning));
+            ModuleConstants.kPTurning.get(),
+            ModuleConstants.kITurning.get(),
+            ModuleConstants.kDTurning.get());
         turningController.enableContinuousInput(0, 2 * Math.PI); // Originally was -pi to pi
         turningController.setTolerance(.005);
 
@@ -143,6 +143,11 @@ public class CANSwerveModule implements SwerveModule {
         canCoder.setPosition(startAngle);
 
         ModuleConstants.ktunePID.loadPreferences();
+        ModuleConstants.kPTurning.loadPreferences();
+        ModuleConstants.kITurning.loadPreferences();
+        ModuleConstants.kDTurning.loadPreferences();
+        turningController.setPID(ModuleConstants.kPTurning.get(), ModuleConstants.kITurning.get(), ModuleConstants.kDTurning.get());
+        
     }
 
     /**

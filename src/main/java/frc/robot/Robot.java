@@ -36,6 +36,7 @@ public class Robot extends TimedRobot {
 	
     DataLogManager.start("/media/sda1/logs");
     DataLogManager.logNetworkTables(true);
+    enableLiveWindowInTest(false);
   }
 
   /**

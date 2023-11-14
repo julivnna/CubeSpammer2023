@@ -131,6 +131,7 @@ public class SwerveModule {
     public void resetEncoder() {
         canCoder.setPosition(canCoder.getAbsolutePosition().getValue());
         refreshDrivePID();
+        refreshTurnPID();
 
         ModuleConstants.ktunePID.loadPreferences();
         ModuleConstants.kPTurning.loadPreferences();

@@ -64,7 +64,7 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
     public SwerveDrivetrain(Gyro gyro, SwerveModuleType moduleType, PrimalSunflower sunflower) throws IllegalArgumentException {
         switch (moduleType) {
             case CANCODER:
-                frontLeft = new CANSwerveModule(
+                frontLeft = new SwerveModule(
                     kFLDriveID,
                     kFLTurningID,
                     kFLDriveReversed,
@@ -72,7 +72,7 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
                     CANCoderConstants.kFLCANCoderID,
                     CANCoderConstants.kFLOffsetDeg,
                     CANCoderConstants.kFLCANCoderReversed);
-                frontRight = new CANSwerveModule(
+                frontRight = new SwerveModule(
                     kFRDriveID,
                     kFRTurningID,
                     kFRDriveReversed,
@@ -80,7 +80,7 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
                     CANCoderConstants.kFRCANCoderID,
                     CANCoderConstants.kFROffsetDeg,
                     CANCoderConstants.kFRCANCoderReversed);
-                backLeft = new CANSwerveModule(
+                backLeft = new SwerveModule(
                     kBLDriveID,
                     kBLTurningID,
                     kBLDriveReversed,
@@ -88,7 +88,7 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
                     CANCoderConstants.kBLCANCoderID,
                     CANCoderConstants.kBLOffsetDeg,
                     CANCoderConstants.kBLCANCoderReversed);
-                backRight = new CANSwerveModule(
+                backRight = new SwerveModule(
                     kBRDriveID,
                     kBRTurningID,
                     kBRDriveReversed,
@@ -174,23 +174,9 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
         backRight.resetEncoder();
     }
 
-    public void zeroModules() {
-        SmartDashboard.putNumber("Time", WPIUtilJNI.getSystemTime());
-        CANCoderConstants.kFLOffsetDeg.set((frontLeft.getTurnOffset() + frontLeft.getTurningPositionDegrees()) % 360);
-        CANCoderConstants.kFROffsetDeg.set((frontRight.getTurnOffset() + frontRight.getTurningPositionDegrees()) % 360);
-        CANCoderConstants.kBLOffsetDeg.set((backLeft.getTurnOffset() + backLeft.getTurningPositionDegrees()) % 360);
-        CANCoderConstants.kBROffsetDeg.set((backRight.getTurnOffset() + backRight.getTurningPositionDegrees()) % 360);
-        CANCoderConstants.kFLOffsetDeg.uploadPreferences();
-        CANCoderConstants.kFROffsetDeg.uploadPreferences();
-        CANCoderConstants.kBLOffsetDeg.uploadPreferences();
-        CANCoderConstants.kBROffsetDeg.uploadPreferences();
-
-        
-        resetEncoders();
-    }
 
     /**
-     * Stops all modules. See {@link CANSwerveModule#stop()} for more info.
+     * Stops all modules. See {@link SwerveModule#stop()} for more info.
      */
     public void stopModules() {
         frontLeft.stop();
@@ -200,7 +186,7 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
     }
 
     /**
-     * Have modules move to their desired states. See {@link CANSwerveModule#run()} for more info.
+     * Have modules move to their desired states. See {@link SwerveModule#run()} for more info.
      */
     public void runModules() {
         frontLeft.run();
@@ -342,7 +328,6 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
                 break;
             case ALL:
                 tab.add("Field Position", field).withSize(6, 3);
-                tab.add("Zero Modules", Commands.runOnce(this::zeroModules));
                 tab.addString(("Current Command"), () -> {
                     Command currCommand = this.getCurrentCommand();
                     if (currCommand == null) {
@@ -382,7 +367,6 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
             case ALL:
             case MEDIUM:
                 SmartDashboard.putNumber("Encoder Resets", numEncoderResets);
-                SmartDashboard.putData("Zero Modules", Commands.runOnce(this::zeroModules));
             case MINIMAL:
                 SmartDashboard.putNumber("Odometer X Meters", poseEstimator.getEstimatedPosition().getX());
                 SmartDashboard.putNumber("Odometer Y Meters", poseEstimator.getEstimatedPosition().getY());

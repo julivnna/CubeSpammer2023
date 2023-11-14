@@ -167,17 +167,17 @@ public final class Constants {
 
     public static final double kRotationOffset = 0.5 * kTrackWidth;
 
-    public static final int kFRDriveID = 11;
-    public static final int kFLDriveID = 21;
-    public static final int kBLDriveID = 31;
-    public static final int kBRDriveID = 41;
+    public static final int kFRDriveID = 31; //11
+    public static final int kFLDriveID = 41; //21
+    public static final int kBLDriveID = 11; //31
+    public static final int kBRDriveID = 21; //41
 
-    public static final int kFRTurningID = 12;
-    public static final int kFLTurningID = 22;
-    public static final int kBLTurningID = 32;
-    public static final int kBRTurningID = 42;
+    public static final int kFRTurningID = 32; //12
+    public static final int kFLTurningID = 42; //22
+    public static final int kBLTurningID = 12; //32
+    public static final int kBRTurningID = 22; //42
 
-    public static final boolean kFRTurningReversed = true; 
+    public static final boolean kFRTurningReversed = true;
     public static final boolean kFLTurningReversed = true; 
     public static final boolean kBLTurningReversed = true; 
     public static final boolean kBRTurningReversed = true; 
@@ -188,10 +188,10 @@ public final class Constants {
     public static final boolean kBRDriveReversed = false;
 
     public static final class CANCoderConstants {
-      public static final int kFRCANCoderID = 14;
-      public static final int kFLCANCoderID = 24;
-      public static final int kBLCANCoderID = 34;
-      public static final int kBRCANCoderID = 44;
+      public static final int kFRCANCoderID = 34;
+      public static final int kFLCANCoderID = 44;
+      public static final int kBLCANCoderID = 14;
+      public static final int kBRCANCoderID = 24;
 
       public static final boolean kFRCANCoderReversed = false;    
       public static final boolean kFLCANCoderReversed = false;      
@@ -203,10 +203,10 @@ public final class Constants {
       // public static final double kBLCANCoderOffsetDegrees = 85;          
       // public static final double kBRCANCoderOffsetDegrees = 46.85;
 
-      public static final PrefDouble kFROffsetDeg = new PrefDouble("kFROffsetDeg", -29);
-      public static final PrefDouble kFLOffsetDeg = new PrefDouble("kFLOffsetDeg", 51);
-      public static final PrefDouble kBLOffsetDeg = new PrefDouble("kBLOffsetDeg", 185);
-      public static final PrefDouble kBROffsetDeg = new PrefDouble("kBROffsetDeg", 316);
+      public static final PrefDouble kFROffsetDeg = new PrefDouble("kFROffsetDeg", 0); //-29
+      public static final PrefDouble kFLOffsetDeg = new PrefDouble("kFLOffsetDeg", 0); //51
+      public static final PrefDouble kBLOffsetDeg = new PrefDouble("kBLOffsetDeg", 0); //185
+      public static final PrefDouble kBROffsetDeg = new PrefDouble("kBROffsetDeg", 0); //316
     }
 
     public static final double kPhysicalMaxSpeedMetersPerSecond = 5;    

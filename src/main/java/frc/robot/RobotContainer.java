@@ -353,13 +353,13 @@ public class RobotContainer {
     tab.addNumber("Voltage", () -> Math.abs(pdp.getVoltage()));
   }
 
-  public void reportAllToSmartDashboard() {
-    imu.reportToSmartDashboard(loggingLevel);
-    wrist.reportToSmartDashboard(loggingLevel);
-    shooter.reportToSmartDashboard(loggingLevel);
-    swerveDrive.reportToSmartDashboard(loggingLevel);
-    swerveDrive.reportModulesToSmartDashboard(loggingLevel);
-  }
+  // public void reportAllToSmartDashboard() {
+  //   imu.reportToSmartDashboard(loggingLevel);
+  //   wrist.reportToSmartDashboard(loggingLevel);
+  //   shooter.reportToSmartDashboard(loggingLevel);
+  //   swerveDrive.reportToSmartDashboard(loggingLevel);
+  //   swerveDrive.reportModulesToSmartDashboard(loggingLevel);
+  // }
   
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

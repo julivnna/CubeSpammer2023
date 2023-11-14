@@ -69,33 +69,25 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
                     kFLTurningID,
                     kFLDriveReversed,
                     kFLTurningReversed,
-                    CANCoderConstants.kFLCANCoderID,
-                    CANCoderConstants.kFLOffsetDeg,
-                    CANCoderConstants.kFLCANCoderReversed);
+                    CANCoderConstants.kFLCANCoderID);
                 frontRight = new SwerveModule(
                     kFRDriveID,
                     kFRTurningID,
                     kFRDriveReversed,
                     kFRTurningReversed,
-                    CANCoderConstants.kFRCANCoderID,
-                    CANCoderConstants.kFROffsetDeg,
-                    CANCoderConstants.kFRCANCoderReversed);
+                    CANCoderConstants.kFRCANCoderID);
                 backLeft = new SwerveModule(
                     kBLDriveID,
                     kBLTurningID,
                     kBLDriveReversed,
                     kBLTurningReversed,
-                    CANCoderConstants.kBLCANCoderID,
-                    CANCoderConstants.kBLOffsetDeg,
-                    CANCoderConstants.kBLCANCoderReversed);
+                    CANCoderConstants.kBLCANCoderID);
                 backRight = new SwerveModule(
                     kBRDriveID,
                     kBRTurningID,
                     kBRDriveReversed,
                     kBRTurningReversed,
-                    CANCoderConstants.kBRCANCoderID,
-                    CANCoderConstants.kBROffsetDeg,
-                    CANCoderConstants.kBRCANCoderReversed);
+                    CANCoderConstants.kBRCANCoderID);
                 break;
             default:
                 throw new IllegalArgumentException("Invalid Swerve Module Type provided.");
@@ -158,15 +150,6 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
      */
     public void resetEncoders() {
         numEncoderResets += 1;
-        // SmartDashboard.putNumber("Encoder resets", numEncoderResets);
-        CANCoderConstants.kFLOffsetDeg.loadPreferences();
-        CANCoderConstants.kFROffsetDeg.loadPreferences();
-        CANCoderConstants.kBLOffsetDeg.loadPreferences();
-        CANCoderConstants.kBROffsetDeg.loadPreferences();
-        frontLeft.setTurnOffset(CANCoderConstants.kFLOffsetDeg.get());
-        frontRight.setTurnOffset(CANCoderConstants.kFROffsetDeg.get());
-        backLeft.setTurnOffset(CANCoderConstants.kBLOffsetDeg.get());
-        backRight.setTurnOffset(CANCoderConstants.kBROffsetDeg.get());
         
         frontLeft.resetEncoder();
         frontRight.resetEncoder();
@@ -264,10 +247,10 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
     }
 
     public void setVelocityControl(boolean withVelocityControl) {
-        frontLeft.toggleVelocityControl(withVelocityControl);
-        frontRight.toggleVelocityControl(withVelocityControl);
-        backLeft.toggleVelocityControl(withVelocityControl);
-        backRight.toggleVelocityControl(withVelocityControl);
+        frontLeft.setVelocityControl(withVelocityControl);
+        frontRight.setVelocityControl(withVelocityControl);
+        backLeft.setVelocityControl(withVelocityControl);
+        backRight.setVelocityControl(withVelocityControl);
     }
 
     /**

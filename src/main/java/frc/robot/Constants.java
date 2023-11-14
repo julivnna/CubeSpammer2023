@@ -125,10 +125,11 @@ public final class Constants {
     public static final PrefDouble kDTurning = new PrefDouble("kDTurning",0.02); 
     public static final PrefDouble kFTurning = new PrefDouble("kFTurning",0.015); 
     
-    public static final double kPDrive = 0.13;
-    public static final double kIDrive = 0;
-    public static final double kDDrive = 0;
-    public static final double kFDrive = 0.0469;
+    public static final PrefDouble kPDrive = new PrefDouble("kPDrive", 0.13);
+    public static final PrefDouble kIDrive = new PrefDouble("kIDrive", 0);
+    public static final PrefDouble kDDrive = new PrefDouble("kDDrive", 0);
+    public static final PrefDouble kSDrive = new PrefDouble("kSDrive", 0.0469);
+    public static final PrefDouble kVDrive = new PrefDouble("kVDrive", 0);
 
     public static final PrefBool ktunePID = new PrefBool("TuneDrivePID", false);
     public static final String kCANivoreName = "CANivore1";
@@ -192,21 +193,6 @@ public final class Constants {
       public static final int kFLCANCoderID = 24;
       public static final int kBLCANCoderID = 34;
       public static final int kBRCANCoderID = 44;
-
-      public static final boolean kFRCANCoderReversed = false;    
-      public static final boolean kFLCANCoderReversed = false;      
-      public static final boolean kBLCANCoderReversed = false;       
-      public static final boolean kBRCANCoderReversed = false; 
-
-      // public static final double kFRCANCoderOffsetDegrees = 25.75;       
-      // public static final double kFLCANCoderOffsetDegrees = -53.174;         
-      // public static final double kBLCANCoderOffsetDegrees = 85;          
-      // public static final double kBRCANCoderOffsetDegrees = 46.85;
-
-      public static final PrefDouble kFROffsetDeg = new PrefDouble("kFROffsetDeg", -29);
-      public static final PrefDouble kFLOffsetDeg = new PrefDouble("kFLOffsetDeg", 51);
-      public static final PrefDouble kBLOffsetDeg = new PrefDouble("kBLOffsetDeg", 185);
-      public static final PrefDouble kBROffsetDeg = new PrefDouble("kBROffsetDeg", 316);
     }
 
     public static final double kPhysicalMaxSpeedMetersPerSecond = 5;    

@@ -95,8 +95,7 @@ public class RobotContainer {
   private SendableChooser<Supplier<CommandBase>> autoChooser = new SendableChooser<Supplier<CommandBase>>();
 
   // private PrimalSunflower backSunflower = new PrimalSunflower(VisionConstants.kLimelightBackName);
-  private PrimalSunflower frontSunflower = new PrimalSunflower(VisionConstants.kLimelightFrontName);
-
+  private PrimalSunflower frontSunflower = new PrimalSunflower(VisionConstants.kLimelightFrontName, 0.6); //0.6 is threshold for consistent ATag detection
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */

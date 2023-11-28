@@ -150,6 +150,34 @@ public class PrimalSunflower implements Reportable {
         return null;
     }
 
+    public double getPose3dXCoord() {
+        if (limelight == null) {
+            return 0;
+        }
+
+        limelight.setPipeline(VisionConstants.kAprilTagPipeline);
+        
+        if(limelight.hasValidTarget()) {
+            return limelightUser.getX(); // Replace w different met? Idk i just copied it from generateSun()
+        } 
+
+        return 0;
+    }
+
+    public double getPose3dYCoord() {
+        if (limelight == null) {
+            return 0;
+        }
+
+        limelight.setPipeline(VisionConstants.kAprilTagPipeline);
+        
+        if(limelight.hasValidTarget()) {
+            return limelightUser.getY(); // Replace w different met? Idk i just copied it from generateSun()
+        } 
+
+        return 0;
+    }
+
     /**
      * @return index of the closest grid to the robot
      */

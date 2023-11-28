@@ -1,6 +1,7 @@
 package frc.robot.subsystems.swerve;
 
 import edu.wpi.first.math.WPIMathJNI;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -247,6 +248,28 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
 
     public void drive(double xSpeed, double ySpeed) {
         drive(xSpeed, ySpeed, 0);
+    }
+
+    //****************************** GO TO COORDINATES VISION ******************************/
+    public void driveToSunflower(double xCoord, double yCoord) {
+        double XOffset;
+        double YOffset;
+        XOffset = xCoord - sunflower.getPose3dXCoord();
+        YOffset = yCoord - sunflower.getPose3dYCoord();
+
+        //Make PID Controller for this
+        PIDController 
+
+        if(XOffset < 0.1 && XOffset > -0.1) {
+            XOffset = 0;
+        }
+
+        if(YOffset < 0.1 && YOffset > -0.1) {
+            YOffset = 0;
+        }
+
+        // Should be ~- between 0.1 and 5.0
+        drive(XOffset * 0.1, YOffset * 0.1, 0);
     }
 
     public void driveFieldOriented(double xSpeed, double ySpeed, double turnSpeed) {

@@ -272,7 +272,10 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
         }
 
         // Should be ~- between 0.1 and 5.0
-        drive(XOffset * 0.1, YOffset * 0.1, 0);
+        double calculatedXOffset = sunflowerController.calculate(XOffset, 0);
+        double calculatedYOffset = sunflowerController.calculate(YOffset, 0);
+
+        drive(calculatedXOffset, calculatedYOffset, 0);
     }
 
     public void driveFieldOriented(double xSpeed, double ySpeed, double turnSpeed) {

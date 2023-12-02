@@ -289,6 +289,7 @@ public final class Constants {
   }
 
   public static final class VisionConstants {
+    public static final PIDConstants kSunflowerPIDConstants = new PIDConstants(0, 0, 0);
     public static final String kLimelightBackName = "limelight-back";
     public static final String kLimelightFrontName = "limelight-front";
     public static final int kAprilTagPipeline = 4;

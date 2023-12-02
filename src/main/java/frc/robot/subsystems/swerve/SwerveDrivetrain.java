@@ -22,6 +22,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.SwerveDriveConstants.CANCoderConstants;
 import frc.robot.Constants.VisionConstants;
@@ -258,7 +260,8 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
         YOffset = yCoord - sunflower.getPose3dYCoord();
 
         //Make PID Controller for this
-        PIDController 
+        //idk wut u wanted here but i just made a new controller to fix the build error
+        PIDController sunflowerController = new PIDController(VisionConstants.kSunflowerP, VisionConstants.kSunflowerI, VisionConstants.kSunflowerD); 
 
         if(XOffset < 0.1 && XOffset > -0.1) {
             XOffset = 0;

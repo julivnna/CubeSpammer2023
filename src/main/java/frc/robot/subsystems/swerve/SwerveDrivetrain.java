@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.WPIMathJNI;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -261,7 +262,8 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
 
         //Make PID Controller for this
         //idk wut u wanted here but i just made a new controller to fix the build error
-        PIDController sunflowerController = new PIDController(VisionConstants.kSunflowerP, VisionConstants.kSunflowerI, VisionConstants.kSunflowerD); 
+        PIDController sunflowerController = new PIDController(VisionConstants.kSunflowerP, VisionConstants.kSunflowerI, VisionConstants.kSunflowerD);
+        sunflowerController.setTolerance(0.2);
 
         if(XOffset < 0.1 && XOffset > -0.1) {
             XOffset = 0;
@@ -272,8 +274,8 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
         }
 
         // Should be ~- between 0.1 and 5.0
-        double calculatedXOffset = sunflowerController.calculate(XOffset, 0);
-        double calculatedYOffset = sunflowerController.calculate(YOffset, 0);
+        double calculatedXOffset = MathUtil.clamp(sunflowerController.calculate(XOffset, 0), -0.5 * SwerveDriveConstants.kTeleDriveMaxSpeedMetersPerSecond, SwerveDriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 2);
+        double calculatedYOffset = MathUtil.clamp(sunflowerController.calculate(YOffset, 0), -0.5 * SwerveDriveConstants.kTeleDriveMaxSpeedMetersPerSecond, SwerveDriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 2);
 
         drive(calculatedXOffset, calculatedYOffset, 0);
     }

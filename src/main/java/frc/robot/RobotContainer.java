@@ -115,6 +115,8 @@ public class RobotContainer {
     configureBindings();
 
     DriverStation.reportWarning("Initalization complete", false);
+
+    initShuffleboard();
   }
 
   public void initDefaultCommands() {

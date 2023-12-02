@@ -147,6 +147,7 @@ public class CANSwerveModule implements SwerveModule {
         ModuleConstants.kPTurning.loadPreferences();
         ModuleConstants.kITurning.loadPreferences();
         ModuleConstants.kDTurning.loadPreferences();
+        ModuleConstants.kFTurning.loadPreferences();
         turningController.setPID(ModuleConstants.kPTurning.get(), ModuleConstants.kITurning.get(), ModuleConstants.kDTurning.get());
         
     }
@@ -189,8 +190,16 @@ public class CANSwerveModule implements SwerveModule {
             driveMotor.setControl(this.driveRequest);
         
         }
+
+        double turnPos = getTurningPosition();
+        double angleDiff = turnPos - desiredState.angle.getRadians();
         
-        double turnPower = turningController.calculate(getTurningPosition(), desiredState.angle.getRadians());
+        double turnPower = turningController.calculate(turnPos, desiredState.angle.getRadians());
+        SmartDashboard.putNumber("Turn Power #" + this.turnMotorID, turnPower);
+        if (Math.abs(turnPower) > 0.001) {
+            turnPower += ModuleConstants.kFTurning.get() * Math.signum(angleDiff);
+        }
+        SmartDashboard.putNumber("Turn Power With Adjustment#" + this.turnMotorID, turnPower);
         currentTurnPercent = turnPower;
         this.turnRequest.Output = currentTurnPercent;
         turnMotor.setControl(this.turnRequest);
@@ -337,25 +346,51 @@ public class CANSwerveModule implements SwerveModule {
                 break;
             case ALL:
                 
-                tab.addNumber("Turn Offset", () -> this.CANCoderOffsetDegrees.get());
-                tab.addNumber("Turn percent (motor controller)", () -> turnMotor.getDutyCycle().getValue());
-                tab.addNumber("Turn percent (current)", () -> this.currentTurnPercent);
+                // tab.addNumber("Turn Offset", () -> this.CANCoderOffsetDegrees.get());
+                // tab.addNumber("Turn percent (motor controller)", () -> turnMotor.getDutyCycle().getValue());
+                // tab.addNumber("Turn percent (current)", () -> this.currentTurnPercent);
             case MEDIUM:
-                tab.addNumber("Drive Motor Current", () -> driveMotor.getStatorCurrent().getValue());
-                tab.addNumber("Turn Motor Current", () -> turnMotor.getStatorCurrent().getValue());
-                tab.addNumber("Drive Motor Voltage", () -> (driveMotor.getDutyCycle().getValue() * driveMotor.getSupplyVoltage().getValue()));
-                tab.addNumber("Turn Motor Voltage", () -> turnMotor.getSupplyVoltage().getValue());// ::getMotorOutputVoltage);
-                tab.addNumber("Module velocity", this::getDriveVelocity);
-                tab.addNumber("Desired Velocity", () -> this.desiredVelocity);
-                tab.addNumber("Drive percent (motor controller)", () -> driveMotor.getDutyCycle().getValue());
-                tab.addNumber("Drive percent (current)", () -> this.currentPercent);
+                // tab.addNumber("Drive Motor Current", () -> driveMotor.getStatorCurrent().getValue());
+                // tab.addNumber("Turn Motor Current", () -> turnMotor.getStatorCurrent().getValue());
+                // tab.addNumber("Drive Motor Voltage", () -> (driveMotor.getDutyCycle().getValue() * driveMotor.getSupplyVoltage().getValue()));
+                // tab.addNumber("Turn Motor Voltage", () -> turnMotor.getSupplyVoltage().getValue());// ::getMotorOutputVoltage);
+                // tab.addNumber("Module velocity", this::getDriveVelocity);
+                // tab.addNumber("Desired Velocity", () -> this.desiredVelocity);
+                // tab.addNumber("Drive percent (motor controller)", () -> driveMotor.getDutyCycle().getValue());
+                // tab.addNumber("Drive percent (current)", () -> this.currentPercent);
                 
-                tab.addNumber("Drive ticks", this::getDrivePositionTicks);
-                tab.addNumber("Turn angle", this::getTurningPositionDegrees);
-                tab.addNumber("Turn angle percent", () -> turnMotor.getDutyCycle().getValue());
-                tab.addNumber("Desired Angle", () -> desiredAngle);
-                tab.addBoolean("Velocity Control", () -> this.velocityControl);
-                tab.addNumber("Angle Difference", () -> desiredAngle - currentAngle);
+                // tab.addNumber("Drive ticks", this::getDrivePositionTicks);
+                tab.addNumber("Turn angle", () -> {
+                    double angle = this.getTurningPositionDegrees();
+                    if (angle < 0) {
+                        return angle + 360;
+                    }
+                    return angle;
+                }
+                );
+                // tab.addNumber("Turn angle percent", () -> turnMotor.getDutyCycle().getValue());
+                tab.addNumber("Desired Angle", () -> {
+                    if (desiredAngle < 0) {
+                        return desiredAngle + 360;
+                    }
+                    return desiredAngle;
+                });
+                // tab.addBoolean("Velocity Control", () -> this.velocityControl);
+                tab.addNumber("Angle Difference", () -> {
+                    double angle = this.getTurningPositionDegrees();
+                    double desAngle2 = this.desiredAngle;
+                    if (angle < 0) {
+                        angle += 360;
+                    }
+                    if (desAngle2 < 0) {
+                        desAngle2 += 360;
+                    }
+                    double diff = Math.abs(angle - desAngle2);
+                    if (diff > 10) {
+                        diff = 10;
+                    }
+                    return diff;
+                });
 
                 tab.add("Flip",Commands.runOnce(this::flipModules));
                 // tab.addNumber("Drive Motor Bus Voltage", driveMotor::getBusVoltage);

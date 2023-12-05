@@ -43,6 +43,7 @@ import frc.robot.commands.autos.PreloadTaxiPickupLong;
 import frc.robot.commands.autos.PreloadTaxiPickupShort;
 import frc.robot.commands.autos.PreloadTaxiShort;
 import frc.robot.commands.autos.SquareTest;
+import frc.robot.commands.autos.TestStraight;
 import frc.robot.commands.autos.TwoPiece;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Wrist;
@@ -300,7 +301,7 @@ public class RobotContainer {
   private void initAutoChoosers() {
     // Remember to load the pathplanner paths here
     final String[] paths = {
-       "3Piece Short", "Balance", "DirectBalance", "3PieceLong2", "PreloadTaxiShort", "PreloadTaxiLong"
+       "3Piece Short", "Balance", "DirectBalance", "3PieceLong2", "PreloadTaxiShort", "PreloadTaxiLong", "TestStraight"
       // old paths "TestPath", "TestSquare", "Test Line", "TestSquare3", "SquareTest"
     };
     
@@ -322,6 +323,9 @@ public class RobotContainer {
     autoChooser.addOption("3Short", () -> new Auto3PieceShort(PathPlannerAutos.autoBuilder,swerveDrive, shooter, wrist));
     autoChooser.addOption("3Long2", () -> new Auto3PieceLong(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
     autoChooser.addOption("TwoPiece", () -> new TwoPiece(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
+    autoChooser.addOption("TestStraight", () -> new TestStraight(PathPlannerAutos.autoBuilder));
+    autoChooser.addOption("TestStraightOtherDirection", () -> new TestStraightOtherDirection(PathPlannerAutos.autoBuilder));
+
 
     // autoChooser.addOption("PP SquareTest", () -> new SquareTest(PathPlannerAutos.autoBuilder));
     // these are the auto paths in the old format (not the actual full auto command)

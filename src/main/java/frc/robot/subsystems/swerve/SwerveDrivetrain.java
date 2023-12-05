@@ -265,13 +265,13 @@ public class SwerveDrivetrain extends SubsystemBase implements Reportable {
         PIDController sunflowerController = new PIDController(VisionConstants.kSunflowerP, VisionConstants.kSunflowerI, VisionConstants.kSunflowerD);
         sunflowerController.setTolerance(0.2);
 
-        if(XOffset < 0.1 && XOffset > -0.1) {
-            XOffset = 0;
-        }
+        // if(XOffset < 0.1 && XOffset > -0.1) {
+        //     XOffset = 0;
+        // }
 
-        if(YOffset < 0.1 && YOffset > -0.1) {
-            YOffset = 0;
-        }
+        // if(YOffset < 0.1 && YOffset > -0.1) {
+        //     YOffset = 0;
+        // }
 
         // Should be ~- between 0.1 and 5.0
         double calculatedXOffset = MathUtil.clamp(sunflowerController.calculate(XOffset, 0), -0.5 * SwerveDriveConstants.kTeleDriveMaxSpeedMetersPerSecond, SwerveDriveConstants.kTeleDriveMaxSpeedMetersPerSecond / 2);

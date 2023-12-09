@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 
-public class TestStraightOtherDirection extends SequentialCommandGroup {
-    public TestStraightOtherDirection(SwerveAutoBuilder autoBuilder) {
+public class TestOtherDirect extends SequentialCommandGroup {
+    public TestOtherDirect(SwerveAutoBuilder autoBuilder) {
         List<PathPlannerTrajectory> pathGroup = PathPlannerAutos.getPathGroup("TestStraightOtherDirection");
         
         addCommands(

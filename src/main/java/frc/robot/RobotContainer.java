@@ -43,6 +43,7 @@ import frc.robot.commands.autos.PreloadTaxiPickupLong;
 import frc.robot.commands.autos.PreloadTaxiPickupShort;
 import frc.robot.commands.autos.PreloadTaxiShort;
 import frc.robot.commands.autos.SquareTest;
+import frc.robot.commands.autos.TestOtherDirect;
 import frc.robot.commands.autos.TestStraight;
 import frc.robot.commands.autos.TwoPiece;
 import frc.robot.subsystems.Shooter;
@@ -301,7 +302,7 @@ public class RobotContainer {
   private void initAutoChoosers() {
     // Remember to load the pathplanner paths here
     final String[] paths = {
-       "3Piece Short", "Balance", "DirectBalance", "3PieceLong2", "PreloadTaxiShort", "PreloadTaxiLong", "TestStraight"
+       "3Piece Short", "Balance", "DirectBalance", "3PieceLong2", "PreloadTaxiShort", "PreloadTaxiLong", "TestStraight", "TestStraightOtherDirection"
       // old paths "TestPath", "TestSquare", "Test Line", "TestSquare3", "SquareTest"
     };
     
@@ -324,7 +325,7 @@ public class RobotContainer {
     autoChooser.addOption("3Long2", () -> new Auto3PieceLong(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
     autoChooser.addOption("TwoPiece", () -> new TwoPiece(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
     autoChooser.addOption("TestStraight", () -> new TestStraight(PathPlannerAutos.autoBuilder));
-    autoChooser.addOption("TestStraightOtherDirection", () -> new TestStraightOtherDirection(PathPlannerAutos.autoBuilder));
+    autoChooser.addOption("TestStraightOtherDirection", () -> new TestOtherDirect(PathPlannerAutos.autoBuilder));
 
 
     // autoChooser.addOption("PP SquareTest", () -> new SquareTest(PathPlannerAutos.autoBuilder));
@@ -344,9 +345,9 @@ public class RobotContainer {
   }
   
   public void initShuffleboard() {
-    imu.initShuffleboard(loggingLevel);
-    wrist.initShuffleboard(loggingLevel);
-    shooter.initShuffleboard(loggingLevel);
+    // imu.initShuffleboard(loggingLevel);
+    // wrist.initShuffleboard(loggingLevel);
+    // shooter.initShuffleboard(loggingLevel);
     // backSunflower.initShuffleboard(loggingLevel);
     // frontSunflower.initShuffleboard(loggingLevel);
     swerveDrive.initShuffleboard(loggingLevel);

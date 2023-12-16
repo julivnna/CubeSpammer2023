@@ -302,7 +302,9 @@ public class RobotContainer {
   private void initAutoChoosers() {
     // Remember to load the pathplanner paths here
     final String[] paths = {
-       "3Piece Short", "Balance", "DirectBalance", "3PieceLong2", "PreloadTaxiShort", "PreloadTaxiLong", "TestStraight", "TestStraightOtherDirection"
+       "3Piece Short", "Balance", "DirectBalance", "3PieceLong2", "PreloadTaxiShort", 
+       "PreloadTaxiLong", "TestStraight", "TestStraightOtherDirection",
+       "TestSquare"
       // old paths "TestPath", "TestSquare", "Test Line", "TestSquare3", "SquareTest"
     };
     
@@ -326,6 +328,7 @@ public class RobotContainer {
     autoChooser.addOption("TwoPiece", () -> new TwoPiece(PathPlannerAutos.autoBuilder, swerveDrive, shooter, wrist));
     autoChooser.addOption("TestStraight", () -> new TestStraight(PathPlannerAutos.autoBuilder));
     autoChooser.addOption("TestStraightOtherDirection", () -> new TestOtherDirect(PathPlannerAutos.autoBuilder));
+    autoChooser.addOption("TestSquare", () -> PathPlannerAutos.pathplannerAuto("TestSquare", swerveDrive));
 
 
     // autoChooser.addOption("PP SquareTest", () -> new SquareTest(PathPlannerAutos.autoBuilder));

@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    // m_robotContainer.initShuffleboard();
+    m_robotContainer.initShuffleboard();
     m_robotContainer.swerveDrive.resetEncoders();
 	
     DataLogManager.start("/media/sda1/logs");
